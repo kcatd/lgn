@@ -1,0 +1,1555 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KitsuneAPI</name>
+    </assembly>
+    <members>
+        <member name="T:KitsuneAPI.Facades.Achievements">
+            <summary>
+            Kitsune Achievement Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Achievements.CompleteAchievement(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Complete an Achievement. <see cref="T:KitsuneCore.Services.Achievements.AchievementEntity"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnAchievementCompleted</c> callback and the <c>AchievementEvent.ON_ACHIEVEMENT_COMPLETED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Achievements.AchievementEntity"/> achievement
+            </remarks>
+            <param name="achievementId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Achievements.GetAchievements">
+            <summary>
+            Get all Achievements for the current game id. <see cref="T:KitsuneCore.Services.Achievements.AchievementEntity"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetAchievements</c> callback and the <c>AchievementEvent.ON_GET_ACHIEVEMENTS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Achievements.AchievementEntity"/> achievement
+            </remarks>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Ads">
+             <summary>
+             Facade Ads Class
+             <remarks>
+             Integrate with supported 3rd party ad providers
+            
+             Currently Supported:
+             - AppLovin
+             - Kiip
+             </remarks>
+             </summary>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Analytics">
+            <summary>
+            Kitsune Analytics Services API
+            </summary>
+            <remarks>
+            Used to track events using the Kitsune Server or 3rd party tracking like Firebase
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Analytics.TrackEvent(KitsuneCore.Services.Analytics.TrackingEvent)">
+            <summary>
+            Track custom events for game specific features
+            </summary>
+            <param name="trackingEvent"></param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Authentication">
+            <summary>
+            Kitsune Authentication Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.Login(System.String,System.String)">
+             <summary>
+             Login using a username and password for authentication
+             </summary>
+             <remarks>
+             On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+             On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+             On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+             Returns: <see cref="T:KitsuneCore.Services.Players.PlayerId"/> playerId, <see cref="T:KitsuneCore.Services.Authentication.SessionId"/> sessionId
+             </remarks>
+             <example>
+             Events:
+             <code>
+             Kitsune.Authentication.Subscribe&lt;AuthenticationEvent.ON_AUTHENTICATED&gt;(OnAuthenticated);
+             Kitsune.Authentication.Subscribe&lt;AuthenticationEvent.ON_CONNECTED&gt;(OnConnected);
+             Kitsune.Authentication.Login("FooUser", "BarPass");
+             
+             void OnAuthenticated(PlayerId playerId, SessionId sessionId)
+             {
+             	// PlayerId has been authenticated and provided a valid sessionId to
+             	// connect to the game server
+             }
+            
+             void OnConnected()
+             {
+             	// Game server sockets connected
+             }
+             </code>
+            
+             Callback Container:
+             <code>
+             public class AuthenticationContainer : IAuthenticationSubscriber
+             {
+            		public AuthenticationContainer()
+             	{
+             		Kitsune.Authentication.RegisterTarget(this);
+             		Kitsune.Authentication.Login("FooUser", "BarPass");
+             	}
+            
+             	public void OnAuthenticated(PlayerId playerId, SessionId sessionId)
+             	{
+             		// PlayerId has been authenticated and provided a valid sessionId to
+             		// connect to the game server
+             	}
+            
+             	public void OnConnected()
+             	{
+             		// Game server sockets connected
+             	}
+             }
+             </code>
+             </example>
+             <param name="username">Username or email</param>
+             <param name="password"></param>
+             <returns>Returns a hashed password that can be used for auto-login with <see cref="M:KitsuneAPI.Facades.Authentication.LoginWithHashedPassword(System.String,System.String)"/></returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.LoginWithHashedPassword(System.String,System.String)">
+            <summary>
+            Login using a username and an existing hashed password for authentication
+            </summary>
+            <remarks>
+            To create a hashed password use <see cref="M:KitsuneAPI.Facades.Authentication.Login(System.String,System.String)"/> and store the hashed password for later use.
+            On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Players.PlayerId"/> playerId, <see cref="T:KitsuneCore.Services.Authentication.SessionId"/> sessionId
+            </remarks>
+            <param name="username">Username or email</param>
+            <param name="password"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.Login(System.String)">
+            <summary>
+            Login using an authkey. This is used to identify players if you are using an
+            external form of authentication (i.e. iOS GameCenter)
+            </summary>
+            <remarks>
+            On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Players.PlayerId"/> playerId, <see cref="T:KitsuneCore.Services.Authentication.SessionId"/> sessionId
+            </remarks>
+            <param name="authkey"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.Login(System.Boolean)">
+            <summary>
+            Login using the default device id
+            </summary>
+            <remarks>If a GamePlayer does not have a Kitsune account, one will be created.
+            All logins from the current device id will be associated with the created Kitsune account
+            until another form of authentication is used (i.e. username/password or authKey)
+            On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Players.PlayerId"/> playerId, <see cref="T:KitsuneCore.Services.Authentication.SessionId"/> sessionId
+            </remarks>
+            <param name="createNewGuest">If TRUE then clear the current guest data from this device</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.LoginWithSessionId(System.String)">
+            <summary>
+            Login using a sessionId. This is used to identify players if you already logged in to another Kitsune game.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Players.PlayerId"/> playerId, <see cref="T:KitsuneCore.Services.Authentication.SessionId"/> sessionId
+            </remarks>
+            <param name="sessionId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Authentication.Logout">
+            <summary>
+            Logout the current player
+            </summary>
+            <remarks>
+            Triggers the <c>OnDisconnected</c> callback and <c>AuthenticationEvent.ON_DISCONNECTED</c>.
+            </remarks>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Chat">
+            <summary>
+            Kitsune Chat Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Chat.SendRoomChat(System.String)">
+             <summary>
+             Send a chat message to the current room
+             </summary>
+             <remarks>
+             On success triggers the <c>OnRoomChat</c> callback and the <c>ChatEvent.ON_ROOM_CHAT</c> event.
+             On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+             Returns: <see cref="T:KitsuneCore.Services.Chat.ChatMessage"/>
+             </remarks>
+             <example>
+             Events:
+             <code>
+             Kitsune.Chat.Subscribe&lt;ChatEvent.ON_ROOM_CHAT&gt;(OnRoomChat);
+             Kitsune.Chat.SendRoomChat("RoomFoo");
+             
+             void OnRoomChat(ChatMessage chatMessage)
+             {
+             	Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             	Console.Write("Chat Message: " + chatMessage.Text); // "RoomFoo"
+             }
+             </code>
+            
+             Callback Container:
+             <code>
+             public class ChatContainer : IChatSubscriber
+             {
+            		public ChatContainer()
+             	{
+             		Kitsune.Chat.RegisterTarget(this);
+             		Kitsune.Chat.SendRoomChat("RoomFoo");
+             	}
+            
+             	public void OnRoomChat(ChatMessage chatMessage)
+             	{
+             		Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             		Console.Write("Chat Message: " + chatMessage.Text); // "RoomFoo"
+             	}
+             }
+             </code>
+             </example>
+             <param name="message"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Chat.SendGroupChat(System.String)">
+             <summary>
+             Send a chat message to the current group
+             </summary>
+             <remarks>
+             On success triggers the <c>OnGroupChat</c> callback and the <c>ChatEvent.ON_GROUP_CHAT</c> event.
+             On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+             Returns: <see cref="T:KitsuneCore.Services.Chat.ChatMessage"/>
+             </remarks>
+             <example>
+             Events:
+             <code>
+             Kitsune.Chat.Subscribe&lt;ChatEvent.ON_GROUP_CHAT&gt;(OnGroupChat);
+             Kitsune.Chat.SendGroupChat("GroupFoo");
+             
+             void OnGroupChat(ChatMessage chatMessage)
+             {
+             	Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             	Console.Write("Chat Message: " + chatMessage.Text); // "GroupFoo"
+             }
+             </code>
+            
+             Callback Container:
+             <code>
+             public class ChatContainer : IChatSubscriber
+             {
+            		public ChatContainer()
+             	{
+             		Kitsune.Chat.RegisterTarget(this);
+             		Kitsune.Chat.SendGroupChat("GroupFoo");
+             	}
+            
+             	public void OnGroupChat(ChatMessage chatMessage)
+             	{
+             		Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             		Console.Write("Chat Message: " + chatMessage.Text); // "GroupFoo"
+             	}
+             }
+             </code>
+             </example>
+             <param name="message"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Chat.SendWhisperChat(KitsuneCore.Services.Players.PlayerId,System.String)">
+             <summary>
+             Send a private chat messages to a player
+             </summary>
+             <remarks>
+             On success triggers the <c>OnWhisperChat</c> callback and the <c>ChatEvent.ON_WHISPER_CHAT</c> event.
+             On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+             Returns: <see cref="T:KitsuneCore.Services.Chat.ChatMessage"/>
+             </remarks>
+             <example>
+             Events:
+             <code>
+             Kitsune.Chat.Subscribe&lt;ChatEvent.ON_WHISPER_CHAT&gt;(OnWhisperChat);
+             Kitsune.Chat.SendWhisperChat("WhisperFoo");
+             
+             void OnWhisperChat(ChatMessage chatMessage)
+             {
+             	Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             	Console.Write("Chat Message: " + chatMessage.Text); // "WhisperFoo"
+             }
+             </code>
+            
+             Callback Container:
+             <code>
+             public class ChatContainer : IChatSubscriber
+             {
+            		public ChatContainer()
+             	{
+             		Kitsune.Chat.RegisterTarget(this);
+             		Kitsune.Chat.SendWhisperChat("WhisperFoo");
+             	}
+            
+             	public void OnWhisperChat(ChatMessage chatMessage)
+             	{
+             		Console.Write("Chat from PlayerId: " + chatMessage.FromPlayer); // PlayerId
+             		Console.Write("Chat Message: " + chatMessage.Text); // "WhisperFoo"
+             	}
+             }
+             </code>
+             </example>
+             <param name="player"></param>
+             <param name="message"></param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.CustomData">
+            <summary>
+            Kitsune Achievement Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.CustomData.GetCustomData(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Get custom data by EntityId<see cref="T:KitsuneCore.Services.CustomData.CustomDataEntity"/>.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetCustomData</c> callback and the <c>CustomDataEvent.ON_GET_CUSTOM_DATA</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List of <see cref="T:KitsuneCore.Services.CustomData.CustomDataEntity"/>'s customData
+            </remarks>
+            <param name="customDataId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.CustomData.GetAllCustomData">
+            <summary>
+            Get all CustomData for the current game id. <see cref="T:KitsuneCore.Services.CustomData.CustomDataEntity"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetAllCustomData</c> callback and the <c>CustomDataEvent.ON_GET_ALL_CUSTOM_DATA</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.CustomData.CustomDataEntity"/> customData
+            </remarks>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Developer">
+            <summary>
+            Kitsune Developer API
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Facades.Developer.DeveloperSettings">
+            <value> 
+            DeveloperSettings accessor
+            </value>
+            <remarks>Contains GameSecretKey and <c>KitsunePublisher</c></remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.SetGameSettings(KitsuneCore.Game.IGameSettings)">
+            <summary>
+            Manually set the game settings 
+            </summary>
+            <param name="gameSettings"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.Login(System.String,System.String)">
+            <summary>
+            Login as a developer to create games and provision game entities
+            </summary>
+            <remarks>
+            On success triggers the <c>OnAuthenticated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On success triggers the <c>OnConnected</c> callback and the <c>AuthenticationEvent.ON_CONNECTED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="!:PlayerId"/> playerId, <see cref="!:SessionId"/> sessionId
+            </remarks>
+            <param name="username">Username or email</param>
+            <param name="password"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.RegisterPublisher(KitsuneCore.Developer.KitsunePublisher,System.String)">
+            <summary>
+            Creates a new Kitsune user account, registers it as a publisher, and logs in as that user.
+            </summary>
+            <param name="publisher"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManagePublisher(KitsuneCore.Developer.KitsunePublisher)">
+            <summary>
+            Update publisher name and/or email.
+            </summary>
+            <param name="publisher"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.CreateGame(System.String)">
+            <summary>
+            Creates a new game and provisions a <see cref="T:KitsuneCore.Developer.GameAPIKey"/> along with a developer secret key <see cref="P:KitsuneAPI.Facades.Developer.DeveloperSettings"/>.
+            </summary>
+            <param name="gameTitle"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageGame(KitsuneCore.Game.IGameSettings)">
+            <summary>
+            Update game metadata.
+            </summary>
+            <remarks>Currently this only supports updating the game name</remarks>
+            <param name="gameSettings"></param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:KitsuneAPI.Facades.Developer.GetGameData" -->
+        <member name="M:KitsuneAPI.Facades.Developer.ManageGameLevelXp(KitsuneCore.Game.IGameLevelXpData)">
+            <summary>
+            Manage levels and xp data for this game
+            </summary>
+            <param name="levelXpData"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageAPIKey(KitsuneCore.Developer.GameAPIKey)">
+            <summary>
+            Request a developer API key
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageGameVersion(KitsuneCore.Game.GameVersion)">
+            <summary>
+            Creates a new game version or updates an existing one.
+            </summary>
+            <param name="gameVersion"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.GetGameVersions">
+            <summary>
+            Get all versions of the current game.
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.GetGameEntities">
+            <summary>
+            Get all entities for the current game.
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ReleaseGameVersion(KitsuneCore.Game.GameVersion,System.Boolean)">
+            <summary>
+            Releases a new game version.
+            </summary>
+            <param name="gameVersion"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageEntity(KitsuneCore.Entity.KitsuneEntity,System.String)">
+            <summary>
+            Sets the game version that an entity will be released with.
+            </summary>
+            <param name="entity"></param>
+            <param name="releaseVersion"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.DeleteEntity(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Delete an existing entity. The entity cannot be assigned to a game version that is not in the Unreleased status.
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageReward(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates a Reward or Updates an existing one. <see cref="!:RewardEntity"/>
+            </summary>
+            <param name="reward"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageAchievement(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates an Achievement or Updates an existing one. <see cref="!:AchievementEntity"/>
+            </summary>
+            <param name="achievement"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageCurrency(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates a Currency or Updates an existing one. <see cref="!:CurrencyEntity"/>
+            </summary>
+            <param name="currency"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageProduct(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates a Product (IAP) or Updates an existing one. <see cref="!:ProductEntity"/>
+            </summary>
+            <param name="product"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageItem(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates a Game Item or Updates an existing one. <see cref="!:ItemEntity"/>
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.ManageCustomData(KitsuneCore.Entity.KitsuneEntity)">
+            <summary>
+            Creates a set of Game CustomData or Updates an existing data set. <see cref="!:CustomDataEntity"/>
+            </summary>
+            <param name="customData"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.CheckCurrentGameVersion">
+            <summary>
+            Checks the current version and if an update is required
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Developer.SendLog(System.String)">
+            <summary>
+            Sends a json log to the server for later analysis
+            </summary>
+            <param name="jsonLog"></param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Friends">
+            <summary>
+            Kitsune Friends Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.FriendRequest(KitsuneCore.Services.Players.PlayerId,System.String,System.String)">
+            <summary>
+            Send a friend request to the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnFriendStatusUpdated</c> callback and the <c>FriendEvent.ON_FRIEND_STATUS_UPDATED</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Friends.Friend"/>
+            </remarks>
+            <param name="playerId">UserId of the user to send a request to</param>
+            <param name="subject">Subject of the message to send (optional)</param>
+            <param name="message">Message to send to the user (optional)</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.DenyRequest(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Deny a friend request from the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            </summary>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.AcceptRequest(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Accept a friend request from the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnFriendStatusUpdated</c> callback and the <c>FriendEvent.ON_FRIEND_STATUS_UPDATED</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Friends.Friend"/>
+            </remarks>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.DropFriend(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Remove a friend for the current player
+            </summary>
+            <param name="playerId">The user id of the friend you want to remove</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.FindFriend(System.String)">
+            <summary>
+            Find a friend by player name
+            </summary>
+            <remarks>
+            On success triggers the <c>OnFindFriend</c> callback and the <c>FriendEvent.ON_FIND_FRIEND</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Friends.Friend"/> 
+            </remarks>
+            <param name="name"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.GetFriendsList(KitsuneCore.Services.Players.PlayerId,System.Boolean)">
+            <summary>
+            Get the the list of <see cref="T:KitsuneCore.Services.Friends.Friend"/>'s for the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetFriendsList</c> callback and the <c>FriendEvent.ON_GET_FRIENDS_LIST</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;Friend&gt;</remarks>
+            <param name="playerId">UserId of the user to get their friends list</param>
+            <param name="onlineOnly">Only return friends that are online</param>
+            <param name="friendCountOnly">Only return the users friend count</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.GetFriendCount(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Get the total number of friends the player has
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetFriendCount</c> callback and the <c>FriendEvent.ON_GET_FRIENDS_COUNT</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: int friendCount</remarks>
+            <param name="playerId">UserId for the friend count</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.InviteToGroup(KitsuneCore.Services.Players.PlayerId)">
+             <summary>
+             Invite a player to a group.
+             </summary>
+             <remarks>Players who join the group will be relocated to the Room where the
+             group creator is located.
+            
+             On success triggers the <c>OnGroupInviteReply</c> callback and the <c>FriendEvent.ON_GROUP_INVITE_REPLY</c> event.
+             Returns: <see cref="T:KitsuneCore.Services.Friends.FriendGroup"/> 
+             </remarks>
+             <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.JoinGroup(KitsuneCore.Services.Friends.FriendGroupInvite,System.Boolean)">
+            <summary>
+            Join a group a player has been invited to.
+            </summary>
+            <remarks>Triggers the "OnGroupUpdated" callback and <see cref="T:KitsuneCore.Services.Friends.FriendEvent.ON_GROUP_UPDATED"/>.
+            Returns: <see cref="T:KitsuneCore.Services.Friends.FriendGroup"/>
+            </remarks>
+            <param name="groupInvite">The group invite received from the server</param>
+            <param name="join">"true" to accept the invite. "false" to decline the invite.</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Friends.LeaveGroup">
+            <summary>
+            Leave the current <see cref="T:KitsuneCore.Services.Friends.FriendGroup"/>
+            </summary>
+        </member>
+        <member name="T:KitsuneAPI.Facades.GameServer">
+            <summary>
+            Kitsune GameServer API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.IsGameSessionActive(KitsuneCore.Services.GameSessions.SessionString,KitsuneCommon.GameServer.IJoinGameConfig)">
+            <summary>
+            Is there an active game session with the provided game session code
+            </summary>
+            <param name="sessionCode"></param>
+            <param name="gameConfig"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.IsRoomAvailableOnCurrentServer(KitsuneCommon.GameServer.IJoinGameConfig)">
+            <summary>
+            Checks if a specific room is available on the current game server. Used to determine if a
+            server switch is needed.
+            </summary>
+            <param name="gameConfig"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.JoinGame(KitsuneCommon.GameServer.IJoinGameConfig)">
+            <summary>
+            Join a game using the specified game config
+            </summary>
+            <param name="gameConfig"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Send(KitsuneCommon.Net.Messages.Message,KitsuneCommon.Net.ServerRequests.ServerResponse.Callback,KitsuneCommon.Net.LowLevel.ESocketId)">
+            <summary>
+            Send a game server message and receive a <see cref="T:KitsuneCommon.Net.ServerRequests.ServerResponse"/> See <c>ResponseStatus</c>
+            </summary>
+            <param name="message"><see cref="T:KitsuneCommon.Net.Messages.Message"/> to send to the server</param>
+            
+            <param name="responseCallback">The <see cref="T:KitsuneCommon.Net.ServerRequests.ServerResponse"/> from the server</param>
+            <param name="socket">Socket to send the message on <c>ESocketId.Info</c> or <c>ESocketId.Town</c></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Send(KitsuneCommon.Net.Messages.MessageTag,KitsuneCommon.Net.ServerRequests.ServerResponse.Callback,KitsuneCommon.Net.LowLevel.ESocketId)">
+            <summary>
+            Send a game server message with a response
+            </summary>
+            <param name="message"><see cref="T:KitsuneCommon.Net.Messages.MessageTag"/> to send to the server</param>
+            <param name="responseCallback">The <see cref="T:KitsuneCommon.Net.ServerRequests.ServerResponse"/> from the server</param>
+            <param name="socket">Socket to send the message on <c>ESocketId.Info</c> or <c>ESocketId.Town</c></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Send(KitsuneCommon.Net.Messages.Message,KitsuneCommon.Net.LowLevel.ESocketId)">
+            <summary>
+            Send a game server message with no response
+            </summary>
+            <param name="message"><see cref="T:KitsuneCommon.Net.Messages.Message"/> to send to the server</param>
+            <param name="socket">Socket to send the message on <c>ESocketId.Info</c> or <c>ESocketId.Town</c></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Send(KitsuneCommon.Net.Messages.MessageTag,KitsuneCommon.Net.LowLevel.ESocketId)">
+            <summary>
+            Send a game server message with no response
+            </summary>
+            <param name="tag"><see cref="T:KitsuneCommon.Net.Messages.MessageTag"/> to send to the server</param>
+            <param name="socket">Socket to send the message on <c>ESocketId.Info</c> or <c>ESocketId.Town</c></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Subscribe(KitsuneCommon.Net.Messages.MessageTag)">
+            <summary>
+            Subscribe to a specific game server push message using the <see cref="T:KitsuneCommon.Net.Messages.MessageTag"/>
+            </summary>
+            <param name="tag"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameServer.Unsubscribe(KitsuneCommon.Net.Messages.MessageTag)">
+            <summary>
+            Unsubscribe to a specific game server push message using the <see cref="T:KitsuneCommon.Net.Messages.MessageTag"/>
+            </summary>
+            <param name="tag"></param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.GameSessions">
+            <summary>
+            Kitsune Achievement Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSession">
+            <summary>
+            Creates a new empty game session. <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_CREATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSession
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSessionWithCode(System.String)">
+            <summary>
+            Creates a new empty game session with the specified session code. <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_CREATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSession
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSessionWithExternalUUID(System.String)">
+            <summary>
+            Creates a new empty game session with the specified external meeting UUID. <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_CREATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSession
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSession(System.String)">
+            <summary>
+            Creates game session data with serialized JSON. <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_CREATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSession
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSession(System.DateTime)">
+            <summary>
+            Create game session data with an expiration using server time. 
+            </summary>
+            <remarks>
+            Expiration is in server time. Use <see cref="P:KitsuneAPI.Kitsune.ServerTime"/>.
+            </remarks>
+            <example>
+            <code>DateTime expiration = Kitsune.ServerTime.AddHours(8);</code>
+            </example>
+            <param name="expiration"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.CreateGameSession(System.String,System.DateTime)">
+            <summary>
+            Creates game session data with serialized JSON and an expiration timestamp using server time. <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_CREATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSaveData
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.GetGameSession(KitsuneCore.Services.GameSessions.SessionString)">
+            <summary>
+            Retrieves game session data using a unique game session code. <see cref="T:KitsuneCore.Services.GameSessions.SessionString"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GET_GAME_SESSION</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSaveData
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.GetGameSessionByExternalUUID(System.String)">
+            <summary>
+            Retrieves game session data using an external meeting UUID. <see cref="T:KitsuneCore.Services.GameSessions.SessionString"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionCreated</c> callback and the <c>GameSessionEvent.ON_GET_GAME_SESSION</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/> gameSaveData
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.GetPlayerGameSessions">
+            <summary>
+            Retrieves all game session data for the current player. <see cref="T:KitsuneCore.Services.GameSessions.SessionString"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayerGameSessions</c> callback and the <c>GameSessionEvent.ON_GET_PLAYER_GAME_SESSIONS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List of <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>'s
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.DeleteGameSession(KitsuneCore.Services.GameSessions.GameSessionId)">
+            <summary>
+            Deletes a game session for the provided game session id.
+            </summary>
+            <remarks>
+            Only the owner of the game session can delete their session data.
+            On success triggers the <c>OnGameSessionDeleted</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_DELETED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSessionId"/> game session id of the deleted game save data.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.UpdateGameSession(KitsuneCore.Services.GameSessions.GameSessionId,System.String)">
+            <summary>
+            Updates the the custom save data for the provided game session id.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionUpdated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_UPDATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSessionId"/> game session id of the updated game save data.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.UpdateGameSession(KitsuneCore.Services.GameSessions.GameSessionId,System.DateTime)">
+            <summary>
+            Updates the expiration of the provided game session id.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionUpdated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_UPDATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSessionId"/> game session id of the updated game save data.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.UpdateGameSession(KitsuneCore.Services.GameSessions.GameSessionId,System.String,System.DateTime)">
+            <summary>
+            Updates the custom save data and the expiration of the provided game session id.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGameSessionUpdated</c> callback and the <c>GameSessionEvent.ON_GAME_SESSION_UPDATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.GameSessions.GameSessionId"/> game session id of the updated game save data.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.GetOwnedSessionCode(System.Int32)">
+            <summary>
+            Retrieves an owned session code for the current player of the specified session type.
+            </summary>
+            <param name="sessionType">Session type provided by the consumer</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.GameSessions.GetOwnedSessionCode(System.Int32,System.Boolean)">
+            <summary>
+            Retrieves an owned session code for the current player of the specified session type.
+            </summary>
+            <param name="sessionType">Session type provided by the consumer</param>
+            <param name="assignSessionCodeIfDoesntExist">If the player does not own a session code of the provided type, assign them a code</param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.InboxMessaging">
+            <summary>
+            Kitsune InboxMessaging Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.GetPlayerInbox(System.Int32,System.Int32,KitsuneCore.Services.InboxMessaging.EInboxMessageType,System.Int32)">
+            <summary>
+            Request a range of inbox messages for a specific inbox
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayerInbox</c> callback and the <c>InboxEvent.ON_GET_PLAYER_INBOX</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.InboxMessaging.PlayerInbox"/>
+            </remarks>
+            <param name="firstMessageIndex">Index of the first inbox message being requested</param>
+            <param name="count">How many messages are being requested</param>
+            <param name="inboxType">Inbox type<see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/></param>
+            <param name="currentTotalCount">How many messages the client knows about. This allows the
+            server to offset the response if new messages have arrived while the request is being made</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.SendMessage(KitsuneCore.Services.Players.PlayerId,System.String,System.String)">
+            <summary>
+            Send a message to a user
+            </summary>
+            <remarks>
+            On success triggers the <c>OnMessageSent</c> callback and the <c>InboxEvent.ON_MESSAGE_SENT</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.InboxMessaging.InboxMessageEntity"/>
+            </remarks>
+            <param name="recipientPlayerId"></param>
+            <param name="subject"></param>
+            <param name="body"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.ReplyTo(KitsuneCore.Services.Players.PlayerId,System.String,System.String,KitsuneCore.Entity.EntityId)">
+            <summary>
+            Reply to an inbox message
+            </summary>
+            <remarks>
+            On success triggers the <c>OnMessageSent</c> callback and the <c>InboxEvent.ON_MESSAGE_SENT</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.InboxMessaging.InboxMessageEntity"/>
+            </remarks>
+            <param name="recipientPlayerId">Recipients <see cref="T:KitsuneCore.Services.Players.PlayerId"/></param>
+            <param name="subject">Subject of the inbox message</param>
+            <param name="body">Body of the inbox message</param>
+            <param name="emailId">The email id of the email the user is replying to</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.DeleteMessages(System.Collections.Generic.List{KitsuneCore.Entity.EntityId})">
+            <summary>
+            Delete a range of inbox messages
+            </summary>
+            <remarks>Broadcasts the event <c>InboxEvent.ON_MESSAGES_DELETED</c>.</remarks>
+            <param name="emailIds"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.ReadMessages(System.Collections.Generic.List{KitsuneCore.Entity.EntityId})">
+            <summary>
+            Mark a range of inbox messages as "Read"
+            </summary>
+            <remarks>Broadcasts the event <c>InboxEvent.ON_MESSAGES_READ</c>.</remarks>
+            <param name="emailIds"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.InboxMessaging.SaveMessages(System.Boolean,System.Collections.Generic.List{KitsuneCore.Entity.EntityId})">
+            <summary>
+            Mark a range of inbox messages as saved or unsaved
+            </summary>
+            <remarks>Broadcasts the event <c>InboxEvent.ON_MESSAGES_SAVED</c>.</remarks>
+            <param name="save"></param>
+            <param name="emailIds"></param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Inventory">
+            <summary>
+            Kitsune Inventory Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.GetGameItems">
+            <summary>
+            Get all available items for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetItems</c> callback and the <c>InventoryEvent.ON_GET_ITEMS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;ItemEntity&gt; items
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.GetGameItemsByCategory(KitsuneCore.Services.Inventory.ItemCategoryId)">
+            <summary>
+            Get all available items of the specified category for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetItemsByCategory</c> callback and the <c>InventoryEvent.ON_GET_CATEGORY_ITEMS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;ItemEntity&gt; items
+            </remarks>
+            <param name="id"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.BuyGameItem(KitsuneCore.Entity.EntityId,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Buy an in-game item
+            </summary>
+            <remarks>
+            On success triggers the <c>OnBuyGameItem</c> callback and the <c>InventoryEvent.ON_BUY_GAME_ITEM</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: ItemEntity of the purchased item
+            </remarks>
+            <param name="item">Item being purchased</param>
+            <param name="count">Quantity being purchased</param>
+            <param name="tradeable">Is the item tradeable</param>
+            <param name="status">Optional custom status</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.BuyGift(KitsuneCore.Entity.EntityId,KitsuneCore.Services.Players.PlayerId,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Buy an in-game item and send it as a gift
+            </summary>
+            <remarks>
+            On success triggers the <c>OnBuyGameItem</c> callback and the <c>InventoryEvent.ON_BUY_GAME_ITEM</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="item">Item being purchased</param>
+            <param name="recipientId">PlayerId of the player receiving the item as a gift</param>
+            <param name="count">Quantity being purchased</param>
+            <param name="tradeable">Is the item tradeable</param>
+            <param name="status">Optional custom status</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.GetCachedGameItem(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Returns a Clone of a cached game item.
+            </summary>
+            <param name="itemId"></param>
+            <returns>A cloned <see cref="T:KitsuneCore.Services.Inventory.ItemEntity"/></returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Inventory.OnBuyGameItem(KitsuneCore.Services.Inventory.ItemEntity)">
+            CALLBACKS
+        </member>
+        <member name="T:KitsuneAPI.Facades.Leaderboards">
+            <summary>
+            Kitsune Leaderboard Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Leaderboards.UpdateLeaderboard(System.Int64)">
+            <summary>
+            Send a value to game leaderboard to update the leaderboard
+            </summary>
+            <remarks>
+            On success triggers the <c>OnLeaderboardUpdated</c> callback and the <c>LeaderboardEvent.ON_LEADERBOARD_UPDATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardEntity"/>
+            </remarks>
+            <param name="value"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Leaderboards.UpdateLeaderboardAndReturnRank(System.Int64)">
+            <summary>
+            Send a value to game leaderboard to update the leaderboard and returns the players new rank
+            </summary>
+            <remarks>
+            On success triggers the <c>OnLeaderboardUpdated</c> callback and the <c>LeaderboardEvent.ON_LEADERBOARD_UPDATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardEntity"/>
+            </remarks>
+            <param name="value"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Leaderboards.GetLeaderboard(System.Int32,System.Int32)">
+            <summary>
+            Gets the game leaderboard starting at the specified ranking and returns <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/>
+            containing 'count' number of <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer"/>'s 
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetLeaderboard</c> callback and the <c>LeaderboardEvent.ON_GET_LEADERBOARD</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/>
+            </remarks>
+            <param name="startRank"></param>
+            <param name="count"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Leaderboards.GetLeaderboard(KitsuneCore.Services.Players.PlayerId,System.Int32)">
+            <summary>
+            Gets the game leaderboard starting at the ranking of the specified <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            and returns <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/> containing 'count' number of <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer"/>'s on either side of the player
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetLeaderboard</c> callback and the <c>LeaderboardEvent.ON_GET_LEADERBOARD</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/>
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Leaderboards.GetLeaderboardPosition(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Gets the game leaderboard ranking for the specified <see cref="T:KitsuneCore.Services.Players.PlayerId"/>
+            and returns <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/> containing 1 <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer"/> record
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetLeaderboard</c> callback and the <c>LeaderboardEvent.ON_GET_LEADERBOARD</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardData"/>
+            </remarks>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Monetization">
+             <summary>
+             Kitsune Monetization Services API
+            
+             Monetization Services Include:
+             	- Gifting
+             	- In-App Purchases (Products)
+             	- Rewards
+             	- Virtual Currencies
+             </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetCurrencies">
+            <summary>
+            Get all available currencies for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetCurrencies</c> callback and the <c>MonetizationEvent.ON_GET_CURRENCIES</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;CurrencyEntity&gt;
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetCurrency(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Get a specific currency for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetCurrency</c> callback and the <c>MonetizationEvent.ON_GET_CURRENCY</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity"/>
+            </remarks>
+            <param name="currencyId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetRewards">
+            <summary>
+            Get all available rewards for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetRewards</c> callback and the <c>MonetizationEvent.ON_GET_REWARDS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;RewardEntity&gt;
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetReward(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Get the specified reward for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetReward</c> callback and the <c>MonetizationEvent.ON_GET_REWARD</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Monetization.Rewards.RewardEntity"/>
+            </remarks>
+            <param name="rewardId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetProducts">
+            <summary>
+            Get all available products for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetProducts</c> callback and the <c>MonetizationEvent.ON_GET_PRODUCTS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;ProductEntity&gt;
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetProduct(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Get the specified product for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetProduct</c> callback and the <c>MonetizationEvent.ON_GET_PRODUCT</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;PaymentMethod&gt;
+            </remarks>
+            <param name="productId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.GetPaymentMethods">
+            <summary>
+            Get all available payment methods for the current game
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPaymentMethods</c> callback and the <c>MonetizationEvent.ON_GET_PAYMENT_METHODS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/>
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.PurchaseProduct(KitsuneCore.Services.Monetization.Products.ProductEntity,KitsuneCore.Services.Monetization.Payments.PaymentData)">
+            <summary>
+            Purchase the specified <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnPurchaseComplete</c> callback and the <c>MonetizationEvent.ON_PURCHASE_COMPLETED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/>
+            </remarks>
+            <param name="product"></param>
+            <param name="paymentData"></param>
+            <returns>true if the request was initiated or false if there was an error</returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.ClearPaymentError">
+            <summary>
+            In the case of a payment error, clears the error, letting the payment service
+            know that it is ok to start a new transaction
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.PurchaseGift(KitsuneCore.Services.Monetization.Products.ProductEntity,KitsuneCore.Services.Monetization.Payments.PaymentData,KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Purchase the specified <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/>
+            </summary>
+            <remarks>
+            On success triggers the <c>OnPurchaseComplete</c> callback and the <c>MonetizationEvent.ON_PURCHASE_COMPLETED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/>
+            </remarks>
+            <param name="product"></param>
+            <param name="paymentData"></param>
+            <param name="recipientPlayerId"></param>
+            <returns>true if the request was initiated or false if there was an error</returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Monetization.ClaimGifts(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Tell the server that the gifts have been claimed. This will prevent the server from
+            <see cref="!:MonetizationEvent.ON_GIFTS_RECEIVED"/> events.
+            </summary>
+            <param name="giftIds">Gift ids that are being claimed.</param>
+        </member>
+        <member name="T:KitsuneAPI.Facades.Places">
+            <summary>
+            Kitsune Places Services API
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Facades.Places.CurrentRoom">
+            <summary>
+            The current <see cref="T:KitsuneCore.Services.Places.Room"/> instance that the player is in.
+            This is only valid after the player has successfully joined a room.
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.JoinRandomRoom">
+             <summary>
+             Join a <see cref="T:KitsuneCore.Services.Places.Room"/>
+             </summary>
+             <remarks>Join a random room that will be determined by the server based on availability.
+             A room will be returned with the <c>RoomId</c>.
+            
+             The server adds you to a room on login, however you need to join the room on the
+             client to have access to it's properties and players.
+             On success triggers the <c>OnRoomJoined</c> callback and the <c>PlaceEvent.ON_ROOM_JOINED</c> event.
+             Returns: List&lt;KitsunePlayer&gt; roomPlayers)
+             </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.JoinRoom(KitsuneCore.Services.Places.RoomId)">
+            <summary>
+            Join a specific room by room id. If the <see cref="T:KitsuneCore.Services.Places.Room"/> does
+            not exist it will be created.
+            </summary>
+            <remarks>On Login you will be automatically added to a random <see cref="T:KitsuneCore.Services.Places.Room"/>
+            On success triggers the <c>OnRoomJoined</c> callback and the <c>PlaceEvent.ON_ROOM_JOINED</c> event.
+            Returns: List&lt;KitsunePlayer&gt; roomPlayers)
+            </remarks>
+            <param name="roomId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.JoinRoom(System.String)">
+            <summary>
+            Join a specific room by name. If the <see cref="T:KitsuneCore.Services.Places.Room"/> does
+            not exist it will be created.
+            </summary>
+            <remarks>On Login you will be automatically added to a random <see cref="T:KitsuneCore.Services.Places.Room"/>
+            On success triggers the <c>OnRoomJoined</c> callback and the <c>PlaceEvent.ON_ROOM_JOINED</c> event.
+            Returns: List&lt;KitsunePlayer&gt; roomPlayers)
+            </remarks>
+            <param name="roomId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.LeaveRoom">
+            <summary>
+            Leave the current room and return to the default room.
+            </summary>
+            <remarks>On Login you will be automatically added to a random <see cref="T:KitsuneCore.Services.Places.Room"/>
+            On success triggers the <c>OnLeftRoom</c> callback and the <c>PlaceEvent.ON_LEFT_ROOM</c> event.
+            Returns: List&lt;KitsunePlayer&gt; roomPlayers)
+            </remarks>
+            <param name="roomId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.MovePlayer(System.Int16,System.Int16,System.Int16,System.Int16)">
+            <summary>
+            Request to move the player on the server and broadcast movement to other players in the room
+            </summary>
+            <param name="x">New x coordinate</param>
+            <param name="y">New y coordinate</param>
+            <param name="z">New z coordinate</param>
+            <param name="speed">Speed to move from current position to the new position</param>
+            <remarks>Request to move player to new position
+            On success triggers the <c>PlaceEvent.ON_PLAYER_MOVEMENT</c> event.
+            Returns: <see cref="T:KitsuneCore.Services.Places.PlayerMovement"/>
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Places.OnRoomJoined(System.Collections.Generic.List{KitsuneCore.Services.Players.KitsunePlayer})">
+            CALLBACKS
+        </member>
+        <member name="T:KitsuneAPI.Facades.Players">
+            <summary>
+            Kitsune Player Services API
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.CreatePlayer(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates a new player account and logs the user into the game.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnPlayerCreated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <returns>A hashed password you can store and use with <see cref="M:KitsuneAPI.Facades.Authentication.LoginWithHashedPassword(System.String,System.String)"/></returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.CreateGuest(System.Boolean)">
+            <summary>
+            Creates a new guest player account and logs the user into the game.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnPlayerCreated</c> callback and the <c>AuthenticationEvent.ON_AUTHENTICATED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="clearGuestData">Whether or not to clear the current guest data from this device</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.SavePlayer(System.String,System.String,System.String,KitsuneCore.Services.Authentication.PlayerSaveLocationId)">
+            <summary>
+            Save the current player account.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnPlayerSaved</c> callback and the <c>PlayerEvent.ON_PLAYER_SAVED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="name">Username of the saved account</param>
+            <param name="email">Email for the saved account</param>
+            <param name="password">Password for the saved account</param>
+            <param name="playerSaveLocationId">A provided location id to track where a player decided to save their account.</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayers(System.Collections.Generic.List{KitsuneCore.Services.Players.PlayerId})">
+            <summary>
+            Get a list of players from the server.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayers</c> callback and the <c>PlayerEvent.ON_GET_PLAYERS</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: List&lt;GamePlayer&gt;
+            </remarks>
+            <param name="playerIds"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayer(KitsuneCore.Services.Players.PlayerId,System.Boolean)">
+            <summary>
+            Get a specific player from the server.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayer</c> callback and the <c>PlayerEvent.ON_GET_PLAYER</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <c>KitsunePlayer</c>
+            </remarks>
+            <param name="playerId"></param>
+            <param name="updatePlayerCache">If True, request an updated player and add them to the player cache.
+            If False, then return the player if they are in the player cache.
+            Default  is True.
+            </param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayerFromCache(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Returns a player from the cache or returns null if it does not exist.
+            </summary>
+            <remarks>If the player does not exist in the cache, the player will
+            be requested from the server. This will trigger <c>PlayerEvent.ON_GET_PLAYER</c>
+            and any IPlayerSubscribers.</remarks>
+            <param name="playerId"></param>
+            <returns>KitsunePlayer</returns>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.NotAFK">
+            <summary>
+            If the server receives no messages after ~1 hour, the client is disonnected.
+            Calling NotAFK prevents this
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayerProfile(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Get a profile for a player.
+            </summary>
+            <remarks>Depending on the profile access <see cref="T:KitsuneCore.Services.Players.Profile.EProfileAccess"/>, will return accessible player info.
+            On success triggers the <c>OnGetPlayerProfile</c> callback and the <c>PlayerEvent.ON_GET_PLAYER_PROFILE</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.SavePlayerProfile(KitsuneCore.Services.Players.Profile.PlayerProfile)">
+            <summary>
+            Saves the profile for the current player.
+            </summary>
+            <remarks>
+            On success triggers the <c>OnProfileSaved</c> callback and the <c>PlayerEvent.ON_PROFILE_SAVED</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayerInventory">
+            <summary>
+            Get inventory for specified player id
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayerInventory</c> callback and the <c>PlayerEvent.ON_GET_PLAYER_INVENTORY</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: Dictionary&lt;EntityId, ItemEntity&gt; inventory)
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetPlayerBalances">
+            <summary>
+            Get currency balances for specified player id
+            </summary>
+            <remarks>
+            On success triggers the <c>OnGetPlayerBalances</c> callback and the <c>PlayerEvent.ON_GET_PLAYER_BALANCES</c> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: Dictionary&lt;EntityId, CurrencyBalanceComponent&gt; player balances for each currency)
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.AddGameItem(KitsuneCore.Entity.EntityId,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Add an in-game item to the the current players inventory
+            </summary>
+            
+            <remarks>
+            On success triggers the <c>OnAddGameItem</c> callback and the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_ADD_GAME_ITEM"/> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <c>ItemEntity</c> of the purchased item amd the <see cref="T:KitsuneCore.Services.Inventory.InventoryItemId"/> of the item in the players inventory
+            </remarks>
+            <param name="item"></param>
+            <param name="count"></param>
+            <param name="tradeable"></param>
+            <param name="status"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.AddGameItem(KitsuneCore.Entity.EntityId,System.Int32,System.Boolean,KitsuneCore.Services.Players.PlayerId,System.String)">
+            <summary>
+            Add an in-game item to the the current players inventory
+            </summary>
+            <remarks>
+            On success triggers the <c>OnAddGameItem</c> callback and the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_ADD_GAME_ITEM"/> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            Returns: <c>ItemEntity</c> of the purchased item amd the <see cref="T:KitsuneCore.Services.Inventory.InventoryItemId"/> of the item in the players inventory
+            </remarks>
+            <param name="item"></param>
+            <param name="count"></param>
+            <param name="tradeable"></param>
+            <param name="giftedFrom">0 if not a gift. Otherwise, the <c>PlayerId</c> of the player who gifted the item.</param>
+            <param name="status"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetCustomPlayerData">
+            <summary>
+            Get custom player data for the current player
+            </summary>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetCustomPlayerData(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Get custom player data for a player
+            </summary>
+            <param name="playerId">The player id of the player to get custom data</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.SetCustomPlayerData(System.String)">
+            <summary>
+            Set custom player data for the current player
+            </summary>
+            <param name="serializedJson">Serialized json to be saved for the current player</param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.BlockPlayer(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Block the player with the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>. Blocked players are unable to
+            friend or message players who block them.
+            </summary>
+            <remarks>
+            On success triggers the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_BLOCKED"/> event on the blocked players client.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.UnblockPlayer(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Unblock the player with the provided <see cref="T:KitsuneCore.Services.Players.PlayerId"/>. Blocked players are unable to friend
+            or message players who block them.
+            </summary>
+            <remarks>
+            On success triggers the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_BLOCKED"/> event on the blocked players client.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetBlocks">
+            <summary>
+            Get a list of players we are blocking and players who have blocked us.
+            </summary>
+            <remarks>
+            On success triggers the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_GET_BLOCKS"/> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.GetEquippedItemsForPlayer(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Get equipped items for the specified player id
+            </summary>
+            <remarks>
+            On success triggers the <see cref="T:KitsuneCore.Services.Players.PlayerEvent.ON_GET_EQUIPPED_ITEMS"/> event.
+            On error triggers <c>OnError</c> callback and the <c>KitsuneEvent.ON_ERROR</c> event.
+            </remarks>
+            <param name="playerId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.ChangePlayerName(System.String)">
+            <summary>
+            Change your player name
+            </summary>
+            <param name="newName"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.EarnXp(System.Int32)">
+            <summary>
+            Give the current player experience which may result in leveling up the player.
+            </summary>
+            <param name="xp"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.LevelUp(System.Int32)">
+            <summary>
+            Explicitly level up the current player.
+            </summary>
+            <param name="level"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.ReportPlayer(KitsuneCore.Services.Players.PlayerId,System.String,KitsuneCore.Services.Players.EReportPlayerCat)">
+            <summary>
+            Report bad behavior to customer service.
+            </summary>
+            <param name="playerId"></param>
+            <param name="message"></param>
+            <param name="category"></param>
+        </member>
+        <member name="M:KitsuneAPI.Facades.Players.OnGetPlayers(System.Collections.Generic.List{KitsuneCore.Services.Players.KitsunePlayer})">
+            CALLBACKS
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Connected">
+            <value>
+            Convenience accessor for if the current client is connected.
+            </value>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.ServerTime">
+            <value>
+            DateTime on the server
+            </value>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.PollConnected">
+            <value>
+            Poll the socket and check if it is connected
+            </value>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.CurrentPlayer">
+            <value>
+            Convenience accessor for getting the current <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>
+            This is available after we have connected.
+            </value>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.MyPlayerId">
+            <value>
+            Convenience accessor for getting the current players id. This is known as soon as the player is signed in.
+            </value>
+        </member>
+        <member name="M:KitsuneAPI.Kitsune.Init(KitsuneCore.Game.IGameSettings)">
+             <summary>
+             Initialize the game with <see cref="T:KitsuneCore.Game.IGameSettings"/> and device id.
+             This should be called immediately upon game initialization
+             </summary>
+             <remarks>
+             You can create a new <see cref="T:KitsuneCore.Game.GameSettings"/> class or pass an object that implements the <see cref="T:KitsuneCore.Game.IGameSettings"/> interface.
+             </remarks>
+             <example>
+             <code>
+             GameSettings gameSettings = new GameSettings();
+             gameSettings.GameName = "Kitsune Game";
+             gameSettings.GameId = 1;
+             gameSettings.GameVersion = "v1.0";
+             gameSettings.CompanyName = "FlowPlay, Inc";
+             gameSettings.Email = "kitsune@flowplay.com";
+             gameSettings.GameApiKey = "myApiKey";
+             gameSettings.ServerSettings = new ServerSettings();
+            
+             Kitsune.Init(gameSettings, deviceId);
+             </code>
+            	</example>
+             <param name="gameSettings"></param>
+             <param name="deviceId"></param>
+        </member>
+        <member name="M:KitsuneAPI.Kitsune.Ping(System.Action{System.Int64})">
+            <summary>
+            Ping the server and return the latency in milliseconds
+            </summary>
+            <param name="pingCallback"></param>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Achievements">
+            <summary>
+            Kitsune Achievements Services <see cref="T:KitsuneAPI.Facades.Achievements"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Analytics">
+            <summary>
+            Kitsune Analytics Services <see cref="T:KitsuneAPI.Facades.Analytics"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Authentication">
+            <summary>
+            Kitsune Authentication Services <see cref="T:KitsuneAPI.Facades.Authentication"/> 
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Chat">
+            <summary>
+            Kitsune Chat Services <see cref="T:KitsuneAPI.Facades.Chat"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.CustomData">
+            <summary>
+            Kitsune CustomData Services <see cref="T:KitsuneAPI.Facades.CustomData"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Developer">
+            <summary>
+            Kitsune Developer Services <see cref="T:KitsuneAPI.Facades.Developer"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Friends">
+            <summary>
+            Kitsune Friends Services <see cref="T:KitsuneAPI.Facades.Friends"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.InboxMessaging">
+            <summary>
+            Kitsune InboxMessaging Services <see cref="P:KitsuneAPI.Kitsune.InboxMessaging"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Inventory">
+            <summary>
+            Kitsune Inventory/Item Services <see cref="T:KitsuneAPI.Facades.Inventory"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Leaderboards">
+            <summary>
+            Kitsune Leaderboard Services <see cref="T:KitsuneAPI.Facades.Leaderboards"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Monetization">
+            <summary>
+            Kitsune Monetization Services <see cref="P:KitsuneAPI.Kitsune.Monetization"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Places">
+            <summary>
+            Kitsune Place Services <see cref="P:KitsuneAPI.Kitsune.Places"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneAPI.Kitsune.Players">
+            <summary>
+            Kitsune Players Services <see cref="T:KitsuneAPI.Facades.Players"/>
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,15 @@
+<UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement class="row entity-list-item list-header">
+        <ui:VisualElement class="list-item--preview-header" name="Preview"/>
+        <ui:VisualElement class="list-item--id">
+            <ui:TextElement text="Entity Id" />
+        </ui:VisualElement>
+        <ui:VisualElement class="list-item--name">
+            <ui:TextElement text="Name" />
+        </ui:VisualElement>
+        <ui:VisualElement name="EntityHeaderData" />
+        <ui:VisualElement class="list-item--release-version">
+            <ui:TextElement text="Release Version" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</UXML>

@@ -1,0 +1,25 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="level-xp--main">
+        <ui:VisualElement class="column header-title-description">
+            <ui:TextElement text="Game Level/XP Config" class="h1" name="ListTitle" />
+            <ui:TextElement text="Manage your games level and xp data." class="h3" name="ListDescription" />
+        </ui:VisualElement>
+        <ue:PropertyField binding-path="_gameVersion" label="Game Version" name="GameVersion" tooltip="Game version string this level data is associated with" />
+        <ue:PropertyField binding-path="_maxLevel" label="Max Game Level" name="MaxLevel" />
+        <ui:Toggle class="level-xp--autoscale" label="Auto-Scale Level XP" tooltip="Auto scale level xp or manually set xp per level" name="AutoScale" />
+        <ui:VisualElement name="AutoScaleContainer">
+            <ui:TextElement text="Levels are auto-scaled from the starting xp (Level 2) up to the max level." />
+            <ue:PropertyField binding-path="_startingXp" label="Starting Level XP" name="StartingXP" tooltip="This is the starting level xp at which to start scaling from. Usually the XP to get to level 2." />
+            <ue:PropertyField binding-path="_levelCoefficient" label="Scaling Coefficient" name="Scaling Coefficient" tooltip="0.2 is a good starting point. if your starting XP is 200xp for level 2, then level 3 would require 240xp (prevLevelXP + prevLevelXP * _levelCoefficient)" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ManualScaleContainer" />
+        <ui:Foldout text="XP JSON data" value="false" name="JSONFoldout" class="custom-data--json-foldout">
+            <ui:TextField binding-path="_levelXpJson" class="level-xp-inspector--json" readonly="true" multiline="true" name="JSON" />
+        </ui:Foldout>
+        <ui:VisualElement class="row button-container add-edit-entity-buttons">
+            <ui:Button class="mini-button default-button" name="Save">
+                <ui:Label text="Save" />
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</UXML>

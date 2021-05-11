@@ -1,0 +1,4 @@
+<UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Common/EntityListWithHeaderTemplate.uxml" name="entity-list-template" />
+    <ui:Instance template="entity-list-template" name="IAPs" class="flex-grow" />
+</UXML>

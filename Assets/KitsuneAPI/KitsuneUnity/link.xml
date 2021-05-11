@@ -1,0 +1,7 @@
+<linker>
+    <assembly fullname="KitsuneCore" preserve="all"/>
+    <assembly fullname="KitsuneAPI" preserve="all"/>
+    <assembly fullname="System.Core">
+        <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+    </assembly>
+</linker>

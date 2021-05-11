@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68e4ac49ea424aa69c1c6f459147d6e, type: 3}
+  m_Name: KitsuneServerList
+  m_EditorClassIdentifier: 
+  Servers:
+  - {fileID: 11400000, guid: 2a91c0663ecaf43949302d5b31852ad7, type: 2}
+  - {fileID: 11400000, guid: 6e5e41cdb17979c448c4f8ba4d2b3ccf, type: 2}
+  - {fileID: 11400000, guid: 7a3a163b496b349daa878463ff4f6b77, type: 2}
+  - {fileID: 11400000, guid: 5d4a04fcd888e4bbc83d0695069877cb, type: 2}
+  - {fileID: 11400000, guid: 33cb886d2eaae4a71bd97a828ce82109, type: 2}

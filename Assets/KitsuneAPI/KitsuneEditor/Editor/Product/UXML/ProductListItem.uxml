@@ -1,0 +1,14 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="list-item--description">
+        <ui:TextElement binding-path="_description" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--price">
+        <ui:TextElement name="Price" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--reward">
+        <ui:TextElement name="Reward" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--release-version">
+        <ui:TextElement binding-path="_releaseVersion" />
+    </ui:VisualElement>
+</UXML>

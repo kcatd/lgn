@@ -1,0 +1,12 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_description" name="Description" />
+    <ui:VisualElement class="row add-rewards-button-container">
+        <ui:Button class="mini-button" name="AddCurrencyReward" text="Add Currency" />
+        <ui:Button class="mini-button" name="AddItemReward" text="Add Item" />
+    </ui:VisualElement>
+    <ui:VisualElement class="reward-inspector--reward-parts-container" name="RewardPartsContainer" />
+    <ui:VisualElement class="row">
+        <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+        <ui:VisualElement name="ReleaseVersionDropDownContainer" />
+    </ui:VisualElement>
+</UXML>

@@ -1,0 +1,26 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/EntityMenu/EntityMenu.uxml" name="entity-menu-template" />
+    <ui:VisualElement class="row root">
+        <ui:ScrollView class="menu">
+            <ui:Button class="row-center logo-container" name="LogoButton">
+                <ui:Image name="Logo" class="logo" />
+            </ui:Button>
+            <ue:InspectorElement name="Publisher"/>
+            <ue:InspectorElement name="GameSettings"/>
+            <ui:Instance template="entity-menu-template" class="row"/>
+        </ui:ScrollView>
+        <ui:VisualElement class="main">
+            <ui:VisualElement name="HomePage" class="main--homepage-container">
+                <ui:TextElement text="Thank you for using Kitsune!" class="h1"/>
+                <ui:TextElement text="To get started, register as a Publisher. Once you are registered you can create and customize your game." class="h2"/>
+                <ui:TextElement text="After you create a game start by creating a new Currency which is a dependency for creating other Kitsune Entities." class="p" />
+            </ui:VisualElement>
+            <ui:VisualElement name="EntityList" class="main--entity-list-container" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:Label class="status-bar" text="..." name="StatusBar" />
+    <ui:VisualElement class="row status-bar-popups">
+        <ui:VisualElement class="help-list" name="HelpList"  />
+        <ui:VisualElement class="server-list" name="ServerList"  />
+    </ui:VisualElement>
+</UXML>

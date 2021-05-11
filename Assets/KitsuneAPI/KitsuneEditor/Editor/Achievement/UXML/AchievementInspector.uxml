@@ -1,0 +1,14 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_description" name="Description" />
+    <ue:ObjectField binding-path="_precondition" allow-scene-objects="false" label="Precondition" tooltip="The achievement that must be completed
+before this achievement is available" name="Precondition" />
+    <ui:VisualElement name="ObjectiveContainer" class="row">
+        <ui:VisualElement name="ObjectiveType" />
+        <ue:PropertyField binding-path="_objectiveTarget" class="achievement-inspector--target-value" label="Target Value" name="ObjectiveTarget" />
+    </ui:VisualElement>
+    <ue:ObjectField binding-path="_reward" allow-scene-objects="false" label="Reward" tooltip="The reward that will be given to the player when this achievement is completed" name="Reward" />
+    <ui:VisualElement class="row">
+        <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+        <ui:VisualElement name="ReleaseVersionDropDownContainer" />
+    </ui:VisualElement>
+</UXML>

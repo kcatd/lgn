@@ -1,0 +1,16 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="UnityEngine.UIElements ">
+    <ue:PropertyField binding-path="_categoryId" name="Category" label="Category"/>
+    <ui:VisualElement name="CategoryDropDownContainer" class="item-inspector--category-dropdown"/>
+    <ue:PropertyField binding-path="_description" name="Description"/>
+    <ue:PropertyField binding-path="_currency" name="Currency"/>
+    <ue:PropertyField binding-path="_cost" name="Cost"/>
+    <ue:PropertyField binding-path="_consumable" name="Consumable"/>
+    <ue:PropertyField binding-path="_stackable" name="Stackable"/>
+    <ue:PropertyField binding-path="_tradeable" name="Tradeable"/>
+    <ue:PropertyField binding-path="_levelRequirement" name="LevelRequirement"/>
+    <ui:VisualElement class="row">
+        <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+        <ui:VisualElement name="ReleaseVersionDropDownContainer" />
+    </ui:VisualElement>
+</UXML>

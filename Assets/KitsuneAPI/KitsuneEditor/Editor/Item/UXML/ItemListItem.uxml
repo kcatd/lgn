@@ -1,0 +1,29 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="list-item--category">
+        <ui:TextElement binding-path="_categoryId" name="CategoryId" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--description">
+        <ui:TextElement binding-path="_description" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--currency">
+        <ui:TextElement binding-path="_currency" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--cost">
+        <ui:TextElement binding-path="_cost" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--consumable">
+        <ui:TextElement binding-path="_consumable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--stackable">
+        <ui:TextElement binding-path="_stackable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--tradeable">
+        <ui:TextElement binding-path="_tradeable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--level-requirement">
+        <ui:TextElement binding-path="_levelRequirement" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--release-version">
+        <ui:TextElement binding-path="_releaseVersion" />
+    </ui:VisualElement>
+</UXML>

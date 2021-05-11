@@ -1,0 +1,32 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row game-settings-header" name="Game Settings">
+        <ui:Label text="Game Settings" class="h2" />
+        <ui:Button class="game-settings-button" name="Settings">
+            <ui:Image class="game-settings-icon" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:TextElement binding-path="_title" name="Title" class="property-value game-title" />
+    <ui:VisualElement class="row">
+        <ui:Label text="GameId:" name="GameId" class="prefix-label" />
+        <ui:TextElement binding-path="_gameId" name="GameId" class="property-value game-id" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row">
+        <ui:VisualElement class="column">
+            <ui:VisualElement class="row">
+                <ui:Label text="Dev Version:" name="GameVersion" class="prefix-label" />
+                <ui:TextElement binding-path="_gameVersion" name="Version" class="property-value game-version" />
+            </ui:VisualElement>
+            <ui:VisualElement class="row">
+                <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+                <ui:TextElement binding-path="_releasedGameVersion" name="ReleaseVersion" class="property-value game-version" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="column">
+            <ui:Button class="versions-sync-button" name="Get the latest versions">
+                <ui:Image class="versions-sync-icon" />
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:TextElement text="API Key:" name="APIKey" class="prefix-label" />
+    <ui:TextField binding-path="_gameApiKey" readonly="true" multiline="true" name="Game API Key" class="property-value api-key" />
+</UXML>

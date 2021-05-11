@@ -1,0 +1,5 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="list-item--description">
+        <ui:TextElement text="Description" />
+    </ui:VisualElement>
+</UXML>

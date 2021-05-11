@@ -1,0 +1,11 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row game-settings-header" name="Game Settings">
+        <ui:Label text="Game Settings" class="h2" />
+    </ui:VisualElement>
+    <ue:PropertyField binding-path="_title" name="Title" class="property-field game-title" />
+    <ui:VisualElement class="row button-container">
+        <ui:Button class="mini-button" name="CreateGame">
+            <ui:Label text="Create Game" />
+        </ui:Button>
+    </ui:VisualElement>
+</UXML>

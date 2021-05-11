@@ -1,0 +1,11 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_companyName" name="Company" class="property-field company" />
+    <ue:PropertyField binding-path="_email" name="Email" class="property-field email" />
+    <ui:Label text="Password" name="Password" />
+    <ui:TextField binding-path="password" name="Password" password="true" mask-character="•" class="property-field password" />
+    <ui:VisualElement class="row button-container">
+        <ui:Button class="mini-button" name="Register">
+            <ui:Label text="Register" />
+        </ui:Button>
+    </ui:VisualElement>
+</UXML>

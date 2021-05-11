@@ -1,0 +1,11 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="list-item--description">
+        <ui:TextElement text="Description" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--precondition">
+        <ui:TextElement text="Precondition" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--objective">
+        <ui:TextElement text="Objective" />
+    </ui:VisualElement>
+</UXML>

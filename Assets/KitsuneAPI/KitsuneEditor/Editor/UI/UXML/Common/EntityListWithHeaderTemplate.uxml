@@ -1,0 +1,18 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row entity-list-header" name="EntityListHeader">
+        <ui:VisualElement class="column header-title-description">
+            <ui:TextElement text="" class="h1" name="ListTitle" />
+            <ui:TextElement text="" class="h3" name="ListDescription" />
+            <ui:VisualElement class="row dependency-requirements-container" name="DependenciesContainer">
+                <ui:Image name="WarnIcon" class="dependency-warn-icon" />
+                <ui:TextElement text="" class="h3 dependency-requirement" name="DependencyRequirements" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ue:ToolbarSearchField class="entity-search-field" />
+        <ui:Button class="add-entity-button" name="AddEntityButton" />
+    </ui:VisualElement>
+    <ui:VisualElement name="NewEntityInspector" class="new-entity-inspector" />
+    <ui:ScrollView name="EntityScrollList" class="entity-scroll-view">
+        <ui:VisualElement class="entity-list" />
+    </ui:ScrollView>
+</UXML>

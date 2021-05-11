@@ -1,0 +1,15 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_companyName" name="Company" class="property-field company" />
+    <ue:PropertyField binding-path="_email" name="Email" class="property-field email" />
+    <ui:VisualElement class="row button-container">
+        <ui:Button class="mini-button" name="Cancel">
+            <ui:Label text="Cancel" />
+        </ui:Button>
+        <ui:Button class="mini-button" name="Save">
+            <ui:Label text="Save" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:Button class="mini-button" name="New">
+        <ui:Label text="New" />
+    </ui:Button>
+</UXML>

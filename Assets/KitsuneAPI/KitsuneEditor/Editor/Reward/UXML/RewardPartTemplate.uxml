@@ -1,0 +1,10 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row reward-inspector--reward-part-container" name="RewardPartContainer">
+        <ue:ObjectField class="reward-inspector--reward-part-entity-field" name="RewardEntity" allow-scene-objects="false" />
+        <ui:VisualElement class="row reward-inspector--quantity-container">
+            <ui:Label class="prefix-label reward-inspector--quantity-prefix" text="Qty" name="QuantityLabel" />
+            <ue:IntegerField name="RewardQuantity" class="reward-inspector--quantity-input" />
+        </ui:VisualElement>
+        <ui:Button name="Remove" class="list-item--delete-button" />
+    </ui:VisualElement>
+</UXML>

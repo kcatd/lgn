@@ -1,0 +1,14 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row publisher-settings-header" name="Publisher Settings">
+        <ui:TextElement binding-path="_companyName" name="Company" class="property-value company" />
+        <ui:Button class="publisher-settings-button" name="Publisher Settings">
+            <ui:Image class="publisher-settings-icon" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:TextElement binding-path="_email" name="Email" class="property-field email" />
+    <ui:VisualElement class="row button-container">
+        <ui:Button class="mini-button" name="Logout">
+            <ui:Label text="Logout" />
+        </ui:Button>
+    </ui:VisualElement>
+</UXML>

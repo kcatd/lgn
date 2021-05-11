@@ -1,0 +1,20 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Publisher/EditPublisher.uxml" name="edit-template" />
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Publisher/AuthenticatedPublisher.uxml" name="authenticated-template" />
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Publisher/RegisteredPublisher.uxml" name="registered-template" />
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Publisher/UnregisteredPublisher.uxml" name="unregistered-template" />
+    <ui:VisualElement name="Publisher_Settings" class="publisher-settings">
+        <ui:VisualElement name="Unregistered">
+            <ui:Instance template="unregistered-template" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Registered">
+            <ui:Instance template="registered-template" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Authenticated">
+            <ui:Instance template="authenticated-template" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Edit">
+            <ui:Instance template="edit-template" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</UXML>

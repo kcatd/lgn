@@ -1,0 +1,21 @@
+<UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement class="entity-list-item-container">
+        <ui:VisualElement class="row entity-list-item">
+            <ui:VisualElement class="list-item--preview" name="Preview" />
+            <ui:VisualElement class="list-item--id">
+                <ui:TextElement binding-path="_id" />
+            </ui:VisualElement>
+            <ui:VisualElement class="list-item--name">
+                <ui:TextElement binding-path="_name" name="Name" />
+            </ui:VisualElement>
+            <ui:VisualElement name="EntityData"/>
+            <ui:VisualElement class="list-item--button-container">
+                <ui:Button class="list-item--button list-item--edit-button" name="Edit">
+                    <ui:Label text="Edit" />
+                </ui:Button>
+                <ui:Button class="list-item--delete-button" name="Delete" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="EditEntityInspector" />
+    </ui:VisualElement>
+</UXML>

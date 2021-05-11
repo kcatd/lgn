@@ -1,0 +1,2609 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KitsuneCore</name>
+    </assembly>
+    <members>
+        <member name="T:KitsuneCore.Broadcast.CallbackContainer`1">
+            <summary>
+            Callback containers are used to register and unregister <see cref="T:KitsuneCore.Broadcast.IServiceSubscriber"/>'s
+            to broadcast server messages
+            </summary>
+            <typeparam name="T">The type of IServiceSubscriber to broadcast to</typeparam>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.CallbackContainer`1.RegisterTarget(`0)">
+            <summary>
+            Register an <see cref="T:KitsuneCore.Broadcast.IServiceSubscriber"/> to receive callbacks
+            </summary>
+            <example>
+            <code>
+            public class ChatWindow : IChatSubscriber
+            {
+            	public ChatWindow()
+            	{
+            		Kitsune.Chat.RegisterTarget(this);
+            	}
+            }
+            </code>
+            </example>
+            <param name="target"></param>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.CallbackContainer`1.UnregisterTarget(`0)">
+            <summary>
+            Unregister an <see cref="T:KitsuneCore.Broadcast.IServiceSubscriber"/> from receiving callbacks
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.CallbackContainer`1.OnError(System.String)">
+            <summary>
+            Unsuccessful requests default to the OnError callback with an error message
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.CallbackContainer`1.Subscribe``1(``0)">
+             <summary>
+             Subscribe to a Kitsune service event.
+             </summary>
+             <example>
+             <code>
+             Kitsune.Chat.Subscribe&lt;ChatEvent.ROOM_CHAT_RECEIVED&gt;(OnRoomChatReceived);
+            
+             public void OnRoomChatReceived(ChatMessage chatMessage)
+             {
+            		...
+             }
+             </code>
+             </example>
+             <param name="handler"></param>
+             <typeparam name="T1">Service event delegate type. i.e. ChatEvent.ROOM_CHAT_RECEIVED</typeparam>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.CallbackContainer`1.Unsubscribe``1(``0)">
+            <summary>
+            Unsubscribe to a Kitsune service event.
+            </summary>
+            <example>
+            <code>
+            Kitsune.Chat.Unsubscribe&lt;ChatEvent.ROOM_CHAT_RECEIVED&gt;(OnRoomChatReceived);
+            </code>
+            </example>
+            <param name="handler"></param>
+            <typeparam name="T1">Service event delegate type. i.e. ChatEvent.ROOM_CHAT_RECEIVED</typeparam>
+        </member>
+        <member name="T:KitsuneCore.Broadcast.KitsuneEvent">
+             <summary>
+             Subscribe and Unsubscribe from Kitsune Service events.
+             </summary>
+             <remarks>IMPORTANT! Be careful not to subscribe using lambda expressions -- you won't be able to unsubscribe them.
+             If needed, an alternate solution is to use local functions (C# 7.0).
+             </remarks>
+             <example>
+             <code>KitsuneAPI.Kitsune.Developer.Subscribe&lt;DeveloperEvent.ON_ITEM_UPDATED&gt;(OnItemUpdated);
+             KitsuneAPI.Kitsune.Developer.ManageItem(item.Entity);
+            				
+             void OnItemUpdated(ItemEntity updatedEntity)
+             {
+             	// one time use code here
+             	KitsuneAPI.Kitsune.Developer.Unsubscribe&lt;DeveloperEvent.ON_ITEM_UPDATED&gt;(OnItemUpdated);
+             }
+            </code>
+             </example>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.KitsuneEvent.Subscribe``1(``0)">
+            <summary>
+            Subscribe to an event handler
+            </summary>
+            <param name="eventHandler"></param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:KitsuneCore.Broadcast.KitsuneEvent.Unsubscribe``1(``0)">
+            <summary>
+            Unsubscribe to an event handler
+            </summary>
+            <param name="eventHandler"></param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:KitsuneCore.Context.DeviceProfile">
+            TODO - need to add Android phones
+        </member>
+        <member name="T:KitsuneCore.Context.Platform">
+            Don't like this name
+            This class will store the current EPlatform and Device Profile
+        </member>
+        <member name="T:KitsuneCore.Context.Version">
+            <summary>
+            TODO Generated Class
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.DataTypes.IntId`1">
+            <summary>
+            Wrapper for integer id's so we are type safe
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:KitsuneCore.DataTypes.LongId`1">
+            <summary>
+            Wrapper for long id's so we are type safe
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:KitsuneCore.DataTypes.StringId`1">
+            <summary>
+            Wrapper for string id's so we are type safe
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="F:KitsuneCore.Developer.DeveloperSettings._gameSecretKey">
+            <value>
+            Used to provision game entities. This key is game specific.
+            </value>
+            <remarks>Set this to your secret key that is received after
+            creating a game. <see cref="!:GameAPIKey.SecretKey"/></remarks>
+        </member>
+        <member name="P:KitsuneCore.Developer.GameAPIKey.GameId">
+            <value>
+            GameId associated with this API key
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Developer.GameAPIKey._apiKeyId">
+            <value>
+            If 0, adds new API key. Else, updates existing key.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.GameAPIKey.PublicKey">
+            <value>
+            The API key String associated with the referenced GameId.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Developer.GameAPIKey._name">
+            <value>
+            A friendly name for the API key.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.GameAPIKey.Enabled">
+            <value>
+            True if enabled.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.GameAPIKey.Created">
+            <value>
+            When the API key was created.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.IDeveloperSettings.GameSecretKey">
+            <value>
+            Developer Secret Key used to provision game entities.
+            IMPORTANT! Do Not Publish This With Your Game!
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.IDeveloperSettings.Publisher">
+            <value>
+            Kitsune Registered Game Publisher for this game.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.DeveloperCore.DeveloperSettings">
+            <value>
+            Set the developer settings for game entity provisioning
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.KitsunePublisher.Name">
+            <value>
+            Publisher Name
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Developer.KitsunePublisher.Email">
+            <value>
+            Publisher contact email address
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Developer.WebRequests.DeveloperLoginWebRequest">
+            <summary>
+            Used to login as a developer or the "portal" (portal shouldn't be built in)
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Entity.Components.AchievementComponent">
+            <summary>
+            Represents an entity that awards an achievement
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Entity.Components.CurrencyTypeComponent.Type">
+            <summary>
+            Soft, Social, or Hard currency
+            </summary>
+            <see cref="T:KitsuneCore.Services.Monetization.VirtualCurrency.ECurrencyType"/>
+        </member>
+        <member name="T:KitsuneCore.Entity.Components.InventoryItemComponent">
+            <summary>
+            Added to ItemEntities that are player owned and are a unique instance of an item.
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Entity.Components.ProductComponent">
+            <summary>
+            Represents a product that can be purchased with real money
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Entity.KitsuneComponent">
+            <summary>
+            Class of data that can be added or removed from a KitsuneEntity
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneComponent.ComponentName">
+            <value>
+            Component name for debugging
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneComponent.ToJson">
+            <summary>
+            Converts the current component to a valid JSON object string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneComponent.Clone">
+            <summary>
+            Returns a clone of an this a <c>KitsuneComponent</c>.
+            </summary>
+            <returns><c>ItemEntity</c></returns>
+        </member>
+        <member name="T:KitsuneCore.Entity.KitsuneEntity">
+            <summary>
+            Represents a persistent data object stored in the Kitsune database.
+            </summary>
+            <remarks>KitsuneEntities consist of a <see cref="T:KitsuneCore.Entity.EntityId"/> a Name and <see cref="T:KitsuneCore.Entity.KitsuneComponent"/>'s.
+            KitsuneEntities are simply a container for data and shouldn't contain any game logic.</remarks>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.Id">
+            <value>
+            Every KitsuneEntity has a unique ID  
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.VersionId">
+            <value>
+            Every KitsuneEntity has a version ID  
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.ReleaseVersion">
+            <value>
+            The developer provided string version this entity will be released on  
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.GameId">
+            <value>
+            The <c>GameId</c> this entity belongs to
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.Name">
+            <value>
+            Every entity has a name for internal or display purposes
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.GameVersionId">
+            <value>
+            Returns the version of this entity or zero if not provisioned
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.HasCustomData">
+            <value>
+            True if this Entity contains custom data
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.CustomData">
+            <value>
+            Optional custom data serialized JSON string
+            </value>
+            <remarks>
+            Entities can contain multiple custom data types and are keyed by the custom data <see cref="T:KitsuneCore.Entity.EntityId"/>
+            </remarks>
+            <example>
+            <code>
+            {
+            	"20349": {
+            		"key1": "value1",
+            		"key2": "value2"
+            	},
+            	"13053": {
+            		"key1": "value1"
+            	}
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.GetCustomDataAs``1">
+            <value>
+            Returns a typed custom data object
+            </value>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:KitsuneCore.Entity.KitsuneEntity.Components">
+            <value>
+            Components attached to this entity. Components can be added or removed at run time.
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.AddComponent(KitsuneCore.Entity.IKitsuneComponent)">
+            <summary>
+            Add a component to this entity
+            </summary>
+            <param name="component"></param>
+            <returns>Returns this entity</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.UpdateComponent(KitsuneCore.Entity.IKitsuneComponent)">
+            <summary>
+            Removes and replaces the existing component
+            </summary>
+            <param name="component"></param>
+            <returns>Returns this entity</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.RemoveComponent(KitsuneCore.Entity.IKitsuneComponent)">
+            <summary>
+            Removes a component from this entity
+            </summary>
+            <param name="component"></param>
+            <returns>Returns this entity</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.HasComponent``1">
+            <summary>
+            Check whether a component exists in this entity
+            </summary>
+            <typeparam name="T">The type of IKitsuneComponent</typeparam>
+            <returns><c>true</c> if this entity contains the specified
+            component and <c>false</c> if not</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.HasComponent(System.Type)">
+            <summary>
+            Check whether a component exists in this entity
+            </summary>
+            <param name="type"><c>Type</c> of IKitsuneComponent</param>
+            <returns><c>true</c> if this entity contains the specified
+            component and <c>false</c> if not</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.GetComponent``1">
+            <summary>
+            Get component of type <c>T</c>
+            </summary>
+            <typeparam name="T">Type of IKitsuneComponent</typeparam>
+            <returns>Component of type <c>T</c> if it exists</returns>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.Mk(KitsuneCommon.Net.Messages.MessageBody)">
+            <summary>
+            Parse and create a strongly typed data object from a <see cref="T:KitsuneCommon.Net.Messages.MessageBody"/>
+            that is specific for it's intent.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:KitsuneCore.Entity.KitsuneEntity.Mk(System.String)">
+            <summary>
+            Optional creation method from JSON data
+            </summary>
+            <param name="json"></param>
+        </member>
+        <member name="P:KitsuneCore.Game.GameLevelXpData.MaxLevel">
+            <value>
+            Max level for this game
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameLevelXpData.AutoScale">
+            <value>
+            Max level for this game
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameLevelXpData.LevelXpJson">
+            <value>
+            For explicitly setting each level
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameLevelXpData.StartingXp">
+            <value>
+            For auto scaling levels
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameLevelXpData.LevelCoefficient">
+            <value>
+            For auto scaling levels
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.Title">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.Title"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.GameId">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.GameId"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.GameVersion">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.GameVersion"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.ReleasedGameVersionId">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.ReleasedGameVersionId"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.ReleasedVersion">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.ReleasedVersion"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.GameApiKey">
+            <value>
+            <inheritdoc cref="!:IGameSettings.GameGameApiKey"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.GameSettings.ServerSettings">
+            <value>
+            <inheritdoc cref="P:KitsuneCore.Game.IGameSettings.ServerSettings"/>
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Game.GameVersion.GameId">
+            <value>
+            GameId
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Game.GameVersion.GameVersionId">
+            <value>
+            If 0, adds a new version. Else, updates existing version.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Game.GameVersion.Version">
+            <value>
+            Publisher provided version string.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Game.GameVersion._updateRequired">
+            <value>
+            Whether or not an update is required
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.Title">
+            <value>
+            Game Name
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.GameId">
+            <value>
+            Kitsune GameId
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.GameVersion">
+            <value>
+            Game version. Used to identify builds and can be used for match making and
+            game items/currencies associated with a specific game version.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.ReleasedGameVersionId">
+            <value>
+            The current game version id that has been release.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.ReleasedVersion">
+            <value>
+            The current string version of the game that has been released.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.GameApiKey">
+            <summary>
+            Kitsune Developer API Key
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Game.IGameSettings.ServerSettings">
+            <value>
+            Kitsune Server To Use (i.e production, staging, dev, etc)
+            </value>
+        </member>
+        <member name="T:KitsuneCore.KitsuneFacade">
+            <summary>
+            Kitsune is a cross-platform service SDK that connects to Kitsune servers
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.GameSettings">
+            <value>
+            Helper accessor for the current <see cref="P:KitsuneCore.KitsuneFacade.GameSettings"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.DeveloperSettings">
+            <value>
+            Helper accessor for the current <see cref="P:KitsuneCore.KitsuneFacade.DeveloperSettings"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.Authenticated">
+            <value>
+            The client has been authenticated and has a valid <c>SessionId</c>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.Connected">
+            <value>
+            The client has been authenticated and has connected to the Kitsune game server
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.CurrentPlayer">
+            <value>
+            Helper accessor for the current <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.MyPlayerId">
+            <value>
+            Helper accessor for the current client's PlayerId
+            </value>
+        </member>
+        <member name="F:KitsuneCore.KitsuneFacade.ServerDateTimeOffset">
+            <value>
+            DateTime offset between the client and server from utc 1970 in milliseconds
+            </value>
+        </member>
+        <member name="P:KitsuneCore.KitsuneFacade.ServerTime">
+            <summary>
+            DateTime on the server
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.RegisterServiceSubscriber``1(``0)">
+            <summary>
+            Registers a Kitsune service to subscribe to events
+            </summary>
+            <param name="serviceSubscriber"></param>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetAchievements">
+            
+             ACHIEVEMENTS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.TrackEvent(KitsuneCore.Services.Analytics.TrackingEvent)">
+            
+             ANALYTICS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.LoginWithHashedPassword(System.String,System.String)">
+            
+             AUTHENTICATION
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.SendRoomChat(System.String)">
+            
+             CHAT
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetCustomData(KitsuneCore.Entity.EntityId)">
+            
+             CUSTOM DATA
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.CreateGameSession">
+            
+             GAME SESSIONS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.SetDeveloperSettings(KitsuneCore.Developer.IDeveloperSettings)">
+            
+             DEVELOPER
+            
+            <summary>
+            Set the developer settings 
+            </summary>
+            <param name="developerSettings"></param>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.SetGameSettings(KitsuneCore.Game.IGameSettings)">
+            <summary>
+            Manually set the game settings 
+            </summary>
+            <param name="gameSettings"></param>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.FriendRequest(KitsuneCore.Services.Players.PlayerId,System.String,System.String)">
+            
+             FRIENDS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetAvailableGifts">
+            
+             GIFTS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetPlayerInbox(System.Int32,System.Int32,KitsuneCore.Services.InboxMessaging.EInboxMessageType,System.Int32)">
+            
+             INBOX
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetGameItems">
+            
+             INVENTORY
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.UpdateLeaderboard(System.Int64,System.Boolean)">
+            
+             LEADERBOARD
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.GetProducts">
+            
+             MATCHMAKING
+            
+            
+             MONETIZATION
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.JoinRandomRoom">
+            
+             PLACES
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.CreatePlayer(System.String,System.String,System.String,System.String)">
+            
+             PLAYERS
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.ProcessQueuedMessages">
+            
+             QUESTS
+            
+            
+             REWARDS - SEE MONETIZATION
+            
+            
+             TOURNAMENTS
+            
+            
+             NETWORKING
+            
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.SetWebRequestAction(System.Action{System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.Object},KitsuneCore.WebServer.EUrlRequestMethod,System.Action{System.String},System.Action{System.String}})">
+            <summary>
+            WebRequest Handler
+            Action:
+            	- Servlet URL
+            	- Query Params (k=>v)
+            	- Post Data (k=>v)
+            	- Request Method (GET, POST, POST_QUERY) <see cref="T:KitsuneCore.WebServer.EUrlRequestMethod"/>
+            	- Response Callback
+            	  Action:
+            		- Response string
+            </summary>
+            <param name="requestHandler"></param>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.SetJSONParseAction(System.Action{System.String,System.Object,System.String,System.Action{System.Object}})">
+            
+             JSON HANDLING
+            
+            <summary>
+            Set an external JSON Parsing Handler such as JsonUtility.FromJson() in Unity
+            Action:
+            	- Object to populate
+            	- JSON string
+            	- Parsed callback 
+            	  Action:
+            		- Populated object
+            </summary>
+            <param name="JSONParseHandler"></param>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.UseWebSockets(KitsuneCore.Net.LowLevel.SocketConnection.IKitsuneWebSocket,KitsuneCore.Net.LowLevel.SocketConnection.IKitsuneWebSocket)">
+            <summary>
+            Used for Unity WebGL Only.
+            </summary>
+            <param name="infoSocket"></param>
+            <param name="townSocket"></param>
+        </member>
+        <member name="M:KitsuneCore.KitsuneFacade.InitServiceForSubscriber(KitsuneCore.Broadcast.IServiceSubscriber)">
+            <summary>
+            Lazily instantiate core services as needed
+            </summary>
+            <param name="subscriber"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="F:KitsuneCore.Net.EServerRequestType.FireAndForget">
+            <summary>
+            Sends a message with no expected response from the server
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Net.EServerRequestType.FireAndRemember">
+            <summary>
+            Sends a message expecting a response from the server
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Net.LowLevel.MessageHandlers.BaseMessageHandler.CreateMessage(KitsuneCommon.Net.Messages.MessageTag,System.Int16)">
+            <summary>
+            Create a new message
+            </summary>
+            <param name="messageTag"></param>
+            <param name="sender"><see cref="T:KitsuneCommon.Net.Messages.MessageSource"/></param>
+            <returns></returns>
+        </member>
+        <member name="T:KitsuneCore.Net.LowLevel.MessageHandlers.MessageHandler.OnConnectionAcceptedDelegate">
+            <summary>
+            This is if the server "accepts" the connection, not if the <see cref="T:KitsuneCore.Net.LowLevel.SocketConnection.KitsuneTCPSocket"/> connects
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:KitsuneCore.Net.LowLevel.ServerDescription.Mk(KitsuneCore.Net.ServerId,KitsuneCommon.Net.Messages.MessageBody)">
+            kTagServer				Int			If > 0, ID of server to join, which means need to disconnect completely and reconnect.
+            // Rest only present if kTagServer > 0
+            kDBServerID				Int				Which game server to move to
+            kDBPort					Int				Which port to connect to (for this new game server)
+            kDBHost					String			Which host name to connect to
+            kDBServerAssignment		Child			Two of these (one will have kDBSecure=true, one kDBSecure=false)
+            	kDBSecure				Boolean			True if this is for a secure web socket
+            	kDBTotal				String			Full connection string for web socket (e.g. ws://game2.vegasworld.com:7311/websocket)
+            	kDBHost					String			Host + url (e.g. game2.vegasworld.com/websocket)
+            	kDBPort					Int				Port number (e.g. 7311)
+        </member>
+        <member name="T:KitsuneCore.Net.LowLevel.ServerMessages.MessageQueue`1">
+            <summary>
+            A FIFO queue with the ability to remove an element from the queue
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:KitsuneCore.Net.LowLevel.ServerRequests.RoomRequest.RoomId">
+            <value>
+            This is the room id we are trying to join
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Net.LowLevel.ServerRequests.RoomRequest.RoomName">
+            <value>
+            This is the room name we are trying to join
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Net.LowLevel.ServerRequests.RoomRequest._joinGameConfig">
+            <summary>
+            Internal config for Kitsune Game Server
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Net.LowLevel.SocketConnection.KitsuneWebSocket.PollConnected">
+            <summary>
+            This checks the current state of the real socket
+            We only use this internally
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Net.LowLevel.SocketConnection.KitsuneWebSocket.Connected">
+            <summary>
+            We cache the state of the socket and use that for Connected queries
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Net.LowLevel.SocketConnection.KitsuneWebSocket._socket">
+            <summary>
+            A native socket implementation
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Net.LowLevel.SocketConnection.KitsuneWebSocket.OnConnected">
+            WebSocket Callbacks *
+        </member>
+        <member name="T:KitsuneCore.Net.EServerErrorValues">
+            What is the purpose of this class??? We have server KserverError
+        </member>
+        <member name="T:KitsuneCore.Server.ServerSettings">
+            <summary>
+            Kitsune server settings. Defaults to local server settings.
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._name">
+            <summary>
+            Name of the Kistune server environment (i.e. localhost, qatest, playtest, live)
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._gameServerUrl">
+            <summary>
+            Url for this server environment
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._webServerUrl">
+            <summary>
+            Url for this server environment
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._webServerPort">
+            <summary>
+            Port for web server requests
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._kitsuneServerPort">
+            <summary>
+            Socket port for server requests
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Server.ServerSettings._gameServerPort">
+            <summary>
+            Stub for socket port of future Kitsune game server (Not implemented)
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Achievements.AchievementEntity">
+            <summary>
+            Base representation of a Kitsune Achievement
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.Description">
+            <value>
+            Achievement Description
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.PercentComplete">
+            <value>
+            Percent complete until achievement is gained
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.Completed">
+            <value>
+            If the achievement is completed or not
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.RewardId">
+            <value>
+            The reward entity IDs to be given to the player once the achievement is completed. <see cref="T:KitsuneCore.Services.Monetization.Rewards.RewardEntity"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.Preconditions">
+            <value>
+            0 if no precondition. Else, the achievement’s entity ID that must be completed
+            before this achievement is available
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.ObjectiveType">
+            <value>
+            The type of achievement objective: Score, Level, Game Stat, Custom
+            </value>
+            <remarks>
+            Score		The player must reach a target score
+            Level		The player must reach a certain level
+            Game Stat	The player must satisfy certain game stats
+            Custom		The game determines the achievement logic itself
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.ObjectiveTarget">
+            <value>
+            The target value for for the Objective Type
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Achievements.AchievementEntity.GameVersionId">
+            <value>
+            The game version that the Achievement will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="M:KitsuneCore.Services.Achievements.AchievementsCore.OnGetAllAchievements(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Achievements.AchievementsCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.AuthenticationCore">
+            <summary>
+            This authenticates the game with the Kitsune servers.
+            It also handles user authentication and creation.
+            <remarks>
+            </remarks>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.GameSettings">
+            <value>
+            GameSettings for this game
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.GameId">
+            <value>
+            Game Id for the current client
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.GameApiKey">
+            <value>
+            Api Key for the current client
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.GuestData">
+            <value>
+            Persistent guest data consisting of their <see cref="P:KitsuneCore.Services.Authentication.AuthenticationCore.MachineId"/> and <see cref="P:KitsuneCore.Services.Authentication.AuthenticationCore.PlayerId"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.MachineId">
+            <value>
+            Used to track the current device.
+            Current implementation is only used in tracking guest creation and login.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.KitsuneUserId">
+            <value>
+            Stored KitsuneUserId for this session
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.PlayerId">
+            <value>
+            Stored PlayerId for this session
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Authentication.AuthenticationCore.SessionId">
+            <value>
+            Session id for the current authenticated session
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Authentication.AuthenticationCore.Login(System.Boolean,System.String)">
+            <summary>
+            Login as a "guest"
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Authentication.AuthenticationCore.OnSignedIn(KitsuneCore.Services.Authentication.WebRequests.GameLoginWebResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Authentication.AuthenticationCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+            
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.EAuthenticationPlatform">
+            <summary>
+            Optional Authentication types
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Default">
+            <summary>Default.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Xbox">
+            <summary>Authenticates users by their Xbox Account and XSTS token.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.PlayStation">
+            <summary>Authenticates users by their PSN Account and token.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Steam">
+            <summary>Authenticates users by their Steam Account. Set auth values accordingly.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Facebook">
+            <summary>Authenticates users by their Facebook Account. Set auth values accordingly.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Viveport">
+            <summary>Authenticates users by their Vive Account. Set auth values accordingly.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Oculus">
+            <summary>Authenticates users by their Oculus Account and token.</summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Authentication.EAuthenticationPlatform.Custom">
+            <summary>Use a custom authentification service. i.e. Apple Game Center</summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.GuestData">
+            <summary>
+            Used to identify guests 'Users' using a combination of their machine id and player id
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.MachineId">
+            <summary>
+            Unique machine id of the client
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.SessionId">
+            <summary>
+            Session id provided after authentication. Required to connect to the game server
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.WebRequests.GameLoginWebRequest">
+            <summary>
+            Used to login to individual games
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Authentication.WebRequests.GameLoginWebRequest.#ctor">
+            <summary>
+            Login a registered user
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Authentication.WebRequests.GameLoginWebRequest.#ctor(KitsuneCore.Services.Players.PlayerId,KitsuneCore.Services.Authentication.MachineId)">
+            <summary>
+            Login as a guest using the server provided machine id
+            </summary>
+            <param name="machineId"></param>
+        </member>
+        <member name="T:KitsuneCore.Services.Authentication.WebRequests.ServerQueryWebRequest">
+            <summary>
+            Query the Kitsune server for the correct server info
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Chat.ChatCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            CALLBACKS
+            BROADCAST
+        </member>
+        <member name="P:KitsuneCore.Services.Chat.ChatMessage.ChatChannel">
+            <value>
+            The channel the message is in for chat logging only <see cref="T:KitsuneCore.Services.Chat.EChatChannel"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Chat.ChatMessage.FromPlayer">
+            <value>
+            The player the message is from
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Chat.ChatMessage.ToPlayer">
+            <value>
+            The player the message is to (optional)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Chat.ChatMessage.Text">
+            <value>
+            The chat message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Chat.ChatMessage.Category">
+            <value>
+            Normal, Phishing, or Hacking <see cref="T:KitsuneCore.Services.Chat.EChatCategory"/>
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Chat.ChatMessage.Mk">
+            kTagUser				Int				Who this is from
+            kTagToPlayer			Int				who this is to
+            kTagText				String			The chat content
+            kTagCategory            Int             0 if normal chat, > 0 if triggered some type of phishing filter: 5 = password, 7 = hacking
+        </member>
+        <member name="P:KitsuneCore.Services.CustomData.CustomDataEntity.ParentId">
+            <value>
+            The parent entity id this custom data belongs to or EntityId.NoValue if it does not have a parent.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.CustomData.CustomDataEntity.SerializedData">
+            <value>
+            The stringified JSON data 
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.CustomData.CustomDataEntity.DeserializeObject``1">
+            <summary>
+            Returns the populated custom data type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.Friend.PlayerId">
+            <value>
+            PlayerId of friend
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.Friend.Name">
+            <value>
+            Name of friend
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.Friend.FriendStatus">
+            <summary>
+            The current status of the requested friend
+            </summary>
+            <remarks>
+            Unknown, Self, None, Friend, Requested, Denied <see cref="T:KitsuneCore.Services.Friends.EFriendStatus"/>
+            </remarks>
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.Friend.Mk">
+            kTagUser or kDBFriendId				Int				PlayerId of friend
+            kDBName or kTagName					String			Name of friend				
+            kDBFriends							Child			(optional) present if current player and PlayerId are friends
+            kDBFriendRequest					Child			(optional) present if a friend request has been made and not accepted
+            	kDBStatus							String		if "x" then the friend request has been denied
+        </member>
+        <member name="T:KitsuneCore.Services.Friends.FriendGroup">
+            <summary>
+            Represents a grouping of <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>'s
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroup.GroupOwner">
+            <value>
+            The <see cref="T:KitsuneCore.Services.Players.PlayerId"/> of the player who created the group
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroup.Members">
+            <value>
+            The list of players who are currently in the group
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.FriendGroup.Mk">
+            kTagGroup					Child
+            	kTagUser					Int			User ID of player in the group
+            	kTagLeader					Boolean		True if this player is a group leader (others will have the chance to follow if they change rooms)
+        </member>
+        <member name="T:KitsuneCore.Services.Friends.FriendOnlineStatus">
+            <summary>
+            Represents the online status of a <see cref="T:KitsuneCore.Services.Friends.Friend"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendOnlineStatus.PlayerId">
+            <value>
+            Which friend
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendOnlineStatus.IsOnline">
+            <value>
+            True if coming online, false if going offline
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendOnlineStatus.IsNew">
+            <value>
+            True if the player is newly online (didn't just switch servers)
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.FriendOnlineStatus.Mk">
+            kTagUser				Int			Which player
+            kTagStatus				Boolean		True if coming online, false if going offline
+            kDBNew					Boolean		True if player is newly online (didn't just switch servers etc.)
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.FriendsCore.OnFindFriend(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="T:KitsuneCore.Services.Friends.FriendGroupInvite">
+            <summary>
+            Represents an invitation to a group of players
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInvite.GroupOwner">
+            <value>
+            PlayerId of the group owner. Used to locate the joining player to their location.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInvite.Recipient">
+            <value>
+            PlayerId of the invited player
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInvite.RoomId">
+            <value>
+            RoomId of where the Recipient will be relocated to
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInvite.Place">
+            <value>
+            Place URL
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.FriendGroupInvite.Mk">
+            kTagUser					Int			User ID of player who sent the invitation to join a group
+            kTagPlace					String		(Deprecated) Place folder where the user sending the invitation is currently (e.g. arcadia-starlight-lounge) 
+            kDBRoom						Int			Room id where the player sending the invitation is currently 
+            kTagOwner					Int			Owner (user id) of the place -- used for condos to specify which condo (0 if no owner)
+            kTagDetails					Child		Optional:  Custom information for joining a specific type of room (e.g. category of video to watch in Sideshow)
+        </member>
+        <member name="T:KitsuneCore.Services.Friends.FriendGroupInviteReply">
+            <summary>
+            Represents a reply to a <see cref="T:KitsuneCore.Services.Friends.FriendGroupInvite"/>. This is sent to the invite sender and recipient
+            after a reply has been made.
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.Sender">
+            <value>
+            PlayerId of the player sending the group invite
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.Recipient">
+            <value>
+            PlayerId of the player receiving the group invite
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.Accepted">
+            <value>
+            Recipient accepted invite or declined
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.CanJoin">
+            <value>
+            If the Recipient is able to join or not
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.RoomId">
+            <value>
+            The RoomId where the Sender is currently located
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.GroupOwner">
+            <value>
+             The PlayerId of the group owner
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Friends.FriendGroupInviteReply.RequiredToSwitchRooms">
+            <value>
+            Returns true if the Recipient will be force to change rooms
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Friends.FriendGroupInviteReply.Mk">
+            kTagUser					Int			User ID of player who sent the invitation to join a group
+            kTagPlayer					int			User ID of player who received the invitation
+            kTagJoin					Boolean		Yes or No to invitation.  If no, rest of fields invalid (player said no to request, so we're done)
+            kDBRoom						Int			Room id of where the group owner currently is
+            kTagOwner					Int			Owner (user id) of the place -- used for condos to specify which condo (0 if no owner)
+            kTagStatus					Boolean		False if could not join the group.  True if either joined now or will join after you move to the same room (see kTagNew for more).
+            kTagNew						Boolean		If true, need to move to new room.  If false, no need to do anything--joining group here.			
+        </member>
+        <member name="M:KitsuneCore.Services.GameServer.GameServerCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.InboxMessaging.Inbox">
+            <summary>
+            A representation of a <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>'s messages for a given <see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.Inbox.InboxType">
+            <value>
+            Inbox type <see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.Inbox.TotalMessages">
+            <value>
+            Total messages in this InboxType
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.Inbox.TotalUnread">
+            <value>
+            Total unread messages in the InboxType
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.Inbox.Messages">
+            <value>
+            All inbox messages in this Inbox
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.Inbox.Mk">
+            kTagType 				Child			One per class of message this user has (NOTE: If a user doesn't have any of a particular message class the child won't be present)
+            	kDBMessageClass			Int				kGeneral(0), kFriendRequest(1),	kNotification(2)
+            	kTagTotal				Int				Total number of inbox messages for this user
+            	kTagUnread				Int				Total number of unread comments for this user
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.InboxEvent.OnMessagesRecieved(System.Collections.Generic.List{KitsuneCore.Services.InboxMessaging.InboxMessageEntity})">
+            <summary>
+             TODO - this needs support
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="T:KitsuneCore.Services.InboxMessaging.InboxMessageEntity">
+            <summary>
+            Base representation of an InboxMessage
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Type">
+            <value>
+            Type of InboxMessage <see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Subject">
+            <value>
+            Subject of this message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Body">
+            <value>
+            Body of this message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.SenderName">
+            <value>
+            Sender player name
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.SenderPlayerId">
+            <value>
+            PlayerId of sender
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Date">
+            <value>
+            Date the message was sent
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.RepliedTo">
+            <value>
+            Flag if recipient replied to the message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Read">
+            <value>
+            Flag if the recipient read the message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Starred">
+            <value>
+            Flag if the recipient 'starred' the message
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.SystemMessage">
+            <value>
+            Flag if this message was sent from a user or is a system message
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.InboxMessageEntity.Mk(KitsuneCommon.Net.Messages.MessageBody)">
+            <inheritdoc/>
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.InboxMessagingCore.OnGetPlayerInbox(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.InboxMessagingCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.InboxMessaging.PlayerInbox">
+            <summary>
+            The PlayerInbox stores all the different <see cref="T:KitsuneCore.Services.InboxMessaging.Inbox"/> types for a given <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.PlayerInbox.TotalMessages">
+            <summary>
+            Total message count for a specific player, inclusive of ALL message types
+            <see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.PlayerInbox.TotalUnread">
+            <summary>
+            Total messages the player has not read across all message types
+            <see cref="T:KitsuneCore.Services.InboxMessaging.EInboxMessageType"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.InboxMessaging.PlayerInbox.Inboxes">
+            <summary>
+            All the inboxes for a specific player
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.InboxMessaging.PlayerInbox.Mk">
+            kTagMessageInbox						Response: The inbox messages
+            kTagTotal				Int				Total number of inbox messages for this user
+            kTagUnread				Int				Total number of unread messages for this user
+            kTagType 				Child			One per class of message this user has (NOTE: If a user doesn't have any of a particular message class the child won't be present)
+            		kDBMessageClass			Int				kGeneral(0), kFriendRequest(1),	kNotification(2)
+            		kTagTotal				Int				Total number of inbox messages for this user
+            		kTagUnread				Int				Total number of unread comments for this user
+            dbEmails					Child			For each message (ordered by date, newest first)
+            	Fields: Currently email_id, (from character) name, thumbnail_url, subject, message, from_user_id, read_email, save, message_class
+        </member>
+        <member name="M:KitsuneCore.Services.Inventory.InventoryCore.OnBuyGameItem(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Inventory.InventoryCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.Inventory.InventoryItemId">
+            <summary>
+            A unique instance id to an item in a players inventory
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Inventory.ItemEntity">
+            <summary>
+            Base representation of an Item 
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.CategoryId">
+            <value>
+            Item category this item belongs to
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Description">
+            <value>
+            Description of this item
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.CurrencyId">
+            <value>
+            CurrencyId of the currency that is used to purchase this item
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Cost">
+            <value>
+            How much of the specified currency it requires to purchase this item 
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Consumable">
+            <value>
+            Is this item consumable or is it a persistent item
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Tradeable">
+            <value>
+            True if this item can be traded with other players 
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Stackable">
+            <value>
+            Is this item stackable
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.LevelRequirement">
+            <value>
+            The GamePlayer level required to use this item
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.GameVersionId">
+            <value>
+            The game version that the Item will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Version">
+            <value>
+            The developer provided version that the Item will be released on.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.InventoryItemId">
+            <value>
+            The player owned instance id of this item.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.OwnerId">
+            <value>
+            Owner of this item.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Quantity">
+            <value>
+            How many of this item does the player have.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.GiftedById">
+            <value>
+            The <c>PlayerId</c> of the player who gifted this item. 0 if not a gift.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Status">
+            <value>
+            Optional status description of this item. e.g. "equipped, cursed" or "recharging", etc.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.Equipped">
+            <value>
+            If this is an inventory item, whether or not the player has it equipped
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Inventory.ItemEntity.IsInventoryItem">
+            <value>
+            Returns true if this is a unique inventory belonging to a players inventory
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Inventory.ItemEntity.Clone">
+            <summary>
+            Returns a clone of an ItemEntity definition.
+            </summary>
+            <remarks>Cannot be used if the item is an InventoryItem</remarks>
+            <returns><c>ItemEntity</c></returns>
+        </member>
+        <member name="T:KitsuneCore.Services.Leaderboard.ELeaderboardPlayerFilter">
+            <summary>
+            TODO - Filter for leaderboard requests to get Global players or Friends only
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Leaderboard.ELeaderboardTimeSpan">
+            <summary>
+            TODO
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Leaderboard.LeaderboardData">
+            <summary>
+            Represents a leaderboard with players within a range of start and end rank (inclusive)
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardData.StartRank">
+            <value>
+            Start Rank of this leaderboard request
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardData.EndRank">
+            <value>
+            End Rank of this leaderboard request
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardData.Players">
+            <value>
+            List of players included in this Leaderboard data <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer"/>
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Leaderboard.LeaderboardEntity">
+            <summary>
+            TODO
+            Base representation of a Leaderboard 
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardEntity.Description">
+            <value>
+            Description for this leaderboard
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardEntity.League">
+            <value>
+            The league this leaderboard represents <see cref="T:KitsuneCore.Services.Players.EPlayerLeague"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardEntity.Players">
+            <value>
+            List of <see cref="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer"/>'s contained in this leaderboard
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardEntity.CurrencyId">
+            <value>
+            The CurrencyId that this leaderboard is based on to rank players
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardEntity.GameVersionId">
+            <value>
+            The game version that the Leaderboard will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="M:KitsuneCore.Services.Leaderboard.LeaderboardCore.OnGetLeaderboard(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Leaderboard.LeaderboardCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.Leaderboard.LeaderboardPlayer">
+            <summary>
+            Represents a player in a leaderboard
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardPlayer.PlayerId">
+            <summary>
+            PlayerId of this player
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardPlayer.Rank">
+            <summary>
+            The current position in the current leaderboard
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Leaderboard.LeaderboardPlayer.Value">
+            <summary>
+            The players score in the current leaderboard
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Leaderboard.LeaderboardPlayer.Mk">
+            kDBUserID			Integer			The player's user id
+            kTagScore			Int				Score
+            kDBRank				Int				Rank in the leaderboard (1 = first place)
+        </member>
+        <member name="M:KitsuneCore.Services.Monetization.Gifting.GiftingCore.OnGetAvailableGifts(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            
+            CALLBACKS
+            
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Gifting.KitsuneGift">
+            <summary>
+            A gifted entity sent by another player
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.GiftId">
+            <value>
+            The id of this gift
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.Created">
+            <value>
+            The date and time this gift was sent
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.RecipientId">
+            <value>
+            The player id of the recipient
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.GiverId">
+            <value>
+            The player id of the giver
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.GiverName">
+            <value>
+            The name of the player who sent the gift
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.GiftedEntityId">
+            <value>
+            The <see cref="T:KitsuneCore.Entity.EntityId"/> of the gift sent
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.EntityType">
+            <value>
+            The type of gift sent. <see cref="T:KitsuneCore.Entity.EEntityType"/>
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Gifting.KitsuneGift.Status">
+            <value>
+            Whether or not the gift has been claimed.
+            </value>
+            <remarks>
+            Possible values are <see cref="F:KitsuneCore.Services.Monetization.Gifting.EGiftStatus.PickedUp"/> and <see cref="F:KitsuneCore.Services.Monetization.Gifting.EGiftStatus.NotPickedUp"/>
+            </remarks>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Gifting.GiftEvent.ON_GIFTS_RECEIVED">
+            <summary>
+            Dispatched to all subscribers when the server sends a gifts received event.
+            </summary>
+            <param name="gifts"></param>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore.KITSUNE_PRODUCT">
+            <value>
+            The product that is being purchased. We only process one purchase at a time.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore._recipientId">
+            <value>
+            The recipient of the purchased product
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore._paymentData">
+            <value>
+            The payment information for the current purchase.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore._requestedProductId">
+            <summary>
+            Null unless GetProduct() has been called and the requested <see cref="T:KitsuneCore.Services.Monetization.Products.ProductEntity"/> is not cached
+            </summary>
+            <remarks>If the product is not cached, a web request to get products will be made.
+            If the product does not exist in the server response it will trigger an OnError call</remarks>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore._requestedRewardId">
+            <summary>
+            Null unless GetReward() has been called and the requested <see cref="T:KitsuneCore.Services.Monetization.Rewards.RewardEntity"/> is not cached
+            </summary>
+            <remarks>If the reward is not cached, a server request to get rewards will be made.
+            If the reward does not exist in the server response it will trigger an OnError call</remarks>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.MonetizationCore._requestedCurrencyId">
+            <summary>
+            Null unless GetCurrency() has been called and the requested <see cref="T:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity"/> is not cached
+            </summary>
+            <remarks>If the currency is not cached, a server request to get currencies will be made.
+            If the currency does not exist in the server response it will trigger an OnError call</remarks>
+        </member>
+        <member name="M:KitsuneCore.Services.Monetization.MonetizationCore.ClearPaymentError">
+            <summary>
+            On a payment error, let the payment service know that the error was handled
+            and is ready for a new transaction.
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Monetization.MonetizationCore.Checkout(KitsuneCore.Services.Monetization.Products.ProductEntity,KitsuneCore.Services.Monetization.Payments.PaymentData,KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Initiate Checkout
+            </summary>
+            <param name="kitsuneProduct"></param>
+            <param name="paymentData"></param>
+            <param name="recipientPlayerId"></param>
+            <returns>Returns false if checkout is not initiated</returns>
+        </member>
+        <member name="M:KitsuneCore.Services.Monetization.MonetizationCore.OnGetProducts(KitsuneCommon.Net.ServerRequests.ServerResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Monetization.MonetizationCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Payments.CountryData">
+            <summary>
+            Representation of payment country data
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Payments.EPaymentStatus">
+            <summary>
+            The current payment status of the PaymentCenter
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.EPaymentStatus.None">
+            <summary>
+            A new payment can be initiated
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.EPaymentStatus.PaymentInitiated">
+            <summary>
+            Payment has been initiated
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.EPaymentStatus.PaymentProcessing">
+            <summary>
+            Payement is processing
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.EPaymentStatus.PaymentError">
+            <summary>
+            Error processing payment
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.EPaymentStatus.PaymentComplete">
+            <summary>
+            Payment completed
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.PaymentType">
+            <value>
+            Payment type <see cref="T:KitsuneCore.Services.Monetization.Payments.EPaymentId"/>
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.IsQuickBuy">
+            <value>
+            Is the users CC info stored
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.Name">
+            <value>
+            Billing Name
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.Email">
+            <value>
+            Billing Email
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.Address1">
+            <value>
+            Billing Address
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.Address2">
+            <value>
+            Billing Address 2 (optional)
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.City">
+            <value>
+            Billing City
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.StateProvince">
+            <value>
+            Billing State or Province
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.ZipCode">
+            <value>
+            Billing Zip Code
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.CountryData">
+            <value>
+            Billing Country Code
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.CreditCardExpirationYY">
+            <value>
+            CC Expiration Year in YY format
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.Payments.PaymentData.CreditCardExpirationMM">
+            <value>
+            CC Expiration Monthin in MM format
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Payments.WebRequests.InitiatePaymentResponse">
+            <summary>
+            Retrieves the basic info of the appending purchase.
+            Responds with the order id, merchant order id, the checkout method, and status
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Payments.WebRequests.SubmitPaymentWebResponse">
+            <summary>
+            Returns with a success or error.
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Products.ProductEntity">
+            <summary>
+            Base representation of an in-game purchasable product
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.Description">
+            <value>
+            Description of this product
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.BillingDescription">
+            <value>
+            Billing description of the product, that may appear in checkout
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.Price">
+            <value>
+            The real money cost to purchase in cents
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.DisplayPrice">
+            <value>
+            The price in US dollars as a string
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.RewardId">
+            <value>
+            The <see cref="T:KitsuneCore.Entity.EntityId"/> of the item, currency, or membership the player will receive
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.AppStoreSKUs">
+            <value>
+            The list of App store SKU's for this product. This must match one-for-one with PaymentTypes
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.GameVersionId">
+            <value>
+            The game version id the product will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Products.ProductEntity.GameVersion">
+            <value>
+            The game version string.
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.Rewards.RewardEntity">
+            <summary>
+            Base representation of a Reward
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Rewards.RewardEntity.Description">
+            <value>
+            Description of the reward
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Rewards.RewardEntity.Rewards">
+            <value>
+            The the entity and.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Rewards.RewardEntity.GameVersionId">
+            <value>
+            The game version that the Reward will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.Rewards.RewardEntity.GameVersion">
+            <value>
+            The game version string.
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity">
+            <summary>
+            Base representation of a Virtual Currency
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity.Description">
+            <value>
+            Description of the currency
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity.Type">
+            <value>
+            The currency type <see cref="T:KitsuneCore.Services.Monetization.VirtualCurrency.ECurrencyType"/>
+            </value>
+            <remarks>Soft Currency, Hard Currency, or Social Currency</remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity.GameVersionId">
+            <value>
+            The game version that the Currency will be released on.
+            </value>
+            <remarks>
+            An entity cannot be deleted once the set game version has been released.
+            </remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Monetization.VirtualCurrency.CurrencyEntity.GameVersion">
+            <value>
+            The game version string.
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Monetization.VirtualCurrency.ECurrencyType">
+            <summary>
+            Used for economies using a multiple currency model 
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.VirtualCurrency.ECurrencyType.SoftCurrency">
+            <summary>
+            Typically earned through gameplay or purchased using hard currency
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.Services.Monetization.VirtualCurrency.ECurrencyType.HardCurrency">
+            <summary>
+            Typically can only be purchased through an IAP with real world money
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Places.JoinRoomResponse.Mk">
+            kTagStatus				Int				0: Success, 1: Unexpected error, kWrongServer(51) - should switch to a different game server [only returned if include kDBCheck]
+            kDBRoom					Int				The room id of the requested room
+            kDBRoomName				String			The public room name
+            kDBPlaceId				Int				The PlaceId this room belongs to
+            kTagPlaceName			String			The Place Url of the Place this room belongs to
+            kDBServerId				Int				Only present if kTagStatus returns kWrongServer(51)
+        </member>
+        <member name="T:KitsuneCore.Services.Places.Place">
+            <summary>
+            A representation of a Place on the server. There is one 'Place' for each game
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Place.Id">
+            <summary>
+            Database Id of the Place on the server
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Place.Url">
+            <summary>
+            The server place url. This is the directory where the room.xml resides.
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Places.PlaceId">
+            <inheritdoc cref="T:KitsuneCore.DataTypes.IntId`1" />
+        </member>
+        <member name="M:KitsuneCore.Services.Places.PlacesCore.OnPlayersUpdated(System.Collections.Generic.List{KitsuneCore.Services.Players.KitsunePlayer})">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Places.PlacesCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="F:KitsuneCore.Services.Places.PlayerMovement.PlayerId">
+            <value>
+            PlayerId of player who is moving
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.PlayerMovement.Start">
+            <value>
+            Initial x,y,z coord
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.PlayerMovement.Destination">
+            <value>
+            Destination x,y,z coord
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.PlayerMovement.Speed">
+            <value>
+            Speed to move from current location to this location
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.PlayerMovement.Duration">
+            <value>
+            Total time (in milliseconds) that this move will take from start to finish
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.PlayerMovement.Time">
+            <value>
+            Tenths of seconds that have elapsed since start of this move
+            </value>
+        </member>
+        <member name="T:KitsuneCore.Services.Places.Room">
+            <summary>
+            Represents a Room instance on the server within a <see cref="P:KitsuneCore.Services.Places.Room.Place"/>.
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.Id">
+            <value>
+            Database Id of this room
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.RoomName">
+            <value>
+            Name of this room
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.Place">
+            <value>
+            The <see cref="P:KitsuneCore.Services.Places.Room.Place"/> this <c>Room</c> belongs to
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.OwnerId">
+            <value>
+            The <c>PlayerId</c> of the <c>Room</c> owner
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.IsConnected">
+            <value>
+            Returns true if the client is connected to this room. False if not.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Places.Room.GamePlayers">
+            <value>
+            The list of players in the current room
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Places.Room.Connect">
+            <summary>
+            On login players are put in a room. 
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Places.RoomId">
+            <inheritdoc cref="T:KitsuneCore.DataTypes.IntId`1" />
+        </member>
+        <member name="T:KitsuneCore.Services.Places.Position">
+            <summary>
+            Player position represented in the x,y,z coordinate space
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Players.EPlayerLeague">
+            <summary>
+            Default leaderboard leagues 
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Players.KitsunePlayer">
+            <summary>
+            Base representation of a "game" player
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.PlayerId">
+            <value>
+            Player id of this player
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.CurrencyBalances">
+            <value>
+            Currency balances for this player.
+            </value>
+            <remarks>Dictionary&lt;EntityId, CurrencyBalanceComponent&gt; keyed by the currency id</remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Inventory">
+            <value>
+            Item inventory for this player. 
+            </value>
+            <remarks>Dictionary&lt;EntityId, ItemEntity&gt; keyed by the item id</remarks>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Level">
+            <value>
+            Player level
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.MaxLevel">
+            <value>
+            Max player level
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Experience">
+            <value>
+            Players current experience
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.ExperienceToNextLevel">
+            <value>
+            Remaining experience needed to level up the player
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.NextLevelRequiredExperience">
+            <value>
+            The total amount of XP required to level up the player
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Description">
+            <value>
+            Player self set description
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.ProfileAccess">
+            <value>
+            Profile access for other players to view their profile <see cref="T:KitsuneCore.Services.Players.Profile.EProfileAccess"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.ShowCurrenciesInProfile">
+            <value>
+            Whether or not to hide whether the player is online
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.HideOnlineStatus">
+            <value>
+            Whether or not to hide whether the player is online
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Title">
+            <value>
+            Player self set title base on a completed achievement
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.TitleId">
+            <value>
+            Player self set title base on a completed achievement
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Email">
+            <value>
+            Players email address
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.EmailVerified">
+            <value>
+            Whether or not the players email has been verified
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.IsOnline">
+            <value>
+            If this player is currently online
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.IsGuest">
+            <value>
+            If the player is guest. True if the player has not saved their account (if available)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.Created">
+            <value>
+            When the player created their account or logged in for the first time (if saving is not available)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.IsNPC">
+            <value>
+            Whether or not this player is an NPC
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.ServerId">
+            <value>
+            The ServerId of the server the player is currently on
+            </value>s
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.FriendStatus">
+            <value>
+            The friend status of this player in relation to the player requesting this player <see cref="T:KitsuneCore.Services.Friends.EFriendStatus"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.EquippedItems">
+            <value>
+            List of <see cref="T:KitsuneCore.Entity.EntityId"/>'s this player has equipped
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsunePlayer.ChurnProbability">
+            <value>
+            Currently unsupported
+            </value>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.GetProfile">
+            <summary>
+            Returns a subset of player data that can be used to display this player's profile
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.AdjustBalance(KitsuneCore.Entity.EntityId,System.Int64)">
+            <summary>
+            Adjust a currency balance for this player (may be negative)
+            </summary>
+            <param name="currencyId"></param>
+            <param name="amount"></param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.UpdateItem(KitsuneCore.Services.Inventory.ItemEntity)">
+            <summary>
+            If an item is stackable, update the item with new quantity
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.GetItemQuantity(KitsuneCore.Services.Inventory.InventoryItemId)">
+            <summary>
+            Get the quantity of a specific inventory item this player might have
+            </summary>
+            <param name="inventoryItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.GetItemQuantity(KitsuneCore.Entity.EntityId)">
+            <summary>
+            Get the quantity of a game item this player might have
+            </summary>
+            <param name="inventoryItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.ConsumeItem(KitsuneCore.Services.Inventory.InventoryItemId,System.Int32)">
+            <summary>
+            Use an item that is in this players inventory
+            </summary>
+            <param name="inventoryItemId"></param>
+            <param name="quantity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.UpdateItemStatus(KitsuneCore.Services.Inventory.InventoryItemId,System.String)">
+            <summary>
+            Update the status of the item in this player's inventory
+            </summary>
+            <param name="inventoryItemId"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.EquipItem(KitsuneCore.Services.Inventory.InventoryItemId,System.Boolean)">
+            <summary>
+            Equip or unequip an inventory item
+            </summary>
+            <param name="inventoryItemId"></param>
+            <param name="equipped"></param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsunePlayer.GetEquippedItems">
+            <summary>
+            Get the equipped items for this player
+            </summary>
+            <remarks>Use Subscribe&lt;PlayerEvent.ON_GET_EQUIPPED_ITEMS&gt;</remarks>
+        </member>
+        <member name="T:KitsuneCore.Services.Players.KitsuneUser">
+            <summary>
+            The Kitsune "Human" user. KitsuneUser maps to all the user ids for each game
+            the Player plays.
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsuneUser.GetUserIds">
+            <summary>
+            Get all user id's associated with this Kitsune Player
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.KitsuneUser.CustomProperties">
+            <summary>Read-only cache for custom properties of player. Set via Player.SetCustomProperties.</summary>
+            <remarks>
+            Don't modify the content of this Hashtable. Use SetCustomProperties and the
+            properties of this class to modify values. When you use those, the client will
+            sync values with the server.
+            </remarks>
+            <see cref="M:KitsuneCore.Services.Players.KitsuneUser.SetCustomProperties(System.Collections.Hashtable)"/>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.KitsuneUser.SetCustomProperties(System.Collections.Hashtable)">
+             <summary>
+             Updates and synchronizes this Player's Custom Properties.
+             </summary>
+             <remarks>
+             Custom Properties are a set of string keys and arbitrary values which are synchronized
+             for the players in a Place. They are available when the client enters the Place, as
+             they are in the response of OpJoin and OpCreate.
+            
+             Custom Properties either relate to the (current) Room or a Player (in that Room).
+            
+             You should call SetCustomProperties only with key/values that are new or changed. This reduces
+             traffic and performance.
+             </remarks>
+             <param name="propertiesToSet">Hashtable of Custom Properties to be set. </param>
+        </member>
+        <member name="T:KitsuneCore.Services.Players.KitsuneUserId">
+            <summary>
+            The "Master" Kitsune User Id
+            <remarks>
+            This is used to associate game <c>PlayerId</c>'s to a "Human" <c>KitsuneUser</c>
+            </remarks>
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.Services.Players.PlayerEvent.ON_BLOCKED">
+            <summary>
+            Notification that another player has blocked you (the recipient)
+            </summary>
+            <param name="playerId"></param>
+            <param name="blocked">True if blocking, false if unblocking</param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.PlayersCore.AddGameItem(KitsuneCore.Entity.EntityId,System.Int32,System.Boolean,KitsuneCore.Services.Players.PlayerId,System.String)">
+            <summary>
+            Add an item to a players inventory
+            </summary>
+            <param name="item"></param>
+            <param name="count"></param>
+            <param name="tradeable"></param>
+            <param name="giftedFrom"></param>
+            <param name="status"></param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.PlayersCore.ChangePlayerName(System.String)">
+            <summary>
+            Change the name of the current player
+            </summary>
+            <param name="newName"></param>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.PlayersCore.GetEquippedItemsForPlayer(KitsuneCore.Services.Players.PlayerId)">
+            <summary>
+            Get the equipped items for this player
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.PlayersCore.OnPlayerCreated(KitsuneCore.Services.Players.WebRequests.CreatePlayerWebResponse)">
+            CALLBACKS
+        </member>
+        <member name="M:KitsuneCore.Services.Players.PlayersCore.ProcessServerPushMessage(KitsuneCommon.Net.Messages.Message,System.Boolean)">
+            BROADCAST
+        </member>
+        <member name="T:KitsuneCore.Services.Players.Profile.PlayerProfile">
+            <summary>
+            A subset of <see cref="T:KitsuneCore.Services.Players.KitsunePlayer"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.PlayerId">
+            <value>
+            PlayerId associated with this Profile <see cref="P:KitsuneCore.Services.Players.Profile.PlayerProfile.PlayerId"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.Name">
+            <value>
+            Players name
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.IconAsset">
+            <value>
+            Icon asset association with this player
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.ProfileAccess">
+            <value>
+            Accessibility of this players profile <see cref="T:KitsuneCore.Services.Players.Profile.EProfileAccess"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.Level">
+            <value>
+            Player level
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.ShowCurrencies">
+            <value>
+            Whether or not to display this players currencies
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.Description">
+            <value>
+            Player description
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.HideOnlineStatus">
+            <value>
+            Show or hide if the player is currently online
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.IsOnline">
+            <value>
+            Whether or not the player is online
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.Title">
+            <value>
+            The title string from an achievement
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.Players.Profile.PlayerProfile.TitleId">
+            <summary>
+            The achievement id used to create the title
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.Profile.PlayerProfile.#ctor">
+            <summary>
+            Create an empty profile for editing to send to the server
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.Players.Profile.PlayerProfile.#ctor(KitsuneCore.Services.Players.KitsunePlayer)">
+            <summary>
+            Populate a profile object using player date
+            </summary>
+            <param name="player"></param>
+        </member>
+        <member name="T:KitsuneCore.Services.GameSessions.CustomGameSession">
+            <summary>
+            Abstract class to create custom strongly typed game save data
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.SessionId">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.SessionId"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.CodeStringValue">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.CodeStringValue"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.GameSessionCode">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.GameSessionCode"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.Created">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.Created"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.CreatedLocal">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.CreatedLocal"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.Modified">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.Modified"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.ModifiedLocal">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.ModifiedLocal"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.HasExpiration">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.HasExpiration"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.Expiration">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.Expiration"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.ExpirationLocal">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.ExpirationLocal"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.SerializedSessionData">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.SerializedSessionData"/>>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.CustomGameSession.ExternalUUID">
+            <inheritdoc cref="P:KitsuneCore.Services.GameSessions.GameSession.ExternalUUID"/>>
+        </member>
+        <member name="M:KitsuneCore.Services.GameSessions.CustomGameSession.Populate">
+            <summary>
+            Populate the custom game save data using the <see cref="P:KitsuneCore.Services.GameSessions.GameSession.SerializedSessionData"/>
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.Services.GameSessions.CustomGameSession.Serialize">
+            <summary>
+            Serialize custom properties to be saved on the server <see cref="P:KitsuneCore.Services.GameSessions.GameSession.SerializedSessionData"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.SessionId">
+            <value>
+            The session id of this session.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.CodeStringValue">
+            <value>
+            A unique string code that can be used to retrieve the session data from the server.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.GameSessionCode">
+            <value>
+            GameSessionCode associated with this GameSession
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.ExternalUUID">
+            <value>
+            Used to associate a game session with an external UUID
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.GameSessions.GameSession._created">
+            <value>
+            When the session data was created in server time.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.CreatedLocal">
+            <value>
+            When the session data was created in local time.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.GameSessions.GameSession._modified">
+            <value>
+            When the session data was last modified in server time.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.ModifiedLocal">
+            <value>
+            When the session data was last modified in local time.
+            </value>
+        </member>
+        <member name="F:KitsuneCore.Services.GameSessions.GameSession._expiration">
+            <value>
+            When this session expires in server time. Save data is deleted after expiration.
+            (Optional)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.ExpirationLocal">
+            <value>
+            When this session expires in local time.
+            (Optional)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.HasExpiration">
+            <value>
+            Does the current session have an expiration
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSession.SerializedSessionData">
+            <value>
+            Serialized JSON data. Store any valid JSON data to save game state.
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSessionCode.Code">
+            <value>
+            The session code identifying a <see cref="T:KitsuneCore.Services.GameSessions.GameSession"/>
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSessionCode.OwnerId">
+            <value>
+            Owner of this GameSessionCode (optional)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSessionCode.SessionType">
+            <value>
+            The GameSessionType the code is associated with (optional)
+            </value>
+        </member>
+        <member name="P:KitsuneCore.Services.GameSessions.GameSessionCode.HasOwner">
+            <value>
+            Whether or not this code is owned
+            </value>
+        </member>
+        <member name="P:KitsuneCore.WebServer.BaseWebResponse.Response">
+            <summary>
+            Raw JSON result
+            </summary>
+        </member>
+        <member name="M:KitsuneCore.WebServer.BaseWebResponse.Parse(System.String)">
+            <summary>
+            Enforce Parsing of the response of all web server requests
+            </summary>
+            <param name="response"></param>
+        </member>
+        <member name="T:KitsuneCore.WebServer.EParamKeys">
+            <summary>
+            Web request params that are dictated by the server
+            </summary>
+        </member>
+        <member name="T:KitsuneCore.WebServer.EWebRequestValues">
+            <summary>
+            Web request values that are dictated by the server
+            </summary>
+        </member>
+        <member name="F:KitsuneCore.WebServer.Servlet.QueryGameServerHost">
+            KITSUNE
+        </member>
+        <member name="T:KitsuneCommon.GameServer.IJoinGameConfig">
+            <summary>
+            Interface for adding custom join conditions to use for conditional
+            logic in the server place handler.
+            </summary>
+        </member>
+        <member name="P:KitsuneCommon.GameServer.IJoinGameConfig.Place">
+            <summary>
+            The <see cref="P:KitsuneCommon.GameServer.IJoinGameConfig.Place"/> to join. This can include the <c>PlaceId</c> or the Place URL or both.
+            </summary>
+        </member>
+        <member name="M:KitsuneCommon.GameServer.IJoinGameConfig.AddJoinDetails(KitsuneCommon.Net.Messages.MessageBody)">
+            <summary>
+            Custom join config details get added to the <see cref="T:KitsuneCommon.Net.Messages.MessageBody"/> when you call
+            <c>Kitsune.GameServer.JoinGame()</c> is called.
+            </summary>
+            <example>
+            <code>
+            public void AddJoinDetails(MessageBody messageBody)
+            {	
+            	messageBody.AddString(Tag.kTagCustomGame1, SessionCode);
+            	messageBody.AddBoolean(Tag.kTagCustomGame2, true);
+            	messageBody.AddBoolean(Tag.kTagCustomGame3, true);
+            	messageBody.AddBoolean(Tag.kTagCustomGame4, false);
+            	messageBody.AddInteger(Tag.kTagCustomGame5, SessionTime);
+            }
+            </code>
+            </example>
+            <param name="messageBody"></param>
+        </member>
+        <member name="T:KitsuneCommon.IO.NetworkBinaryWriter">
+            <summary>
+            This allows you to write bytes in the correct order depending on the endianness of the server
+            which isn't available with <see cref="T:System.IO.BinaryWriter"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCommon.IO.NetworkBinaryWriter.UseMUTF">
+            <summary>
+            Use MUTF instead of UTF i.e. with a Java server
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.IO.NetworkBinaryReader">
+            <summary>
+            This allows you to read bytes the correct order depending on the endianness of the server
+            which isn't available with <see cref="T:System.IO.BinaryReader"/>
+            </summary>
+        </member>
+        <member name="P:KitsuneCommon.IO.NetworkBinaryReader.UseMUTF">
+            <summary>
+            Use MUTF instead of UTF
+            </summary>
+        </member>
+        <member name="M:KitsuneCommon.Net.KitsuneServerObject.Mk">
+            <summary>
+            Convenience method for 'Making' a strongly typed data object using the MessageBody in the server response
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.Messages.Message">
+            <summary>
+            A message contains data content sent over the network.  It is formatted in a way that is easy
+            for use, rather than being formatted as a byte stream for transmission.
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.Messages.MessageBody">
+            <summary>
+            The message body contains the actual data content of the message.
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.Messages.MessageTag">
+             <summary>
+             Message tags are special tags that are only used at the top level of a message.
+            
+             These used to be folded into the tag class as they are logically just the same, but conceptually
+             we use them differently and having them in a separate class makes everything clearer and more type safe.
+            
+             Because of the different usage, I'm also allowing the values for these tags to be the same as the
+             values used in the regular tags.
+             </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.Messages.Tag">
+            <summary>
+            The values used to label fields in messages.
+            Once created a tag value shouldn't be changed because server and client must agree
+            on these values.
+            </summary>
+        </member>
+        <member name="M:KitsuneCommon.Net.ReadWriteBuffer.#ctor">
+            <summary>
+            Stream to handle socket data between different endianess client/server
+            limited to 256k read and write buffers
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.ServerRequests.ServerResponse">
+            <summary>
+            Server response to a <see cref="T:KitsuneCommon.Net.ServerRequests.BaseServerRequest"/>
+            </summary>
+        </member>
+        <member name="T:KitsuneCommon.Net.ServerRequests.ServerResponse.Callback">
+            <summary>
+            Delegate that returns the response from the server
+            </summary>
+            <param name="serverResponse"></param>
+        </member>
+        <member name="M:KitsuneCommon.Net.ServerRequests.ServerResponse.#ctor(KitsuneCommon.Net.ServerRequests.BaseServerRequest,KitsuneCommon.Net.Messages.Message)">
+            <summary>
+            The server response to a specific server request
+            </summary>
+            <param name="serverRequest">The server request instance sent to the server</param>
+            <param name="message">The game server response message</param>
+        </member>
+    </members>
+</doc>

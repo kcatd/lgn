@@ -1,0 +1,17 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:Label text="" class="h2" name="Context Title" />
+    <ui:VisualElement class="row" name="PrefabContainer">
+        <ui:Label class="prefix-label" text="Entity Prefab" />
+        <ue:ObjectField binding-path="_prefab" allow-scene-objects="false" class="property-value" name="Prefab" />
+    </ui:VisualElement>
+    <ue:PropertyField binding-path="_name" name="Name" />
+    <ui:VisualElement name="EntityProperties" />
+    <ui:VisualElement class="row button-container add-edit-entity-buttons">
+        <ui:Button class="mini-button" name="Cancel">
+            <ui:Label text="Cancel" />
+        </ui:Button>
+        <ui:Button class="mini-button default-button" name="Save">
+            <ui:Label text="Save" />
+        </ui:Button>
+    </ui:VisualElement>
+</UXML>

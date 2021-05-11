@@ -1,0 +1,6 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <Button class="entity-menu-button">
+        <Image class="entity-button-icon" />
+        <Label text="" class="entity-button-label" />
+    </Button>
+</UXML>

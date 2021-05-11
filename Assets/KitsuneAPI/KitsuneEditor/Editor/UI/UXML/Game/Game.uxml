@@ -1,0 +1,16 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Game/EditGame.uxml" name="edit-template" />
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Game/NewGame.uxml" name="new-template" />
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/Game/RegisteredGame.uxml" name="registered-template" />
+    <ui:VisualElement name="Game_Settings" class="game-settings">
+        <ui:VisualElement name="NewGame">
+            <ui:Instance template="new-template" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RegisteredGame">
+            <ui:Instance template="registered-template" />
+        </ui:VisualElement>
+        <ui:VisualElement name="EditGame">
+            <ui:Instance template="edit-template" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</UXML>

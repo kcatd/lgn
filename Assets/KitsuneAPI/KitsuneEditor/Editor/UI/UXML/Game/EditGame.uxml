@@ -1,0 +1,28 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="row game-settings-header" name="Game Settings">
+        <ui:Label text="Game Settings" class="h2" />
+    </ui:VisualElement>
+    <ue:PropertyField binding-path="_title" name="Title" class="property-field game-title" />
+        <ui:VisualElement class="row">
+            <ui:Label text="GameId:" name="GameId" class="prefix-label" />
+            <ui:TextElement binding-path="_gameId" name="GameId" class="property-value game-id" />
+        </ui:VisualElement>
+    <ui:VisualElement class="row">
+        <ue:PropertyField binding-path="_gameVersion" label="Version" name="Version" class="property-field game-version" />
+        <ui:Toggle binding-path="_updateRequired" text="Required" name="UpdateRequired" class="property-value update-required" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row button-container">
+        <ui:Button class="mini-button" name="Cancel">
+            <ui:Label text="Cancel" />
+        </ui:Button>
+        <ui:Button class="mini-button" name="Save">
+            <ui:Label text="Save" />
+        </ui:Button>
+        <ui:Button class="mini-button" name="NewVersion">
+            <ui:Label text="New Version" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:Button class="mini-button" name="New">
+        <ui:Label text="Release Version" />
+    </ui:Button>
+</UXML>

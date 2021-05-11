@@ -1,0 +1,12 @@
+<UXML xmlns="UnityEngine.UIElements" >
+    <Template path="Assets/KitsuneAPI/KitsuneEditor/Editor/UI/UXML/EntityMenu/EntityMenuButton.uxml" name="entity-button-template" />
+    <VisualElement name="EntityMenuButtons" class="menu-buttons-container invisible">
+        <Instance template="entity-button-template" name="Achievements" />
+        <Instance template="entity-button-template" name="Currency" />
+        <Instance template="entity-button-template" name="Custom Data" />
+        <Instance template="entity-button-template" name="Items" />
+        <Instance template="entity-button-template" name="IAPs" />
+        <Instance template="entity-button-template" name="Levels and XP" />
+        <Instance template="entity-button-template" name="Rewards" />
+    </VisualElement>
+</UXML>

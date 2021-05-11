@@ -1,0 +1,8 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_description" name="Description" />
+    <ue:PropertyField binding-path="_type" name="Type" />
+    <ui:VisualElement class="row">
+        <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+        <ui:VisualElement name="ReleaseVersionDropDownContainer" />
+    </ui:VisualElement>
+</UXML>

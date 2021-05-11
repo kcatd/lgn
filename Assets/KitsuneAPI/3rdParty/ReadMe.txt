@@ -1,0 +1,1 @@
+If you are using Unity's RemoteConfig that includes NewtonSoft, remove this

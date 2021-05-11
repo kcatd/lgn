@@ -1,0 +1,13 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ue:PropertyField binding-path="_description" name="Description" />
+    <ue:PropertyField binding-path="_billingDescription" name="BillingDescription" />
+    <ue:PropertyField binding-path="_price" name="Price" tooltip="Price In Cents" />
+    <ui:VisualElement class="row">
+        <ui:Label class="prefix-label" text="Reward To Purchase" />
+        <ue:ObjectField binding-path="_rewardToPurchase" allow-scene-objects="false" class="property-value" name="Reward" />
+    </ui:VisualElement>
+    <ui:VisualElement class="row">
+        <ui:Label text="Release Version:" name="ReleaseGameVersion" class="prefix-label" />
+        <ui:VisualElement name="ReleaseVersionDropDownContainer" />
+    </ui:VisualElement>
+</UXML>

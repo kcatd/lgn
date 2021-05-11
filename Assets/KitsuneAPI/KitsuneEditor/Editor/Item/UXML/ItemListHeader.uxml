@@ -1,0 +1,26 @@
+<UXML xmlns:ui="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <ui:VisualElement class="list-item--category">
+        <ui:VisualElement name="CategoryListHeader" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--description">
+        <ui:TextElement text="Description" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--currency">
+        <ui:TextElement text="Currency" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--cost">
+        <ui:TextElement text="Cost" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--consumable">
+        <ui:TextElement text="Consumable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--stackable">
+        <ui:TextElement text="Stackable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--tradeable">
+        <ui:TextElement text="Tradable" />
+    </ui:VisualElement>
+    <ui:VisualElement class="list-item--level-requirement">
+        <ui:TextElement text="Lvl Requirement" />
+    </ui:VisualElement>
+</UXML>
