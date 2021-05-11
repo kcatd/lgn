@@ -22,6 +22,7 @@ public class LoginPanel : MonoBehaviour
     [SerializeField] TMP_InputField passwordField;
     [SerializeField] Button         signUpBtn;
     [SerializeField] Button         loginBtn;
+    [SerializeField] TextMeshProUGUI    statusText;
 
     LoginStateID                    loginState;
 
@@ -52,6 +53,9 @@ public class LoginPanel : MonoBehaviour
     {
         signUpBtn.onClick.AddListener(OnSignUpBtn);
         loginBtn.onClick.AddListener(OnLoginBtn);
+
+        signUpBtn.interactable = true;
+        loginBtn.interactable = true;
     }
 
     // Update is called once per frame
@@ -66,7 +70,12 @@ public class LoginPanel : MonoBehaviour
         accountNameField.text = "bob@boomzap.com";
         passwordField.text = "1234";
 
+        userNameField.interactable = true;
+        accountNameField.interactable = true;
+        passwordField.interactable = true;
+
         LoginState = LoginStateID.LoggedOut;
+        statusText.text = "Disconnected";
     }
 
     private void OnDisable()
@@ -85,24 +94,27 @@ public class LoginPanel : MonoBehaviour
 
     void    OnLoggedOut()
     {
-        userNameField.enabled = true;
-        accountNameField.enabled = true;
-        passwordField.enabled = true;
-        signUpBtn.enabled = true;
-        loginBtn.enabled = true;
+        statusText.text = "Disconnected";
+        userNameField.interactable = true;
+        accountNameField.interactable = true;
+        passwordField.interactable = true;
+        signUpBtn.interactable = true;
+        loginBtn.interactable = true;
     }
 
     void    OnLoggingIn()
     {
-        userNameField.enabled = false;
-        accountNameField.enabled = false;
-        passwordField.enabled = false;
-        signUpBtn.enabled = false;
-        loginBtn.enabled = false;
+        statusText.text = "Connecting...";
+        userNameField.interactable = false;
+        accountNameField.interactable = false;
+        passwordField.interactable = false;
+        signUpBtn.interactable = false;
+        loginBtn.interactable = false;
     }
 
     void    OnLoggedIn()
     {
+        statusText.text = "Connected!";
         game.LoginDone();
     }
 }
