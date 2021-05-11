@@ -202,7 +202,7 @@ public class GobbleGame : MonoBehaviour
 
     public void InitializeBoard(bool createEmptyBoard = false)
     {
-        ClearTracking();
+        ClearBoard();
 
         if (createEmptyBoard)
         {
@@ -213,12 +213,16 @@ public class GobbleGame : MonoBehaviour
         {
             diceBoard.InitializeDiceBoard(diceList);
         }
-        wordList.ClearWords();
+    }
 
-        scoreBoard.ClearScoreBoard();
+    public void ClearBoard()
+    {
+        ClearFX();
+        ClearTracking();
+        wordList.ClearWords();
+        ScoreBoard.ClearScoreBoard();
 
         PlayerId localPlayer = client.MyPlayerID;
-
         if (null != localPlayer)
         {
             scoreBoard.AddPlayer(client.MyPlayerName, localPlayer);
@@ -280,5 +284,22 @@ public class GobbleGame : MonoBehaviour
         }
         trackingSet.Clear();
         isTracking = false;
+    }
+
+    private void ClearFX()
+    {
+        FoundWordFX[] wordFX = gameCanvas.GetComponentsInChildren<FoundWordFX>();
+        foreach (var fx in wordFX)
+        {
+            Destroy(fx.gameObject);
+        }
+
+        ScoreFX[] allFx = gameCanvas.GetComponentsInChildren<ScoreFX>();
+        foreach (var fx in allFx)
+        {
+            Destroy(fx.gameObject);
+        }
+
+        scoreFXEvents.Clear();
     }
 }

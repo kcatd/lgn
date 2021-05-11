@@ -558,6 +558,10 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 			}
 		}
 
+		if (gameID != curGameID)
+        {
+			game.ClearBoard();
+        }
 		gameID = curGameID;
 		isHostPlayer = myPlayerID == hostPlayerID;
 
