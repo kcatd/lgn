@@ -22,6 +22,7 @@ public class LoginPanel : MonoBehaviour
     [SerializeField] TMP_InputField passwordField;
     [SerializeField] Button         signUpBtn;
     [SerializeField] Button         loginBtn;
+    [SerializeField] Button         offlineBtn;
     [SerializeField] TextMeshProUGUI    statusText;
 
     LoginStateID                    loginState;
@@ -53,9 +54,11 @@ public class LoginPanel : MonoBehaviour
     {
         signUpBtn.onClick.AddListener(OnSignUpBtn);
         loginBtn.onClick.AddListener(OnLoginBtn);
+        offlineBtn.onClick.AddListener(OnOfflineBtn);
 
         signUpBtn.interactable = true;
         loginBtn.interactable = true;
+        offlineBtn.interactable = true;
     }
 
     // Update is called once per frame
@@ -73,6 +76,9 @@ public class LoginPanel : MonoBehaviour
         userNameField.interactable = true;
         accountNameField.interactable = true;
         passwordField.interactable = true;
+        signUpBtn.interactable = true;
+        loginBtn.interactable = true;
+        offlineBtn.interactable = true;
 
         LoginState = LoginStateID.LoggedOut;
         statusText.text = "Disconnected";
@@ -92,6 +98,11 @@ public class LoginPanel : MonoBehaviour
         game.StartLogin(userNameField.text, accountNameField.text, passwordField.text, false);
     }
 
+    void    OnOfflineBtn()
+    {
+        game.StartOffline();
+    }
+
     void    OnLoggedOut()
     {
         statusText.text = "Disconnected";
@@ -100,6 +111,7 @@ public class LoginPanel : MonoBehaviour
         passwordField.interactable = true;
         signUpBtn.interactable = true;
         loginBtn.interactable = true;
+        offlineBtn.interactable = true;
     }
 
     void    OnLoggingIn()
@@ -110,6 +122,7 @@ public class LoginPanel : MonoBehaviour
         passwordField.interactable = false;
         signUpBtn.interactable = false;
         loginBtn.interactable = false;
+        offlineBtn.interactable = false;
     }
 
     void    OnLoggedIn()

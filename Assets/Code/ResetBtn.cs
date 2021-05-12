@@ -29,12 +29,12 @@ public class ResetBtn : MonoBehaviour
     {
         if (resetBtn.IsInteractable())
         {
-            if (!game.IsHost)
+            if (!game.IsOfflineMode && !game.IsHost)
                 resetBtn.interactable = false;
         }
         else
         {
-            if (game.IsHost)
+            if (game.IsOfflineMode || game.IsHost)
                 resetBtn.interactable = true;
         }
     }

@@ -12,6 +12,11 @@ public class ScoreFXEvent
     public int addScore;
 }
 
+public class GameModeSettings
+{
+    public int  gameTime;
+}
+
 public class GobbleGame : MonoBehaviour
 {
     [Header("Objects")]
@@ -24,6 +29,7 @@ public class GobbleGame : MonoBehaviour
     [Header("UI")]
     [SerializeField] GameObject     gameCanvas;
     [SerializeField] GameObject     loginPanel;
+    [SerializeField] GameModePanel  gameModePanel;
 
     [Header("Prefabs")]
     [SerializeField] ScoreFX        prefabScoreFX;
@@ -38,11 +44,14 @@ public class GobbleGame : MonoBehaviour
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
+    float                           gameTime = 0.0f;
     bool                            isGameStarted = false;
+    bool                            isOfflineMode = false;
 
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
+    public bool IsOfflineMode           { get { return isOfflineMode; } }
 
     // Start is called before the first frame update
     void Start()
@@ -126,8 +135,14 @@ public class GobbleGame : MonoBehaviour
             {
                 Debug.Log(string.Format("Tracked dice result: {0}", test));
 
-                PlayerId localPlayerID = client.MyPlayerID;
+                PlayerId localPlayerID = null;
                 FoundWord srcObj = null;
+
+                if (isOfflineMode)
+                    localPlayerID = new PlayerId(0);
+                else
+                    localPlayerID = client.MyPlayerID;
+
                 int scoreVal = wordList.AddWord(test.ToLower(), localPlayerID, ref srcObj);
 
                 if (scoreVal > 0)
@@ -151,7 +166,8 @@ public class GobbleGame : MonoBehaviour
                         }
                     }
 
-                    client.DoAddFoundWord(test.ToLower());
+                    if (!isOfflineMode)
+                        client.DoAddFoundWord(test.ToLower());
                 }
                 else
                 {
@@ -171,7 +187,12 @@ public class GobbleGame : MonoBehaviour
 
     public void ResetGame()
     {
-        if (client.IsHostPlayer)
+        if (isOfflineMode)
+        {
+            InitializeBoard();
+            StartGame();
+        }
+        else if (client.IsHostPlayer)
         {
             InitializeBoard();
             client.DoStartGame(diceBoard.BoardLayout);
@@ -180,12 +201,14 @@ public class GobbleGame : MonoBehaviour
 
     public void StartGame()
     {
+        gameModePanel.gameObject.SetActive(false);
         isGameStarted = true;
     }
 
     public void EndGame()
     {
         isGameStarted = false;
+        InitializeLobby();
     }
 
     public void StartLogin(string userName, string accountName, string accountPwd, bool createNewUser)
@@ -200,6 +223,19 @@ public class GobbleGame : MonoBehaviour
         InitializeBoard(true);
     }
 
+    public void StartOffline()
+    {
+        isOfflineMode = true;
+        loginPanel.gameObject.SetActive(false);
+        diceBoard.gameObject.SetActive(true);
+        InitializeBoard(true);
+    }
+
+    public void InitializeLobby()
+    {
+        //gameModePanel.gameObject.SetActive(true);
+    }
+
     public void InitializeBoard(bool createEmptyBoard = false)
     {
         ClearBoard();
@@ -208,6 +244,7 @@ public class GobbleGame : MonoBehaviour
         {
             diceBoard.InitializeDefault();
             isGameStarted = false;
+            InitializeLobby();
         }
         else
         {
@@ -222,10 +259,17 @@ public class GobbleGame : MonoBehaviour
         wordList.ClearWords();
         ScoreBoard.ClearScoreBoard();
 
-        PlayerId localPlayer = client.MyPlayerID;
-        if (null != localPlayer)
+        if (isOfflineMode)
         {
-            scoreBoard.AddPlayer(client.MyPlayerName, localPlayer);
+            scoreBoard.AddPlayer("Player", new PlayerId(0));
+        }
+        else
+        {
+            PlayerId localPlayer = client.MyPlayerID;
+            if (null != localPlayer)
+            {
+                scoreBoard.AddPlayer(client.MyPlayerName, localPlayer);
+            }
         }
     }
 
