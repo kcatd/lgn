@@ -60,6 +60,16 @@ public class GameScoreBoard : MonoBehaviour
         return null;
     }
 
+    public int  GetScore(PlayerId id)
+    {
+        PlayerScore score = GetPlayer(id);
+        if (null != score)
+        {
+            return score.Score;
+        }
+        return 0;
+    }
+
     public void UpdatePlayer(GobbleGame game, PlayerId id, string playerName, int playerScore)
     {
         List<ScoreFXEvent> pendingSet = new List<ScoreFXEvent>();

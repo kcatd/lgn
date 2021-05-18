@@ -4,6 +4,13 @@ using UnityEngine;
 
 using KitsuneCore.Services.Players;
 
+public enum FoundWordResult
+{
+    no,
+    partial,
+    ok,
+}
+
 public class FoundWordList : MonoBehaviour
 {
     [SerializeField] FoundWord      foundWordPrefab;
@@ -21,13 +28,11 @@ public class FoundWordList : MonoBehaviour
         
     }
 
-    public int  AddWord(string strWord, PlayerId ownerID, ref FoundWord outWord)
+    public FoundWordResult  AddWord(string strWord, PlayerId ownerID, ref FoundWord outWord)
     {
         if (!string.IsNullOrEmpty(strWord))
         {
             FoundWord wordExists = WordExists(strWord);
-            int baseScoreVal = GetWordScore(strWord);
-            int actualScoreVal = 0;
 
             if (null != wordExists)
             {
@@ -40,7 +45,7 @@ public class FoundWordList : MonoBehaviour
                 {
                     // we get partial score for this
                     outWord = wordExists;
-                    actualScoreVal = Mathf.CeilToInt(0.5f * (float)baseScoreVal);
+                    return FoundWordResult.partial;
                 }
             }
             else if (gameDictionary.ValidateWord(strWord))
@@ -48,11 +53,10 @@ public class FoundWordList : MonoBehaviour
                 FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
                 newWord.SetFoundWord(strWord, ownerID);
                 outWord = newWord;
-                actualScoreVal = baseScoreVal;
+                return FoundWordResult.ok;
             }
-            return actualScoreVal;
         }
-        return 0;
+        return FoundWordResult.no;
     }
 
     public FoundWord    WordExists(string strWord)
@@ -68,16 +72,6 @@ public class FoundWordList : MonoBehaviour
             }
         }
         return null;
-    }
-
-    public int GetWordScore(string strWord)
-    {
-        // maybe each letter has a different value?
-        if (!string.IsNullOrEmpty(strWord))
-        {
-            return strWord.Length;
-        }
-        return 0;
     }
 
     public void ClearWords()
@@ -122,6 +116,19 @@ public class FoundWordList : MonoBehaviour
                         newWord.SetRevealed();
                     }
                 }
+            }
+        }
+    }
+
+    public void GetFoundWordList(PlayerId id, ref List<string> output)
+    {
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+
+        foreach (FoundWord w in Words)
+        {
+            if (w.IsFoundPlayer(id))
+            {
+                output.Add(w.Word);
             }
         }
     }

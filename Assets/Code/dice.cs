@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class dice : MonoBehaviour
@@ -9,6 +10,7 @@ public class dice : MonoBehaviour
     [SerializeField] TextMeshProUGUI    diceFaceText;
     [SerializeField] GameObject         diceHighlight;
     [SerializeField] TextMeshProUGUI    diceFaceText3D;
+    [SerializeField] TextMeshProUGUI    diceFaceScoreText3D;
     [SerializeField] GameObject         diceHighlight3D;
     [SerializeField] GameObject         diceCube3D;
     [SerializeField] float              rotationScale;
@@ -127,7 +129,7 @@ public class dice : MonoBehaviour
         return false;
     }
 
-    public void InitDice(string Data)
+    public void InitDice(string Data, GobbleGame game)
     {
         if (!string.IsNullOrEmpty(Data))
         {
@@ -152,11 +154,11 @@ public class dice : MonoBehaviour
             diceHighlight.gameObject.SetActive(false);
             diceHighlight3D.gameObject.SetActive(false);
 
-            RollDice();
+            RollDice(game);
         }
     }
 
-    public void RollDice()
+    public void RollDice(GobbleGame game)
     {
         if (diceFaces.Count > 0)
         {
@@ -175,7 +177,9 @@ public class dice : MonoBehaviour
 
             diceFaceText.text = faceText;
             diceFaceText3D.text = faceText;
+            diceFaceScoreText3D.text = game.GetWordScore(faceText).ToString();
 
+            GetComponent<Image>().enabled = !enable3D;
             diceFaceText.gameObject.SetActive(!enable3D);
             diceFaceText3D.gameObject.SetActive(enable3D);
         }

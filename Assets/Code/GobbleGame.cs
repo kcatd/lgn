@@ -1,8 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 using KitsuneCore.Services.Players;
+
+[System.Serializable]
+public struct DiceScoreEntry
+{
+    public int score;
+    public string characters;
+}
 
 public class ScoreFXEvent
 {
@@ -14,7 +23,10 @@ public class ScoreFXEvent
 
 public class GameModeSettings
 {
-    public int  gameTime;
+    public Vector2Int   boardSize = new Vector2Int(4, 4);
+    public int          gameTime = 1;
+    public int          minWordLen = 2;
+    public bool         allowBacktrack = false;
 }
 
 public class GobbleGame : MonoBehaviour
@@ -26,10 +38,15 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] LineRenderer   dragPath;
     [SerializeField] MouseFX        mouseDragFX;
 
-    [Header("UI")]
+    [Header("UI Panels")]
     [SerializeField] GameObject     gameCanvas;
     [SerializeField] GameObject     loginPanel;
     [SerializeField] GameModePanel  gameModePanel;
+    [SerializeField] SummaryPanel   summaryPanel;
+
+    [Header("UI Elements")]
+    [SerializeField] TextMeshProUGUI    currentWordText;
+    [SerializeField] TextMeshProUGUI    gameTimerText;
 
     [Header("Prefabs")]
     [SerializeField] ScoreFX        prefabScoreFX;
@@ -37,18 +54,22 @@ public class GobbleGame : MonoBehaviour
 
     [Header("Properties")]
     [SerializeField] string[]       diceList;
+    [SerializeField] DiceScoreEntry[] scoreList;
 
     List<dice>                      trackingSet = new List<dice>();
+    private string                  curTrackingWord = "";
     private bool                    isTracking = false;
 
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
+    GameModeSettings                curGameModeSettings;
     float                           gameTime = 0.0f;
     bool                            isGameStarted = false;
     bool                            isOfflineMode = false;
 
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
+    public FoundWordList WordList       { get { return wordList; } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
     public bool IsOfflineMode           { get { return isOfflineMode; } }
@@ -87,16 +108,22 @@ public class GobbleGame : MonoBehaviour
 
                 if ((null != d) && ((trackingSet.Count < 1) || trackingSet[trackingSet.Count - 1].IsAdjacent(d)))
                 {
-                    d.SetHighlight(true);
-                    trackingSet.Add(d);
-
-                    if (tryCenteredLine)
+                    if (((null != curGameModeSettings) && curGameModeSettings.allowBacktrack) || !trackingSet.Exists(x => x == d))
                     {
-                        localPos.x = d.transform.position.x;
-                        localPos.y = d.transform.position.y;
+                        d.SetHighlight(true);
+                        trackingSet.Add(d);
+
+                        curTrackingWord += d.FaceValue;
+                        RefreshTrackingWord();
+
+                        if (tryCenteredLine)
+                        {
+                            localPos.x = d.transform.position.x;
+                            localPos.y = d.transform.position.y;
+                        }
+                        dragPath.positionCount = dragPath.positionCount + 1;
+                        dragPath.SetPosition(dragPath.positionCount - 1, localPos);
                     }
-                    dragPath.positionCount = dragPath.positionCount + 1;
-                    dragPath.SetPosition(dragPath.positionCount - 1, localPos);
                 }
             }
             else if (isGameStarted)
@@ -110,6 +137,9 @@ public class GobbleGame : MonoBehaviour
                     StartTracking();
                     d.SetHighlight(true);
                     trackingSet.Add(d);
+
+                    curTrackingWord = d.FaceValue;
+                    RefreshTrackingWord();
 
                     if (tryCenteredLine)
                     {
@@ -125,15 +155,9 @@ public class GobbleGame : MonoBehaviour
         }
         else if (isTracking)
         {
-            string test = "";
-            foreach (dice d in trackingSet)
+            if (ValidateTrackingWord())
             {
-                test += d.FaceValue;
-            }
-
-            if (!string.IsNullOrEmpty(test))
-            {
-                Debug.Log(string.Format("Tracked dice result: {0}", test));
+                Debug.Log(string.Format("Tracked dice result: {0}", curTrackingWord));
 
                 PlayerId localPlayerID = null;
                 FoundWord srcObj = null;
@@ -143,11 +167,17 @@ public class GobbleGame : MonoBehaviour
                 else
                     localPlayerID = client.MyPlayerID;
 
-                int scoreVal = wordList.AddWord(test.ToLower(), localPlayerID, ref srcObj);
-
-                if (scoreVal > 0)
+                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, ref srcObj);
+                if (FoundWordResult.no != wordResult)
                 {
                     // yay! -- fx and stuff
+                    int scoreVal = GetWordScore(curTrackingWord);
+                    
+                    if (FoundWordResult.partial == wordResult)
+                    {
+                        scoreVal = Mathf.CeilToInt(0.5f * (float)scoreVal);
+                    }
+                    
                     PlayerScore destObj = scoreBoard.GetPlayer(localPlayerID);
                     if (null != destObj)
                     {
@@ -167,7 +197,7 @@ public class GobbleGame : MonoBehaviour
                     }
 
                     if (!isOfflineMode)
-                        client.DoAddFoundWord(test.ToLower());
+                        client.DoAddFoundWord(curTrackingWord.ToLower());
                 }
                 else
                 {
@@ -179,14 +209,44 @@ public class GobbleGame : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        string timeStr = "";
+
+        if (IsGameStarted && (gameTime > 0.0f))
+        {
+            int secs = 0;
+            bool localGameOver = false;
+
+            gameTime -= Time.deltaTime;
+
+            if (gameTime < 0.0f)
+            {
+                gameTime = 0.0f;
+                localGameOver = true;
+            }
+
+            secs = Mathf.CeilToInt(gameTime);
+            timeStr = string.Format("{0}:{1:00}", secs / 60, secs % 60);
+
+            if (localGameOver)
+            {
+                EndGame();
+            }
+        }
+        gameTimerText.text = timeStr;
+    }
+
     public void InitGame()
     {
         diceBoard.gameObject.SetActive(false);
         loginPanel.gameObject.SetActive(true);
     }
 
-    public void ResetGame()
+    public void ResetGame(GameModeSettings settings = null)
     {
+        curGameModeSettings = settings;
+
         if (isOfflineMode)
         {
             InitializeBoard();
@@ -208,7 +268,8 @@ public class GobbleGame : MonoBehaviour
     public void EndGame()
     {
         isGameStarted = false;
-        InitializeLobby();
+        ClearTracking();
+        InitializeSummary();
     }
 
     public void StartLogin(string userName, string accountName, string accountPwd, bool createNewUser)
@@ -227,13 +288,15 @@ public class GobbleGame : MonoBehaviour
     {
         isOfflineMode = true;
         loginPanel.gameObject.SetActive(false);
-        diceBoard.gameObject.SetActive(true);
+        diceBoard.gameObject.SetActive(false);
         InitializeBoard(true);
     }
 
     public void InitializeLobby()
     {
-        //gameModePanel.gameObject.SetActive(true);
+        diceBoard.gameObject.SetActive(false);
+        summaryPanel.gameObject.SetActive(false);
+        gameModePanel.gameObject.SetActive(true);
     }
 
     public void InitializeBoard(bool createEmptyBoard = false)
@@ -242,13 +305,33 @@ public class GobbleGame : MonoBehaviour
 
         if (createEmptyBoard)
         {
-            diceBoard.InitializeDefault();
             isGameStarted = false;
             InitializeLobby();
         }
         else
         {
-            diceBoard.InitializeDiceBoard(diceList);
+            if (null != curGameModeSettings)
+            {
+                diceBoard.SetBoardSize(curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y);
+                gameTime = (float)curGameModeSettings.gameTime;
+            }
+            diceBoard.gameObject.SetActive(true);
+            diceBoard.InitializeDiceBoard(diceList, this);
+        }
+    }
+
+    public void InitializeSummary()
+    {
+        diceBoard.gameObject.SetActive(false);
+        summaryPanel.gameObject.SetActive(true);
+
+        if (isOfflineMode)
+        {
+            summaryPanel.InitSummary(this, new PlayerId(0));
+        }
+        else
+        {
+            summaryPanel.InitSummary(this, client.MyPlayerID);
         }
     }
 
@@ -275,7 +358,7 @@ public class GobbleGame : MonoBehaviour
 
     public void UpdateGameState(string boardLayout)
     {
-        diceBoard.UpdateBoardLayout(boardLayout);
+        diceBoard.UpdateBoardLayout(boardLayout, this);
     }
 
     public void UpdatePlayerState(int playerID, string playerName, int playerScore, string foundWordSet)
@@ -283,6 +366,32 @@ public class GobbleGame : MonoBehaviour
         PlayerId id = new PlayerId(playerID);
         wordList.UpdateFoundWords(id, foundWordSet);
         scoreBoard.UpdatePlayer(this, id, playerName, playerScore);
+    }
+
+    public int  GetWordScore(string theWord)
+    {
+        int result = 0;
+
+        if (!string.IsNullOrEmpty(theWord))
+        {
+            string testWord = theWord.ToLower();
+
+            foreach (var ch in testWord)
+            {
+                int score = 1;
+
+                foreach (var entry in scoreList)
+                {
+                    if (entry.characters.IndexOf(ch) >= 0)
+                    {
+                        score = entry.score;
+                        break;
+                    }
+                }
+                result += score;
+            }
+        }
+        return result;
     }
 
     public int  GetPendingScore(int playerID, ref List<ScoreFXEvent> pendingSet, ref List<ScoreFX> executingSet)
@@ -316,6 +425,31 @@ public class GobbleGame : MonoBehaviour
         isTracking = true;
     }
 
+    private void RefreshTrackingWord()
+    {
+        currentWordText.text = curTrackingWord;
+
+        if (ValidateTrackingWord())
+        {
+            currentWordText.color = new Color(0.0f, 1.0f, 0.0f);
+        }
+        else
+        {
+            currentWordText.color = new Color(1.0f, 0.0f, 0.0f);
+        }
+    }
+
+    private bool ValidateTrackingWord()
+    {
+        int minWordLength = 2;
+
+        if (null != curGameModeSettings)
+        {
+            minWordLength = curGameModeSettings.minWordLen;
+        }
+        return curTrackingWord.Length >= minWordLength;
+    }
+
     private void ClearTracking()
     {
         foreach (dice d in trackingSet)
@@ -327,7 +461,10 @@ public class GobbleGame : MonoBehaviour
             dragPath.positionCount = 0;
         }
         trackingSet.Clear();
+        curTrackingWord = "";
         isTracking = false;
+
+        RefreshTrackingWord();
     }
 
     private void ClearFX()

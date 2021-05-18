@@ -15,6 +15,7 @@ public class FoundWord : MonoBehaviour
     bool hasStarted = false;
     bool isRevealed = false;
 
+    public string Word { get { return foundWord; } }
     public bool HasStarted  { get { return hasStarted; } }
     public bool Revealed { get { return isRevealed; } }
 

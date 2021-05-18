@@ -6,23 +6,23 @@ using TMPro;
 
 public class GameModePanel : MonoBehaviour
 {
-    [SerializeField] GobbleGame game;
-    [SerializeField] Button startGameBtn;
+    [SerializeField] GobbleGame     game;
+    [SerializeField] Button         startGameBtn;
+    [SerializeField] TMP_Dropdown   minWordLengthGroup;
 
-    List<GameTimeBtn>       gameTimeGroup = new List<GameTimeBtn>();
-    GameModeSettings        settings;
+    List<GameTimeBtn>               gameTimeGroup;
+    List<BoardSizeBtn>              boardSizeGroup;
 
     // Start is called before the first frame update
     void Start()
     {
-        startGameBtn.onClick.AddListener(OnStartGameBtn);
-
+        gameTimeGroup = new List<GameTimeBtn>();
         GetComponentsInChildren<GameTimeBtn>(gameTimeGroup);
-        foreach (var btn in gameTimeGroup)
-        {
-            btn.GetComponent<Toggle>().onValueChanged.AddListener(delegate { OnGameTimeToggled(btn); } );
-            btn.IsToggled = btn.IsDefault;
-        }
+
+        boardSizeGroup = new List<BoardSizeBtn>();
+        GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
+
+        startGameBtn.onClick.AddListener(OnStartGameBtn);
     }
 
     // Update is called once per frame
@@ -33,33 +33,69 @@ public class GameModePanel : MonoBehaviour
 
     private void OnEnable()
     {
-        settings = new GameModeSettings();
-
-        foreach (var btn in gameTimeGroup)
-        {
-            if (btn.IsToggled)
-                settings.gameTime = btn.GameTime;
-        }
-    }
-
-    void OnGameTimeToggled(GameTimeBtn btnToggled)
-    {
-        foreach (var btn in gameTimeGroup)
-        {
-            if (btn == btnToggled)
-            {
-                settings.gameTime = btn.GameTime;
-            }
-            else
-            {
-                btn.IsToggled = false;
-            }
-        }
     }
 
     void OnStartGameBtn()
     {
-        Debug.Log(string.Format("Start game time: {0}", settings.gameTime));
-        game.ResetGame();
+        GameModeSettings settings = new GameModeSettings();
+        GetGameSettings(ref settings);
+        game.ResetGame(settings);
+    }
+
+    public void GetGameSettings(ref GameModeSettings settings)
+    {
+        foreach (var btn in gameTimeGroup)
+        {
+            if (btn.IsToggled)
+            {
+                settings.gameTime = btn.GameTime;
+                break;
+            }
+        }
+
+        foreach (var btn in boardSizeGroup)
+        {
+            if (btn.IsToggled)
+            {
+                settings.boardSize.x = btn.Width;
+                settings.boardSize.y = btn.Height;
+                break;
+            }
+        }
+
+        settings.minWordLen = int.Parse(minWordLengthGroup.captionText.text);
+    }
+
+    public void SetGameSettings(GameModeSettings settings)
+    {
+        foreach (var btn in gameTimeGroup)
+        {
+            if (btn.GameTime == settings.gameTime)
+            {
+                btn.IsToggled = true;
+                break;
+            }
+        }
+
+        foreach (var btn in boardSizeGroup)
+        {
+            if ((btn.Width == settings.boardSize.x) && (btn.Height == settings.boardSize.y))
+            {
+                btn.IsToggled = true;
+                break;
+            }
+        }
+
+        string minWordLenStr = settings.minWordLen.ToString();
+        int optionC = minWordLengthGroup.options.Count;
+
+        for (int i = 0; i < optionC; ++i)
+        {
+            if (minWordLenStr == minWordLengthGroup.options[i].text)
+            {
+                minWordLengthGroup.value = i;
+                break;
+            }
+        }
     }
 }
