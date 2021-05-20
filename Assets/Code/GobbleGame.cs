@@ -269,6 +269,7 @@ public class GobbleGame : MonoBehaviour
     {
         isGameStarted = false;
         ClearTracking();
+        mouseDragFX.Release();
         InitializeSummary();
     }
 
@@ -339,6 +340,8 @@ public class GobbleGame : MonoBehaviour
     {
         ClearFX();
         ClearTracking();
+
+        mouseDragFX.Release();
         wordList.ClearWords();
         ScoreBoard.ClearScoreBoard();
 

@@ -15,6 +15,8 @@ public class FoundWord : MonoBehaviour
     bool hasStarted = false;
     bool isRevealed = false;
 
+    List<PlayerId> finders = new List<PlayerId>();
+
     public string Word { get { return foundWord; } }
     public bool HasStarted  { get { return hasStarted; } }
     public bool Revealed { get { return isRevealed; } }
@@ -50,9 +52,23 @@ public class FoundWord : MonoBehaviour
         ownerID = id;
     }
 
-    public bool IsFoundPlayer(PlayerId id)
+    public void AddFinder(PlayerId id)
     {
-        return id == ownerID;
+        if ((id != ownerID) && !finders.Exists(x => x == id))
+            finders.Add(id);
+    }
+
+    public bool IsFoundPlayer(PlayerId id, bool checkOwnerOnly = true)
+    {
+        if (id == ownerID)
+        {
+            return true;
+        }
+        else if (!checkOwnerOnly)
+        {
+            return finders.Exists(x => x == id);
+        }
+        return false;
     }
 
     public bool IsFoundWord(string strWord)
