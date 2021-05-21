@@ -63,6 +63,7 @@ public class GobbleGame : MonoBehaviour
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
+    TeamColors                      teamColorTable;
     GameModeSettings                curGameModeSettings;
     float                           gameTime = 0.0f;
     bool                            isGameStarted = false;
@@ -70,6 +71,7 @@ public class GobbleGame : MonoBehaviour
 
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
     public FoundWordList WordList       { get { return wordList; } }
+    public TeamColors TeamColorTable    { get { return teamColorTable; } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
     public bool IsOfflineMode           { get { return isOfflineMode; } }
@@ -78,6 +80,7 @@ public class GobbleGame : MonoBehaviour
     void Start()
     {
         client = GetComponent<GobbleClient>();
+        teamColorTable = GetComponent<TeamColors>();
         InitGame();
     }
 
@@ -161,17 +164,24 @@ public class GobbleGame : MonoBehaviour
 
                 PlayerId localPlayerID = null;
                 FoundWord srcObj = null;
+                int teamID = 0;
 
                 if (isOfflineMode)
+                {
                     localPlayerID = new PlayerId(0);
+                }
                 else
+                {
                     localPlayerID = client.MyPlayerID;
+                    teamID = client.MyTeamID;
+                }
 
-                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, ref srcObj);
+                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, teamColorTable.GetTeamColor(teamID), ref srcObj);
                 if (FoundWordResult.no != wordResult)
                 {
                     // yay! -- fx and stuff
-                    int scoreVal = GetWordScore(curTrackingWord);
+                    int fullScoreVal = GetWordScore(curTrackingWord);
+                    int scoreVal = fullScoreVal;
                     
                     if (FoundWordResult.partial == wordResult)
                     {
@@ -196,8 +206,8 @@ public class GobbleGame : MonoBehaviour
                         }
                     }
 
-                    if (!isOfflineMode)
-                        client.DoAddFoundWord(curTrackingWord.ToLower());
+                    if (!isOfflineMode && !client.IsSpectator)
+                        client.DoAddFoundWord(curTrackingWord.ToLower(), fullScoreVal);
                 }
                 else
                 {
@@ -232,6 +242,9 @@ public class GobbleGame : MonoBehaviour
             if (localGameOver)
             {
                 EndGame();
+
+                if (!isOfflineMode && client.IsHostPlayer)
+                    client.DoEndGame();
             }
         }
         gameTimerText.text = timeStr;
@@ -255,13 +268,26 @@ public class GobbleGame : MonoBehaviour
         else if (client.IsHostPlayer)
         {
             InitializeBoard();
-            client.DoStartGame(diceBoard.BoardLayout);
+            client.DoStartGame(GetGameState());
+        }
+    }
+
+    public void RefreshGameState()
+    {
+        if (!isOfflineMode && client.IsHostPlayer)
+        {
+            if (null == curGameModeSettings)
+                curGameModeSettings = new GameModeSettings();
+
+            gameModePanel.GetGameSettings(ref curGameModeSettings);
+            client.DoUpdateGameState(GetGameState());
         }
     }
 
     public void StartGame()
     {
         gameModePanel.gameObject.SetActive(false);
+        diceBoard.gameObject.SetActive(true);
         isGameStarted = true;
     }
 
@@ -271,6 +297,17 @@ public class GobbleGame : MonoBehaviour
         ClearTracking();
         mouseDragFX.Release();
         InitializeSummary();
+    }
+
+    public void ForceEndGame()
+    {
+        gameTime = 0.0f;
+        EndGame();
+
+        if (!isOfflineMode && client.IsHostPlayer)
+        {
+            client.DoEndGame();
+        }
     }
 
     public void StartLogin(string userName, string accountName, string accountPwd, bool createNewUser)
@@ -298,6 +335,20 @@ public class GobbleGame : MonoBehaviour
         diceBoard.gameObject.SetActive(false);
         summaryPanel.gameObject.SetActive(false);
         gameModePanel.gameObject.SetActive(true);
+
+        if (null != curGameModeSettings)
+        {
+            gameModePanel.SetGameSettings(curGameModeSettings, false);
+        }
+
+        if (isOfflineMode)
+        {
+            gameModePanel.SetupPlayerControllables(true);
+        }
+        else
+        {
+            gameModePanel.SetupPlayerControllables(client.IsHostPlayer);
+        }
     }
 
     public void InitializeBoard(bool createEmptyBoard = false)
@@ -347,28 +398,103 @@ public class GobbleGame : MonoBehaviour
 
         if (isOfflineMode)
         {
-            scoreBoard.AddPlayer("Player", new PlayerId(0));
+            scoreBoard.AddPlayer("Player", new PlayerId(0), new Color(1.0f, 1.0f, 1.0f));
         }
         else
         {
             PlayerId localPlayer = client.MyPlayerID;
             if (null != localPlayer)
             {
-                scoreBoard.AddPlayer(client.MyPlayerName, localPlayer);
+                scoreBoard.AddPlayer(client.MyPlayerName, localPlayer, new Color(1.0f, 1.0f, 1.0f));
             }
         }
     }
 
-    public void UpdateGameState(string boardLayout)
+    public string GetGameState()
     {
-        diceBoard.UpdateBoardLayout(boardLayout, this);
+        // game board layout + state format:
+        //
+        // board layout | width x height | min word length | cur time / max time
+        //
+        string result = diceBoard.BoardLayout;
+
+        if (string.IsNullOrEmpty(result))
+        {
+            result = "nil";
+        }
+        if (null != curGameModeSettings)
+        {
+            result += string.Format("|{0}x{1}|{2}|{3}/{4}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, gameTime, curGameModeSettings.gameTime);
+        }
+        return result;
     }
 
-    public void UpdatePlayerState(int playerID, string playerName, int playerScore, string foundWordSet)
+    public void UpdateGameState(string data)
+    {
+        string[] tokens = data.Split('|');
+
+        if (tokens.Length > 0)
+        {
+            string boardLayout = diceBoard.BoardLayout;
+
+            if (null == curGameModeSettings)
+                curGameModeSettings = new GameModeSettings();
+
+            if (tokens.Length > 0)
+            {
+                boardLayout = tokens[0];
+            }
+            if (tokens.Length > 1)
+            {
+                string[] sizeStr = tokens[1].Split('x');
+                if (2 == sizeStr.Length)
+                {
+                    curGameModeSettings.boardSize.x = int.Parse(sizeStr[0]);
+                    curGameModeSettings.boardSize.y = int.Parse(sizeStr[1]);
+                }
+                else
+                {
+                    Debug.LogWarning(string.Format("Invalid board size parameter: {0}", tokens[1]));
+                }
+            }
+            if (tokens.Length > 2)
+            {
+                curGameModeSettings.minWordLen = int.Parse(tokens[2]);
+            }
+            if (tokens.Length > 3)
+            {
+                string[] timeStr = tokens[3].Split('/');
+                if (2 == timeStr.Length)
+                {
+                    float updateTime = float.Parse(timeStr[0]);
+                    curGameModeSettings.gameTime = int.Parse(timeStr[1]);
+
+                    // how much leeway do we want to give before "correcting" the time discrepancy?
+                }
+                else
+                {
+                    Debug.LogWarning(string.Format("Invalid game time parameter: {0}", tokens[3]));
+                }
+            }
+
+            diceBoard.SetBoardSize(curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y);
+            diceBoard.UpdateBoardLayout(boardLayout, this);
+            gameModePanel.SetGameSettings(curGameModeSettings, true);
+            gameModePanel.SetupPlayerControllables(client.IsHostPlayer);
+        }
+    }
+
+    public void UpdatePlayerState(int playerID, string playerName, int playerScore, int teamID, string foundWordSet)
     {
         PlayerId id = new PlayerId(playerID);
-        wordList.UpdateFoundWords(id, foundWordSet);
-        scoreBoard.UpdatePlayer(this, id, playerName, playerScore);
+        gameModePanel.UpdatePlayer(id, playerName, teamID, !isOfflineMode && (id == client.HostPlayerID), (!isOfflineMode && id == client.MyPlayerID));
+        wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID));
+        scoreBoard.UpdatePlayer(this, id, playerName, playerScore, teamID);
+    }
+
+    public void UpdatePlayerTeam(int teamID)
+    {
+        client.DoUpdatePlayerTeam(teamID);
     }
 
     public int  GetWordScore(string theWord)

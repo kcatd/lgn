@@ -65,4 +65,9 @@ public class PlayerScore : MonoBehaviour
             }
         }
     }
+
+    public void UpdateColor(Color c)
+    {
+        scoreName.color = c;
+    }
 }

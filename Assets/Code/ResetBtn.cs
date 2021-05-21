@@ -41,6 +41,6 @@ public class ResetBtn : MonoBehaviour
 
     void OnClickReset()
     {
-        game.ResetGame();
+        game.ForceEndGame();
     }
 }

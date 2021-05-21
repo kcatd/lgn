@@ -29,7 +29,8 @@ public class GobbleMsgTag
 {
 	public const MessageTag StartGame = MessageTag.kTagMessageCustomGame1;	// c-> s
 	public const MessageTag AddWord = MessageTag.kTagMessageCustomGame2;	// c->s
-	public const MessageTag GameState = MessageTag.kTagMessageCustomGame3;	// s->c
+	public const MessageTag GameState = MessageTag.kTagMessageCustomGame3;  // c->s + s->c
+	public const MessageTag PlayerTeam = MessageTag.kTagMessageCustomGame4;  // c->s + s->c
 }
 public class GobbleTag
 {
@@ -39,6 +40,7 @@ public class GobbleTag
 	public const Tag GameBoard = Tag.kTagCustomGame4;
 	public const Tag PlayerScore = Tag.kTagCustomGame5;
 	public const Tag PlayerWords = Tag.kTagCustomGame6;
+	public const Tag PlayerTeamID = Tag.kTagCustomGame7;
 }
 public class GobbleJoinConfig : IJoinGameConfig
 {
@@ -88,15 +90,19 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 	private bool                        HasQueuedMessages => _queue.Count > 0;
     private ConcurrentQueue<Message>    _queue = new ConcurrentQueue<Message>();
 
-	private PlayerId					myPlayerID;
+	private PlayerId					hostPlayerID = new PlayerId(0);
+	private PlayerId					myPlayerID = new PlayerId(0);
 	private string						myPlayerName = "player";
 	private UserLoginInfo				pendingLoginInfo;
 	private int							gameID = 0;
-	private bool						isHostPlayer = false;
+	private int							myTeamID = 0;
 
 	public string						MyPlayerName { get { return myPlayerName; } }
 	public PlayerId						MyPlayerID { get { return myPlayerID; } }
-	public bool							IsHostPlayer { get { return isHostPlayer; } }
+	public PlayerId						HostPlayerID { get { return hostPlayerID; } }
+	public int							MyTeamID { get { return myTeamID; } }
+	public bool							IsHostPlayer { get { return (hostPlayerID > 0) && (hostPlayerID == myPlayerID); } }
+	public bool							IsSpectator { get { return myTeamID < 0; } }
 
 	// Start is called before the first frame update
 	void Start()
@@ -536,10 +542,18 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		GobbleGame game = GetComponent<GobbleGame>();
 
 		int curGameID = msg.GetInteger(GobbleTag.GameID);
-		int hostPlayerID = msg.GetInteger(GobbleTag.HostPlayer);
+		int hostID = msg.GetInteger(GobbleTag.HostPlayer);
 		string boardLayout = msg.GetString(GobbleTag.GameBoard);
+		bool beginNewGame = false;
 
-		//Output.Debug(this, string.Format("{0} : {1}", gameStartedFlag ? "started" : "ended", boardLayout));
+		//Debug.LogError(string.Format("update state: {0}", boardLayout));
+		if (gameID != curGameID)
+		{
+			beginNewGame = true;
+			game.ClearBoard();
+		}
+		gameID = curGameID;
+		hostPlayerID = new PlayerId(hostID);
 
 		game.UpdateGameState(boardLayout);
 
@@ -552,21 +566,22 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 				int playerID = player.GetInteger(Tag.kDBUserId);
 				string playerName = player.GetString(Tag.kDBName);
 				int curScore = player.GetInteger(GobbleTag.PlayerScore);
+				int teamID = player.GetInteger(GobbleTag.PlayerTeamID);
 				string foundWords = player.GetString(GobbleTag.PlayerWords);
 
-				game.UpdatePlayerState(playerID, playerName, curScore, foundWords);
+				if (playerID == myPlayerID)
+					myTeamID = teamID;
+
+				game.UpdatePlayerState(playerID, playerName, curScore, teamID, foundWords);
 			}
 		}
 
-		if (gameID != curGameID)
-        {
-			game.ClearBoard();
-        }
-		gameID = curGameID;
-		isHostPlayer = myPlayerID == hostPlayerID;
-
 		if ((gameID > 0) && !game.IsGameStarted)
 		{
+			if (beginNewGame)
+			{
+				//game.InitializeBoard();
+			}
 			game.StartGame();
 		}
 		else if ((0 == gameID) && game.IsGameStarted)
@@ -666,11 +681,37 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		Kitsune.GameServer.Send(message);
 	}
 
-	public void DoAddFoundWord(string foundWordStr)
+	public void DoEndGame()
+	{
+		if (gameID > 0)
+		{
+			Message message = Message.Mk(GobbleMsgTag.StartGame);
+			message.AddString(GobbleTag.GameBoard, "nil");
+			message.AddInteger(GobbleTag.GameID, gameID);
+			Kitsune.GameServer.Send(message);
+		}
+	}
+
+	public void DoAddFoundWord(string foundWordStr, int scoreVal)
 	{
 		Message message = Message.Mk(GobbleMsgTag.AddWord);
 		message.AddInteger(GobbleTag.GameID, gameID);
 		message.AddString(GobbleTag.PlayerWords, foundWordStr);
+		message.AddInteger(GobbleTag.PlayerScore, scoreVal);
 		Kitsune.GameServer.Send(message);
 	}
+
+	public void DoUpdateGameState(string boardLayout)
+    {
+		Message message = Message.Mk(GobbleMsgTag.GameState);
+		message.AddString(GobbleTag.GameBoard, boardLayout);
+		Kitsune.GameServer.Send(message);
+    }
+
+	public void DoUpdatePlayerTeam(int teamID)
+    {
+		Message message = Message.Mk(GobbleMsgTag.PlayerTeam);
+		message.AddInteger(GobbleTag.PlayerTeamID, teamID);
+		Kitsune.GameServer.Send(message);
+    }
 }

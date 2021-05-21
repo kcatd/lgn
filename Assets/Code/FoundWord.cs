@@ -33,7 +33,7 @@ public class FoundWord : MonoBehaviour
         
     }
 
-    public void SetFoundWord(string strWord, PlayerId id)
+    public void SetFoundWord(string strWord, PlayerId id, Color c)
     {
         foundWord = strWord;
         ownerID = id;
@@ -41,15 +41,21 @@ public class FoundWord : MonoBehaviour
         TextMeshProUGUI foundWordText = GetComponent<TextMeshProUGUI>();
         if (null != foundWordText)
         {
-            textColor = foundWordText.color;
+            textColor = c;
             foundWordText.text = strWord;
-            foundWordText.color = new Color(textColor.r, textColor.g, textColor.b, unrevealedAlpha);
+            foundWordText.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
         }
     }
 
-    public void SetFoundPlayer(PlayerId id)
+    public void SetFoundPlayer(PlayerId id, Color c)
     {
         ownerID = id;
+
+        TextMeshProUGUI foundWordText = GetComponent<TextMeshProUGUI>();
+        if (null != foundWordText)
+        {
+            foundWordText.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
+        }
     }
 
     public void AddFinder(PlayerId id)

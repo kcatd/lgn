@@ -107,11 +107,15 @@ public class DiceBoardGrid : MonoBehaviour
         if (!string.IsNullOrEmpty(data) && (0 != string.Compare(data, curBoardLayout, true)))
         {
             ClearBoard();
+            ResizeBoard();
 
-            string[] tokens = data.Split(',');
-            foreach (string t in tokens)
+            if ("nil" != data)
             {
-                AddDice(t, game);
+                string[] tokens = data.Split(',');
+                foreach (string t in tokens)
+                {
+                    AddDice(t, game);
+                }
             }
         }
     }

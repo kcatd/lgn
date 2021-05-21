@@ -31,12 +31,13 @@ public class GameScoreBoard : MonoBehaviour
         activePlayers.Clear();
     }
 
-    public void    AddPlayer(string name, PlayerId id)
+    public void    AddPlayer(string name, PlayerId id, Color c)
     {
         if (null == GetPlayer(id))
         {
             PlayerScore newScore = Instantiate<PlayerScore>(scorePrefab, transform);
             newScore.InitScore(name, id);
+            newScore.UpdateColor(c);
             activePlayers.Add(newScore);
         }
     }
@@ -70,7 +71,7 @@ public class GameScoreBoard : MonoBehaviour
         return 0;
     }
 
-    public void UpdatePlayer(GobbleGame game, PlayerId id, string playerName, int playerScore)
+    public void UpdatePlayer(GobbleGame game, PlayerId id, string playerName, int playerScore, int teamID)
     {
         List<ScoreFXEvent> pendingSet = new List<ScoreFXEvent>();
         List<ScoreFX> execSet = new List<ScoreFX>();
@@ -102,12 +103,16 @@ public class GameScoreBoard : MonoBehaviour
 
         if (null == player)
         {
-            AddPlayer(playerName, id);
-            AddScore(id, updateScoreVal, true);
+            if (teamID >= 0)
+            {
+                AddPlayer(playerName, id, game.TeamColorTable.GetTeamColor(teamID));
+                AddScore(id, updateScoreVal, true);
+            }
         }
         else
         {
             player.UpdateName(playerName);
+            player.UpdateColor(game.TeamColorTable.GetTeamColor(teamID));
             player.AddScore(updateScoreVal, true);
         }
     }

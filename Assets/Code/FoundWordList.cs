@@ -28,7 +28,7 @@ public class FoundWordList : MonoBehaviour
         
     }
 
-    public FoundWordResult  AddWord(string strWord, PlayerId ownerID, ref FoundWord outWord)
+    public FoundWordResult  AddWord(string strWord, PlayerId ownerID, Color c, ref FoundWord outWord)
     {
         if (!string.IsNullOrEmpty(strWord))
         {
@@ -51,7 +51,7 @@ public class FoundWordList : MonoBehaviour
             else if (gameDictionary.ValidateWord(strWord))
             {
                 FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                newWord.SetFoundWord(strWord, ownerID);
+                newWord.SetFoundWord(strWord, ownerID, c);
                 outWord = newWord;
                 return FoundWordResult.ok;
             }
@@ -84,7 +84,7 @@ public class FoundWordList : MonoBehaviour
         }
     }
 
-    public void UpdateFoundWords(PlayerId id, string foundWordSet)
+    public void UpdateFoundWords(PlayerId id, string foundWordSet, Color c)
     {
         if (!string.IsNullOrEmpty(foundWordSet))
         {
@@ -98,21 +98,21 @@ public class FoundWordList : MonoBehaviour
                 if (null != word)
                 {
                     if (isOwner && !word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(id);
+                        word.SetFoundPlayer(id, c);
                     else if (!isOwner && word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(new PlayerId(0));
+                        word.SetFoundPlayer(new PlayerId(0), c);
                 }
                 else
                 {
                     if (isOwner)
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], id);
+                        newWord.SetFoundWord(wordInfo[0], id, c);
                     }
                     else
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], new PlayerId(0));
+                        newWord.SetFoundWord(wordInfo[0], new PlayerId(0), c);
                         newWord.SetRevealed();
                     }
                 }

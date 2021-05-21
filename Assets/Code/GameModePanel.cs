@@ -4,14 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+using KitsuneCore.Services.Players;
+
 public class GameModePanel : MonoBehaviour
 {
-    [SerializeField] GobbleGame     game;
-    [SerializeField] Button         startGameBtn;
-    [SerializeField] TMP_Dropdown   minWordLengthGroup;
+    [SerializeField] GobbleGame         game;
+    [SerializeField] PlayerLobbyList    playerList;
+    [SerializeField] Button             startGameBtn;
+    [SerializeField] TMP_Dropdown       minWordLengthGroup;
+    [SerializeField] Selectable[]       hostControls;
 
     List<GameTimeBtn>               gameTimeGroup;
     List<BoardSizeBtn>              boardSizeGroup;
+
+    bool                            settingsChangedFlag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,12 +29,24 @@ public class GameModePanel : MonoBehaviour
         GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
 
         startGameBtn.onClick.AddListener(OnStartGameBtn);
+
+        minWordLengthGroup.onValueChanged.AddListener(OnGameSettingsChanged);
+
+        Toggle[] allToggles = GetComponentsInChildren<Toggle>(true);
+        foreach (var tog in allToggles)
+        {
+            tog.onValueChanged.AddListener(OnGameSettingsChanged);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (settingsChangedFlag)
+        {
+            settingsChangedFlag = false;
+            game.RefreshGameState();
+        }
     }
 
     private void OnEnable()
@@ -40,6 +58,19 @@ public class GameModePanel : MonoBehaviour
         GameModeSettings settings = new GameModeSettings();
         GetGameSettings(ref settings);
         game.ResetGame(settings);
+    }
+
+    void OnGameSettingsChanged()
+    {
+        settingsChangedFlag = true;
+    }
+    void OnGameSettingsChanged(bool isOn)
+    {
+        settingsChangedFlag = true;
+    }
+    void OnGameSettingsChanged(int value)
+    {
+        settingsChangedFlag = true;
     }
 
     public void GetGameSettings(ref GameModeSettings settings)
@@ -66,7 +97,7 @@ public class GameModePanel : MonoBehaviour
         settings.minWordLen = int.Parse(minWordLengthGroup.captionText.text);
     }
 
-    public void SetGameSettings(GameModeSettings settings)
+    public void SetGameSettings(GameModeSettings settings, bool clearPlayerList)
     {
         foreach (var btn in gameTimeGroup)
         {
@@ -97,5 +128,23 @@ public class GameModePanel : MonoBehaviour
                 break;
             }
         }
+
+        if (clearPlayerList)
+        {
+            playerList.ClearList();
+        }
+    }
+
+    public void SetupPlayerControllables(bool isHost)
+    {
+        foreach (var obj in hostControls)
+        {
+            obj.interactable = isHost;
+        }
+    }
+
+    public void UpdatePlayer(PlayerId id, string playerName, int teamID, bool isHost, bool isLocalPlayer)
+    {
+        playerList.UpdatePlayer(id, playerName, teamID, isHost, isLocalPlayer);
     }
 }
