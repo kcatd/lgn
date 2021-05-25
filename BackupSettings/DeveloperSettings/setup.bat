@@ -1,0 +1,2 @@
+copy %1\DeveloperSettings.asset ..\..\Assets\KitsuneAPI\KitsuneEditor\Editor\Developer\DeveloperSettings.asset /Y
+copy %1\KitsuneGameSettings.asset ..\..\Assets\KitsuneAPI\Resources\KitsuneGameSettings.asset /Y
