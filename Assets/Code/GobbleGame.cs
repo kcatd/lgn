@@ -13,6 +13,18 @@ public struct DiceScoreEntry
     public string characters;
 }
 
+public class PlayerScoreEntry
+{
+    public readonly PlayerId id;
+    public int value;
+
+    public PlayerScoreEntry(PlayerId pid, int score = 0)
+    {
+        id = pid;
+        value = score;
+    }
+}
+
 public class ScoreFXEvent
 {
     public FoundWord srcObj;
@@ -60,6 +72,7 @@ public class GobbleGame : MonoBehaviour
     private string                  curTrackingWord = "";
     private bool                    isTracking = false;
 
+    List<PlayerScoreEntry>          playerScoreList = new List<PlayerScoreEntry>();
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
@@ -206,8 +219,15 @@ public class GobbleGame : MonoBehaviour
                         }
                     }
 
-                    if (!isOfflineMode && !client.IsSpectator)
-                        client.DoAddFoundWord(curTrackingWord.ToLower(), fullScoreVal);
+                    if (isOfflineMode)
+                    {
+                        UpdatePlayerScore(localPlayerID, scoreVal, false);
+                    }
+                    else
+                    {
+                        if (!client.IsSpectator)
+                            client.DoAddFoundWord(curTrackingWord.ToLower(), fullScoreVal);
+                    }
                 }
                 else
                 {
@@ -389,6 +409,7 @@ public class GobbleGame : MonoBehaviour
 
     public void ClearBoard()
     {
+        playerScoreList.Clear();
         ClearFX();
         ClearTracking();
 
@@ -487,6 +508,8 @@ public class GobbleGame : MonoBehaviour
     public void UpdatePlayerState(int playerID, string playerName, int playerScore, int teamID, string foundWordSet)
     {
         PlayerId id = new PlayerId(playerID);
+        UpdatePlayerScore(id, playerScore);
+
         gameModePanel.UpdatePlayer(id, playerName, teamID, !isOfflineMode && (id == client.HostPlayerID), (!isOfflineMode && id == client.MyPlayerID));
         wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID));
         scoreBoard.UpdatePlayer(this, id, playerName, playerScore, teamID);
@@ -495,6 +518,23 @@ public class GobbleGame : MonoBehaviour
     public void UpdatePlayerTeam(int teamID)
     {
         client.DoUpdatePlayerTeam(teamID);
+    }
+
+    public void UpdatePlayerScore(PlayerId playerID, int playerScore, bool isAbsolute = true)
+    {
+        PlayerScoreEntry score = playerScoreList.Find(x => x.id == playerID);
+        if (null == score)
+        {
+            score = new PlayerScoreEntry(playerID, playerScore);
+            playerScoreList.Add(score);
+        }
+        else
+        {
+            if (isAbsolute)
+                score.value = playerScore;
+            else
+                score.value += playerScore;
+        }
     }
 
     public int  GetWordScore(string theWord)
