@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 using KitsuneCore.Services.Players;
 
 public class FoundWord : MonoBehaviour
 {
-    [SerializeField] float  unrevealedAlpha;
+    [SerializeField] TextMeshProUGUI    text;
+    [SerializeField] Image              textBg;
+    [SerializeField] float              unrevealedAlpha;
 
     string  foundWord = "";
     PlayerId ownerID;
@@ -38,24 +41,15 @@ public class FoundWord : MonoBehaviour
         foundWord = strWord;
         ownerID = id;
 
-        TextMeshProUGUI foundWordText = GetComponent<TextMeshProUGUI>();
-        if (null != foundWordText)
-        {
-            textColor = c;
-            foundWordText.text = strWord;
-            foundWordText.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
-        }
+        textColor = c;
+        text.text = strWord;
+        textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
     public void SetFoundPlayer(PlayerId id, Color c)
     {
         ownerID = id;
-
-        TextMeshProUGUI foundWordText = GetComponent<TextMeshProUGUI>();
-        if (null != foundWordText)
-        {
-            foundWordText.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
-        }
+        textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
     public void AddFinder(PlayerId id)
@@ -87,12 +81,7 @@ public class FoundWord : MonoBehaviour
         if (!isRevealed)
         {
             isRevealed = true;
-
-            TextMeshProUGUI foundWordText = GetComponent<TextMeshProUGUI>();
-            if ((null != foundWordText) && (null != textColor))
-            {
-                foundWordText.color = textColor;
-            }
+            textBg.color = textColor;
         }
     }
 }

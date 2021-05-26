@@ -26,7 +26,7 @@ public class TeamColors : MonoBehaviour
         
     }
 
-    public Color    GetTeamColor(int teamID)
+    public Color    GetTeamColor(int teamID, bool defaultToWhite = true)
     {
         foreach (var team in teamColors)
         {
@@ -35,7 +35,7 @@ public class TeamColors : MonoBehaviour
                 return team.teamColor;
             }
         }
-        return new Color(1.0f, 1.0f, 1.0f);
+        return defaultToWhite ? new Color(1.0f, 1.0f, 1.0f) : new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     public int      GetMaxTeams()

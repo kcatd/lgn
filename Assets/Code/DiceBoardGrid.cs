@@ -13,6 +13,7 @@ public class DiceBoardGrid : MonoBehaviour
     Vector2                     baseCellSpacing;
 
     private List<dice>          diceSet = new List<dice>();
+    private bool                diceCollisionFlag = true;
 
     private Vector2Int          curBoardSize = new Vector2Int(5, 5);
     private float               curGridItemScale = 1.0f;
@@ -129,6 +130,7 @@ public class DiceBoardGrid : MonoBehaviour
             Destroy(obj.gameObject);
         }
         diceSet.Clear();
+        diceCollisionFlag = true;
     }
 
     public dice GetDice(Vector3 hitPos)
@@ -139,6 +141,16 @@ public class DiceBoardGrid : MonoBehaviour
                 return obj;
         }
         return null;
+    }
+
+    public void SetDiceCollision(bool isPrimary)
+    {
+        diceCollisionFlag = isPrimary;
+
+        foreach (dice d in diceSet)
+        {
+            d.SetDiceCollision(isPrimary);
+        }
     }
 
     private dice AddDice(string diceValue, GobbleGame game)
@@ -157,6 +169,7 @@ public class DiceBoardGrid : MonoBehaviour
 
             newDice.InitDice(diceValue, game);
             newDice.SetPositionIndex(diceSet.Count, grid.constraintCount);
+            newDice.SetDiceCollision(diceCollisionFlag);
             diceSet.Add(newDice);
 
             if (curBoardLayout.Length > 0)

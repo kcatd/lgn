@@ -16,12 +16,14 @@ public class dice : MonoBehaviour
     [SerializeField] float              rotationScale;
     [SerializeField] float              rotationSpeed;
     [SerializeField] bool               enable3D;
-    
+
+    private BoxCollider2D               primaryCollider;
+    private CircleCollider2D            secondaryCollider;
+
     private List<string>    diceFaces = new List<string>();
     private Vector3         desiredFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3         actualFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
 
-    private Collider2D  diceCollider;
     private int         posX = -1;
     private int         posY = -1;
     private string      diceFaceValue = "a";
@@ -35,7 +37,6 @@ public class dice : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        diceCollider = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -124,9 +125,16 @@ public class dice : MonoBehaviour
         SetHighlight(isHighlighted);
     }
 
-    public bool IsInside(Vector2 Pos)
+    public void SetDiceCollision(bool isPrimary)
     {
-        return false;
+        if (null == primaryCollider)
+            primaryCollider = GetComponent<BoxCollider2D>();
+
+        if (null == secondaryCollider)
+            secondaryCollider = GetComponent<CircleCollider2D>();
+
+        primaryCollider.enabled = isPrimary;
+        secondaryCollider.enabled = !isPrimary;
     }
 
     public void InitDice(string Data, GobbleGame game)

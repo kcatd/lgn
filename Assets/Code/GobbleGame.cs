@@ -189,7 +189,7 @@ public class GobbleGame : MonoBehaviour
                     teamID = client.MyTeamID;
                 }
 
-                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, teamColorTable.GetTeamColor(teamID), ref srcObj);
+                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, teamColorTable.GetTeamColor(teamID, false), ref srcObj);
                 if (FoundWordResult.no != wordResult)
                 {
                     // yay! -- fx and stuff
@@ -511,7 +511,7 @@ public class GobbleGame : MonoBehaviour
         UpdatePlayerScore(id, playerScore);
 
         gameModePanel.UpdatePlayer(id, playerName, teamID, !isOfflineMode && (id == client.HostPlayerID), (!isOfflineMode && id == client.MyPlayerID));
-        wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID));
+        wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID, false));
         scoreBoard.UpdatePlayer(this, id, playerName, playerScore, teamID);
     }
 
@@ -590,7 +590,8 @@ public class GobbleGame : MonoBehaviour
 
     private void StartTracking()
     {
-        ClearTracking();
+        ClearTracking(false);
+        diceBoard.SetDiceCollision(false);
         isTracking = true;
     }
 
@@ -619,16 +620,23 @@ public class GobbleGame : MonoBehaviour
         return curTrackingWord.Length >= minWordLength;
     }
 
-    private void ClearTracking()
+    private void ClearTracking(bool resetDiceCollisionType = true)
     {
         foreach (dice d in trackingSet)
         {
             d.SetHighlight(false);
         }
+        
         if (null != dragPath)
         {
             dragPath.positionCount = 0;
         }
+        
+        if (resetDiceCollisionType)
+        {
+            diceBoard.SetDiceCollision(true);
+        }
+
         trackingSet.Clear();
         curTrackingWord = "";
         isTracking = false;
