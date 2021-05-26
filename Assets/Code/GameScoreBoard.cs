@@ -116,4 +116,17 @@ public class GameScoreBoard : MonoBehaviour
             player.AddScore(updateScoreVal, true);
         }
     }
+
+    public void SortScoreBoard()
+    {
+        int playerCount = activePlayers.Count;
+
+        if (playerCount > 1)
+        {
+            activePlayers.Sort((x, y) => x.Score == y.Score ? string.Compare(x.PlayerName, y.PlayerName, true) : y.Score - x.Score);
+
+            for (int i = 0; i < playerCount; ++i)
+                activePlayers[i].gameObject.transform.SetSiblingIndex(i);
+        }
+    }
 }
