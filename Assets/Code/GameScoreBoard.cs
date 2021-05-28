@@ -1,19 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 using KitsuneCore.Services.Players;
 
 public class GameScoreBoard : MonoBehaviour
 {
     [SerializeField] PlayerScore    scorePrefab;
+    [SerializeField] bool           autoResizeGrid = true;
 
     List<PlayerScore>   activePlayers = new List<PlayerScore>();
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (autoResizeGrid)
+        {
+            RectTransform rect = scorePrefab.GetComponent<RectTransform>();
+            Rect cellRect = rect.rect;
+            GridLayoutGroup grid = GetComponent<GridLayoutGroup>();
+            grid.cellSize = new Vector2(cellRect.width, cellRect.height);
+        }
     }
 
     // Update is called once per frame

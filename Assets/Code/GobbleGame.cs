@@ -25,6 +25,18 @@ public class PlayerScoreEntry
     }
 }
 
+public class PlayerTeamEntry
+{
+    public readonly int id;
+    public List<PlayerId> players;
+
+    public PlayerTeamEntry(int tid)
+    {
+        id = tid;
+        players = new List<PlayerId>();
+    }
+}
+
 public class ScoreFXEvent
 {
     public FoundWord srcObj;
@@ -57,6 +69,7 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] SummaryPanel   summaryPanel;
 
     [Header("UI Elements")]
+    [SerializeField] BackgroundImage    backgroundImage;
     [SerializeField] TextMeshProUGUI    currentWordText;
     [SerializeField] TextMeshProUGUI    gameTimerText;
 
@@ -73,6 +86,7 @@ public class GobbleGame : MonoBehaviour
     private bool                    isTracking = false;
 
     List<PlayerScoreEntry>          playerScoreList = new List<PlayerScoreEntry>();
+    List<PlayerTeamEntry>           playerTeamList = new List<PlayerTeamEntry>();
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
@@ -306,6 +320,7 @@ public class GobbleGame : MonoBehaviour
 
     public void StartGame()
     {
+        backgroundImage.Randomize();
         gameModePanel.gameObject.SetActive(false);
         diceBoard.gameObject.SetActive(true);
         isGameStarted = true;
@@ -410,6 +425,8 @@ public class GobbleGame : MonoBehaviour
     public void ClearBoard()
     {
         playerScoreList.Clear();
+        playerTeamList.Clear();
+
         ClearFX();
         ClearTracking();
 
@@ -537,6 +554,25 @@ public class GobbleGame : MonoBehaviour
         }
     }
 
+    public void UpdatePlayerTeam(PlayerId playerID, int teamID)
+    {
+        if (teamID >= 0)
+        {
+            PlayerTeamEntry team = playerTeamList.Find(x => x.id == teamID);
+            if (null == team)
+            {
+                team = new PlayerTeamEntry(teamID);
+                team.players.Add(playerID);
+                playerTeamList.Add(team);
+            }
+            else
+            {
+                if (!team.players.Contains(playerID))
+                    team.players.Add(playerID);
+            }
+        }
+    }
+
     public int  GetWordScore(string theWord)
     {
         int result = 0;
@@ -586,6 +622,37 @@ public class GobbleGame : MonoBehaviour
             }
         }
         return pendingScoreVal;
+    }
+
+    public int  GetPlayerScore(PlayerId id)
+    {
+        PlayerScoreEntry score = playerScoreList.Find(x => x.id == id);
+        if (null != score)
+        {
+            return score.value;
+        }
+        return 0;
+    }
+
+    public int  GetTeamScore(int teamID)
+    {
+        PlayerTeamEntry team = playerTeamList.Find(x => x.id == teamID);
+        if (null != team)
+        {
+            int teamScore = 0;
+
+            foreach (var player in team.players)
+            {
+                teamScore += GetPlayerScore(player);
+            }
+            return teamScore;
+        }
+        return 0;
+    }
+
+    public bool IsTeamGame()
+    {
+        return playerTeamList.Count > 1;
     }
 
     private void StartTracking()

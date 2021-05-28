@@ -41,15 +41,18 @@ public class FoundWord : MonoBehaviour
         foundWord = strWord;
         ownerID = id;
 
-        textColor = c;
+        //textColor = c;
+        textColor = text.color;
         text.text = strWord;
-        textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
+        text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
+        //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
     public void SetFoundPlayer(PlayerId id, Color c)
     {
         ownerID = id;
-        textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
+        text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
+        //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
     public void AddFinder(PlayerId id)
@@ -81,7 +84,8 @@ public class FoundWord : MonoBehaviour
         if (!isRevealed)
         {
             isRevealed = true;
-            textBg.color = textColor;
+            text.color = textColor;
+            //textBg.color = textColor;
         }
     }
 }

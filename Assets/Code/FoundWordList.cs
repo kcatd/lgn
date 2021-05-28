@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using KitsuneCore.Services.Players;
 
@@ -15,11 +16,18 @@ public class FoundWordList : MonoBehaviour
 {
     [SerializeField] FoundWord      foundWordPrefab;
     [SerializeField] GameDictionary gameDictionary;
+    [SerializeField] bool           autoResizeGrid = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (autoResizeGrid)
+        {
+            RectTransform rt = foundWordPrefab.GetComponent<RectTransform>();
+            Rect cellRect = rt.rect;
+            GridLayoutGroup grid = GetComponent<GridLayoutGroup>();
+            grid.cellSize = new Vector2(cellRect.width, cellRect.height);
+        }
     }
 
     // Update is called once per frame
