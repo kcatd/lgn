@@ -12,6 +12,8 @@ public class SummaryPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI        summaryLongestWord;
     [SerializeField] TextMeshProUGUI        summaryTotalWordsFound;
     [SerializeField] SummaryWordList        summaryWordList;
+    [SerializeField] ScoreSummaryList       summaryPlayerScores;
+    [SerializeField] ScoreSummaryList       summaryTeamScores;
     [SerializeField] Button                 summaryDoneButton;
 
     GobbleGame                              game;
@@ -62,5 +64,19 @@ public class SummaryPanel : MonoBehaviour
             summaryTotalWordsFound.text = "0";
             summaryWordList.ClearList();
         }
+
+        summaryPlayerScores.ClearAllEntries();
+        foreach (var p in game.Players)
+        {
+            summaryPlayerScores.AddEntry(p.name, p.value, game.TeamColorTable.GetTeamColor(game.GetPlayerTeam(p.id)));
+        }
+        summaryPlayerScores.SortEntries();
+
+        summaryTeamScores.ClearAllEntries();
+        foreach (var t in game.Teams)
+        {
+            summaryTeamScores.AddEntry(string.Format("Team {0}", t.id), game.GetTeamScore(t.id), game.TeamColorTable.GetTeamColor(t.id));
+        }
+        summaryTeamScores.SortEntries();
     }
 }

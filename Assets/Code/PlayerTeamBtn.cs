@@ -10,6 +10,7 @@ public class PlayerTeamBtn : MonoBehaviour
     Toggle                  tog;
 
     public int              TeamID { get { return teamID; } }
+    public bool             CanInteract { get { return tog.interactable; } set { tog.interactable = value; } }
     public bool             IsToggled { get { return tog.isOn; } set { tog.SetIsOnWithoutNotify(value); } }
 
     // Start is called before the first frame update

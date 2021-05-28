@@ -13,6 +13,7 @@ public class PlayerLobbyList : MonoBehaviour
 
     List<PlayerLobbyEntry>              players = new List<PlayerLobbyEntry>();
     bool                                isListUpdated = false;
+    bool                                sortListFlag = false;
 
     public GobbleGame                   Game { get { return game; } }
 
@@ -46,6 +47,22 @@ public class PlayerLobbyList : MonoBehaviour
                 }
             }
         }
+
+        if (sortListFlag)
+        {
+            int playerCount = players.Count;
+            sortListFlag = false;
+
+            if (playerCount > 1)
+            {
+                players.Sort((x, y) => x.GetSortIdx(y));
+            }
+
+            for (int i = 0; i < playerCount; ++i)
+            {
+                players[i].transform.SetSiblingIndex(i);
+            }
+        }
     }
 
     PlayerLobbyEntry    GetPlayer(PlayerId id)
@@ -68,6 +85,7 @@ public class PlayerLobbyList : MonoBehaviour
             player = Instantiate<PlayerLobbyEntry>(playerEntryPrefab, transform);
             players.Add(player);
             player.InitPlayer(id, playerName, teamID, isHost, isLocalPlayer, this);
+            sortListFlag = true;
         }
         else
         {

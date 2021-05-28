@@ -16,11 +16,13 @@ public struct DiceScoreEntry
 public class PlayerScoreEntry
 {
     public readonly PlayerId id;
+    public string name;
     public int value;
 
-    public PlayerScoreEntry(PlayerId pid, int score = 0)
+    public PlayerScoreEntry(PlayerId pid, string nameStr, int score = 0)
     {
         id = pid;
+        name = nameStr;
         value = score;
     }
 }
@@ -98,6 +100,8 @@ public class GobbleGame : MonoBehaviour
 
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
     public FoundWordList WordList       { get { return wordList; } }
+    public List<PlayerScoreEntry> Players { get { return playerScoreList; } }
+    public List<PlayerTeamEntry> Teams  { get { return playerTeamList; } }
     public TeamColors TeamColorTable    { get { return teamColorTable; } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
@@ -235,7 +239,7 @@ public class GobbleGame : MonoBehaviour
 
                     if (isOfflineMode)
                     {
-                        UpdatePlayerScore(localPlayerID, scoreVal, false);
+                        UpdatePlayerScore(localPlayerID, "Player", scoreVal, false);
                     }
                     else
                     {
@@ -324,6 +328,9 @@ public class GobbleGame : MonoBehaviour
         gameModePanel.gameObject.SetActive(false);
         diceBoard.gameObject.SetActive(true);
         isGameStarted = true;
+
+        if (null != curGameModeSettings)
+            gameTime = curGameModeSettings.gameTime;
     }
 
     public void EndGame()
@@ -462,7 +469,7 @@ public class GobbleGame : MonoBehaviour
         }
         if (null != curGameModeSettings)
         {
-            result += string.Format("|{0}x{1}|{2}|{3}/{4}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, gameTime, curGameModeSettings.gameTime);
+            result += string.Format("|{0}x{1}|{2}|{3}/{4}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, client.IsHostPlayer ? gameTime : -1.0f, curGameModeSettings.gameTime);
         }
         return result;
     }
@@ -506,8 +513,6 @@ public class GobbleGame : MonoBehaviour
                 {
                     float updateTime = float.Parse(timeStr[0]);
                     curGameModeSettings.gameTime = int.Parse(timeStr[1]);
-
-                    // how much leeway do we want to give before "correcting" the time discrepancy?
                 }
                 else
                 {
@@ -525,7 +530,8 @@ public class GobbleGame : MonoBehaviour
     public void UpdatePlayerState(int playerID, string playerName, int playerScore, int teamID, string foundWordSet)
     {
         PlayerId id = new PlayerId(playerID);
-        UpdatePlayerScore(id, playerScore);
+        UpdatePlayerScore(id, playerName, playerScore);
+        UpdatePlayerTeam(id, teamID);
 
         gameModePanel.UpdatePlayer(id, playerName, teamID, !isOfflineMode && (id == client.HostPlayerID), (!isOfflineMode && id == client.MyPlayerID));
         wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID, false));
@@ -537,12 +543,12 @@ public class GobbleGame : MonoBehaviour
         client.DoUpdatePlayerTeam(teamID);
     }
 
-    public void UpdatePlayerScore(PlayerId playerID, int playerScore, bool isAbsolute = true)
+    public void UpdatePlayerScore(PlayerId playerID, string nameStr, int playerScore, bool isAbsolute = true)
     {
         PlayerScoreEntry score = playerScoreList.Find(x => x.id == playerID);
         if (null == score)
         {
-            score = new PlayerScoreEntry(playerID, playerScore);
+            score = new PlayerScoreEntry(playerID, nameStr, playerScore);
             playerScoreList.Add(score);
         }
         else
@@ -630,6 +636,18 @@ public class GobbleGame : MonoBehaviour
         if (null != score)
         {
             return score.value;
+        }
+        return 0;
+    }
+
+    public int  GetPlayerTeam(PlayerId id)
+    {
+        foreach (var team in playerTeamList)
+        {
+            if (team.players.Exists(x => x == id))
+            {
+                return team.id;
+            }
         }
         return 0;
     }

@@ -101,6 +101,7 @@ public class PlayerLobbyEntry : MonoBehaviour
         foreach (var btn in teamBtns)
         {
             btn.IsToggled = teamID == btn.TeamID;
+            btn.CanInteract = isLocalPlayer;
         }
 
         joinGameBtn.interactable = true;
@@ -123,5 +124,23 @@ public class PlayerLobbyEntry : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    public int  GetSortIdx(PlayerLobbyEntry rightEntry)
+    {
+        if (IsLocalPlayer)
+            return -9999;
+        else if (rightEntry.IsLocalPlayer)
+            return 9999;
+
+        if (playerTeamId != rightEntry.playerTeamId)
+        {
+            if (playerTeamId < 0)
+                return 9999;
+            else if (rightEntry.playerTeamId < 0)
+                return 9999;
+        }
+
+        return string.Compare(playerNameText.text, rightEntry.playerNameText.text);
     }
 }
