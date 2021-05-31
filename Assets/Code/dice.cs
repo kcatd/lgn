@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum WordType
+{
+    Normal              = 0,
+    DoubleWordScore     = 1,
+    TripleWordScore     = 2,
+}
+
 public class dice : MonoBehaviour
 {
     [Header("Properties")]
@@ -13,6 +20,8 @@ public class dice : MonoBehaviour
     [SerializeField] TextMeshProUGUI    diceFaceScoreText3D;
     [SerializeField] GameObject         diceHighlight3D;
     [SerializeField] GameObject         diceCube3D;
+    [SerializeField] GameObject         doubleWordScoreIcon;
+    [SerializeField] GameObject         tripleWordScoreIcon;
     [SerializeField] float              rotationScale;
     [SerializeField] float              rotationSpeed;
     [SerializeField] bool               enable3D;
@@ -27,10 +36,12 @@ public class dice : MonoBehaviour
     private int         posX = -1;
     private int         posY = -1;
     private string      diceFaceValue = "a";
+    private WordType    diceWordType = WordType.Normal;
     private bool        isHighlighted = false;
     private bool        isMouseOver = false;
 
     public string   FaceValue { get { return diceFaceValue; } }
+    public WordType DiceType { get { return diceWordType; } }
     public bool     IsHighlighted { get { return isHighlighted; } }
     public bool     IsMouseOver { get { return isMouseOver; } }
 
@@ -137,30 +148,42 @@ public class dice : MonoBehaviour
         secondaryCollider.enabled = !isPrimary;
     }
 
-    public void InitDice(string Data, GobbleGame game)
+    public void InitDice(string Data, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
     {
         if (!string.IsNullOrEmpty(Data))
         {
             string[] Tokens = Data.Split(',');
             diceFaces.Clear();
 
-            if (Tokens.Length > 1)
+            if (rollSet)
             {
-                foreach (string tok in Tokens)
+                if (Tokens.Length > 1)
                 {
-                    diceFaces.Add(tok);
+                    foreach (string tok in Tokens)
+                    {
+                        diceFaces.Add(tok);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Data.Length; ++i)
+                    {
+                        diceFaces.Add(Data[i].ToString());
+                    }
                 }
             }
             else
             {
-                for (int i = 0; i < Data.Length; ++i)
-                {
-                    diceFaces.Add(Data[i].ToString());
-                }
+                diceFaces.Add(Data);
             }
+
+            diceWordType = type;
 
             diceHighlight.gameObject.SetActive(false);
             diceHighlight3D.gameObject.SetActive(false);
+
+            doubleWordScoreIcon.gameObject.SetActive(WordType.DoubleWordScore == diceWordType);
+            tripleWordScoreIcon.gameObject.SetActive(WordType.TripleWordScore == diceWordType);
 
             RollDice(game);
         }
@@ -216,5 +239,19 @@ public class dice : MonoBehaviour
         isHighlighted = b;
         diceHighlight.gameObject.SetActive(!enable3D && (isHighlighted || isMouseOver));
         diceHighlight3D.gameObject.SetActive(enable3D && (isHighlighted || isMouseOver));
+    }
+
+    public int  GetLetterMultiplier()
+    {
+        return 1;
+    }
+    public int  GetWordMultiplier()
+    {
+        switch (diceWordType)
+        {
+            case WordType.DoubleWordScore:  return 2;
+            case WordType.TripleWordScore:  return 3;
+        }
+        return 1;
     }
 }

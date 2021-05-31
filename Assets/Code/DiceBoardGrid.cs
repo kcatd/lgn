@@ -60,14 +60,45 @@ public class DiceBoardGrid : MonoBehaviour
             AddDice(".", game);
     }
 
-    public void InitializeDiceBoard(string[] diceList, GobbleGame game)
+    public void InitializeDiceBoard(string[] diceList, GobbleGame game, GameModeSettings settings = null)
     {
         List<string> dicePool = new List<string>();
         List<string> diceUsed = new List<string>();
+        Dictionary<int, WordType> specialDiceSet = new Dictionary<int, WordType>();
         int diceCount = curBoardSize.x * curBoardSize.y;
 
         ClearBoard();
         ResizeBoard();
+
+        if (null != settings)
+        {
+            if (settings.enableDoubleWordScore)
+            {
+                int specialCount = 2; // TODO: define this somewhere?
+                for (int i = 0; i < specialCount; ++i)
+                {
+                    int idx = Random.Range(0, diceCount);
+
+                    if (specialDiceSet.ContainsKey(idx))
+                        continue;
+
+                    specialDiceSet[idx] = WordType.DoubleWordScore;
+                }
+            }
+            if (settings.enableTripleWordScore)
+            {
+                int specialCount = 1; // TODO: define this somewhere?
+                for (int i = 0; i < specialCount; ++i)
+                {
+                    int idx = Random.Range(0, diceCount);
+
+                    if (specialDiceSet.ContainsKey(idx))
+                        continue;
+
+                    specialDiceSet[idx] = WordType.TripleWordScore;
+                }
+            }
+        }
 
         foreach (string d in diceList)
         {
@@ -79,7 +110,11 @@ public class DiceBoardGrid : MonoBehaviour
             int idx = Random.Range(0, dicePool.Count);
             string diceValue = dicePool[idx];
 
-            AddDice(diceValue, game);
+            WordType diceType = WordType.Normal;
+            if (specialDiceSet.ContainsKey(i))
+                diceType = specialDiceSet[i];
+
+            AddDice(diceValue, game, diceType);
 
             diceUsed.Add(diceValue);
             dicePool.RemoveAt(idx);
@@ -115,7 +150,17 @@ public class DiceBoardGrid : MonoBehaviour
                 string[] tokens = data.Split(',');
                 foreach (string t in tokens)
                 {
-                    AddDice(t, game);
+                    string[] toks = t.Split(':');
+
+                    if (toks.Length > 1)
+                    {
+                        WordType type = (WordType)int.Parse(toks[1]);
+                        AddDice(toks[0], game, type, false);
+                    }
+                    else
+                    {
+                        AddDice(t, game, WordType.Normal, false);
+                    }
                 }
             }
         }
@@ -153,7 +198,7 @@ public class DiceBoardGrid : MonoBehaviour
         }
     }
 
-    private dice AddDice(string diceValue, GobbleGame game)
+    private dice AddDice(string diceValue, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
     {
         if (!string.IsNullOrEmpty(diceValue))
         {
@@ -167,7 +212,7 @@ public class DiceBoardGrid : MonoBehaviour
             diceScale.z *= curGridItemScale;
             newDice.transform.localScale = diceScale;
 
-            newDice.InitDice(diceValue, game);
+            newDice.InitDice(diceValue, game, type, rollSet);
             newDice.SetPositionIndex(diceSet.Count, grid.constraintCount);
             newDice.SetDiceCollision(diceCollisionFlag);
             diceSet.Add(newDice);
@@ -179,6 +224,12 @@ public class DiceBoardGrid : MonoBehaviour
             else
             {
                 curBoardLayout = newDice.FaceValue;
+            }
+
+            if (WordType.Normal != type)
+            {
+                int typeVal = (int)type;
+                curBoardLayout += string.Format(":{0}", typeVal.ToString());
             }
             return newDice;
         }

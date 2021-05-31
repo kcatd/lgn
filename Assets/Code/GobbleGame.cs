@@ -53,6 +53,8 @@ public class GameModeSettings
     public int          gameTime = 1;
     public int          minWordLen = 2;
     public bool         allowBacktrack = false;
+    public bool         enableDoubleWordScore = false;
+    public bool         enableTripleWordScore = false;
 }
 
 public class GobbleGame : MonoBehaviour
@@ -211,7 +213,7 @@ public class GobbleGame : MonoBehaviour
                 if (FoundWordResult.no != wordResult)
                 {
                     // yay! -- fx and stuff
-                    int fullScoreVal = GetWordScore(curTrackingWord);
+                    int fullScoreVal = GetWordScore(curTrackingWord, trackingSet);
                     int scoreVal = fullScoreVal;
                     
                     if (FoundWordResult.partial == wordResult)
@@ -410,7 +412,7 @@ public class GobbleGame : MonoBehaviour
                 gameTime = (float)curGameModeSettings.gameTime;
             }
             diceBoard.gameObject.SetActive(true);
-            diceBoard.InitializeDiceBoard(diceList, this);
+            diceBoard.InitializeDiceBoard(diceList, this, curGameModeSettings);
         }
     }
 
@@ -459,7 +461,7 @@ public class GobbleGame : MonoBehaviour
     {
         // game board layout + state format:
         //
-        // board layout | width x height | min word length | cur time / max time
+        // board layout | width x height | min word length | cur time / max time | options
         //
         string result = diceBoard.BoardLayout;
 
@@ -469,7 +471,33 @@ public class GobbleGame : MonoBehaviour
         }
         if (null != curGameModeSettings)
         {
-            result += string.Format("|{0}x{1}|{2}|{3}/{4}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, client.IsHostPlayer ? gameTime : -1.0f, curGameModeSettings.gameTime);
+            string optionsStr = "";
+            int optionsCount = 0;
+
+            if (curGameModeSettings.enableDoubleWordScore)
+            {
+                if (optionsCount++ > 0)
+                    optionsStr += "+dw";
+                else
+                    optionsStr = "dw";
+            }
+
+            if (curGameModeSettings.enableTripleWordScore)
+            {
+                if (optionsCount++ > 0)
+                    optionsStr += "+tw";
+                else
+                    optionsStr = "tw";
+            }
+
+            if (optionsCount > 0)
+            {
+                result += string.Format("|{0}x{1}|{2}|{3}/{4}|{5}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, client.IsHostPlayer ? gameTime : -1.0f, curGameModeSettings.gameTime, optionsStr);
+            }
+            else
+            {
+                result += string.Format("|{0}x{1}|{2}|{3}/{4}", curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y, curGameModeSettings.minWordLen, client.IsHostPlayer ? gameTime : -1.0f, curGameModeSettings.gameTime);
+            }
         }
         return result;
     }
@@ -518,6 +546,12 @@ public class GobbleGame : MonoBehaviour
                 {
                     Debug.LogWarning(string.Format("Invalid game time parameter: {0}", tokens[3]));
                 }
+            }
+            if (tokens.Length > 4)
+            {
+                string[] optionToks = tokens[4].Split('+');
+                curGameModeSettings.enableDoubleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dw", x));
+                curGameModeSettings.enableTripleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tw", x));
             }
 
             diceBoard.SetBoardSize(curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y);
@@ -579,17 +613,31 @@ public class GobbleGame : MonoBehaviour
         }
     }
 
-    public int  GetWordScore(string theWord)
+    public int  GetWordScore(string theWord, List<dice> diceSet = null)
     {
         int result = 0;
+        int wordMultiplier = 1;
 
         if (!string.IsNullOrEmpty(theWord))
         {
             string testWord = theWord.ToLower();
+            int wordCount = testWord.Length;
+            int diceCount = 0;
 
-            foreach (var ch in testWord)
+            if (null != diceSet)
+                diceCount = diceSet.Count;
+
+            for (int i = 0; i < wordCount; ++i)
             {
+                char ch = testWord[i];
                 int score = 1;
+                int letterMultiplier = 1;
+
+                if (i < diceCount)
+                {
+                    letterMultiplier = diceSet[i].GetLetterMultiplier();
+                    wordMultiplier += diceSet[i].GetWordMultiplier() - 1;
+                }
 
                 foreach (var entry in scoreList)
                 {
@@ -599,10 +647,11 @@ public class GobbleGame : MonoBehaviour
                         break;
                     }
                 }
-                result += score;
+
+                result += letterMultiplier * score;
             }
         }
-        return result;
+        return wordMultiplier * result;
     }
 
     public int  GetPendingScore(int playerID, ref List<ScoreFXEvent> pendingSet, ref List<ScoreFX> executingSet)

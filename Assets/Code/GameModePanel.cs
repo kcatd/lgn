@@ -16,6 +16,7 @@ public class GameModePanel : MonoBehaviour
 
     List<GameTimeBtn>               gameTimeGroup;
     List<BoardSizeBtn>              boardSizeGroup;
+    List<GameModeEntry>             optionsGroup;
 
     bool                            settingsChangedFlag = false;
 
@@ -27,6 +28,9 @@ public class GameModePanel : MonoBehaviour
 
         boardSizeGroup = new List<BoardSizeBtn>();
         GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
+
+        optionsGroup = new List<GameModeEntry>();
+        GetComponentsInChildren<GameModeEntry>(optionsGroup);
 
         startGameBtn.onClick.AddListener(OnStartGameBtn);
 
@@ -94,6 +98,20 @@ public class GameModePanel : MonoBehaviour
             }
         }
 
+        foreach (var btn in optionsGroup)
+        {
+            switch (btn.OptionType)
+            {
+                case GameModeOption.EnableDoubleWordTiles:
+                    settings.enableDoubleWordScore = btn.IsToggled;
+                    break;
+
+                case GameModeOption.EnableTripleWordTiles:
+                    settings.enableTripleWordScore = btn.IsToggled;
+                    break;
+            }
+        }
+
         settings.minWordLen = int.Parse(minWordLengthGroup.captionText.text);
     }
 
@@ -114,6 +132,20 @@ public class GameModePanel : MonoBehaviour
             {
                 btn.IsToggled = true;
                 break;
+            }
+        }
+
+        foreach (var btn in optionsGroup)
+        {
+            switch (btn.OptionType)
+            {
+                case GameModeOption.EnableDoubleWordTiles:
+                    btn.IsToggled = settings.enableDoubleWordScore;
+                    break;
+
+                case GameModeOption.EnableTripleWordTiles:
+                    btn.IsToggled = settings.enableTripleWordScore;
+                    break;
             }
         }
 
