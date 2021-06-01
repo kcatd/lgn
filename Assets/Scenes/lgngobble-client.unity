@@ -14872,6 +14872,7 @@ GameObject:
   - component: {fileID: 1522216209}
   - component: {fileID: 1522216212}
   - component: {fileID: 1522216213}
+  - component: {fileID: 1522216214}
   m_Layer: 0
   m_Name: GobbleGame
   m_TagString: Untagged
@@ -15025,6 +15026,28 @@ MonoBehaviour:
     teamColor: {r: 0, g: 0, b: 1, a: 1}
   - teamID: 4
     teamColor: {r: 1, g: 1, b: 0, a: 1}
+--- !u!114 &1522216214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522216208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80096f5b34ea2ee48b7f8b49062a9c75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialTiles:
+  - boardSize: {x: 4, y: 4}
+    doubleWordTiles: 2
+    tripleWordTiles: 1
+  - boardSize: {x: 5, y: 5}
+    doubleWordTiles: 3
+    tripleWordTiles: 1
+  - boardSize: {x: 6, y: 6}
+    doubleWordTiles: 3
+    tripleWordTiles: 2
 --- !u!1 &1525648583
 GameObject:
   m_ObjectHideFlags: 0

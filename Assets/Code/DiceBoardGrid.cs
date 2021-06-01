@@ -72,30 +72,36 @@ public class DiceBoardGrid : MonoBehaviour
 
         if (null != settings)
         {
-            if (settings.enableDoubleWordScore)
+            if (settings.enableDoubleWordScore || settings.enableTripleWordScore)
             {
-                int specialCount = 2; // TODO: define this somewhere?
-                for (int i = 0; i < specialCount; ++i)
+                int doubleCount = 2;
+                int tripleCount = 1;
+
+                game.Constants.GetSpecialTileCount(settings.boardSize.x, settings.boardSize.y, ref doubleCount, ref tripleCount);
+
+                if (settings.enableDoubleWordScore)
                 {
-                    int idx = Random.Range(0, diceCount);
+                    for (int i = 0; i < doubleCount; ++i)
+                    {
+                        int idx = Random.Range(0, diceCount);
 
-                    if (specialDiceSet.ContainsKey(idx))
-                        continue;
+                        if (specialDiceSet.ContainsKey(idx))
+                            continue;
 
-                    specialDiceSet[idx] = WordType.DoubleWordScore;
+                        specialDiceSet[idx] = WordType.DoubleWordScore;
+                    }
                 }
-            }
-            if (settings.enableTripleWordScore)
-            {
-                int specialCount = 1; // TODO: define this somewhere?
-                for (int i = 0; i < specialCount; ++i)
+                if (settings.enableTripleWordScore)
                 {
-                    int idx = Random.Range(0, diceCount);
+                    for (int i = 0; i < tripleCount; ++i)
+                    {
+                        int idx = Random.Range(0, diceCount);
 
-                    if (specialDiceSet.ContainsKey(idx))
-                        continue;
+                        if (specialDiceSet.ContainsKey(idx))
+                            continue;
 
-                    specialDiceSet[idx] = WordType.TripleWordScore;
+                        specialDiceSet[idx] = WordType.TripleWordScore;
+                    }
                 }
             }
         }
@@ -203,8 +209,6 @@ public class DiceBoardGrid : MonoBehaviour
         if (!string.IsNullOrEmpty(diceValue))
         {
             dice newDice = Instantiate<dice>(dicePrefab, transform);
-            int y = 0;
-            int x = 0;
 
             Vector3 diceScale = newDice.transform.localScale;
             diceScale.x *= curGridItemScale;

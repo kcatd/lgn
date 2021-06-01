@@ -94,6 +94,7 @@ public class GobbleGame : MonoBehaviour
     List<ScoreFXEvent>              scoreFXEvents = new List<ScoreFXEvent>();
 
     GobbleClient                    client;
+    GameConstants                   gameConstants;
     TeamColors                      teamColorTable;
     GameModeSettings                curGameModeSettings;
     float                           gameTime = 0.0f;
@@ -105,6 +106,7 @@ public class GobbleGame : MonoBehaviour
     public List<PlayerScoreEntry> Players { get { return playerScoreList; } }
     public List<PlayerTeamEntry> Teams  { get { return playerTeamList; } }
     public TeamColors TeamColorTable    { get { return teamColorTable; } }
+    public GameConstants Constants      { get { return gameConstants; } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
     public bool IsOfflineMode           { get { return isOfflineMode; } }
@@ -113,6 +115,7 @@ public class GobbleGame : MonoBehaviour
     void Start()
     {
         client = GetComponent<GobbleClient>();
+        gameConstants = GetComponent<GameConstants>();
         teamColorTable = GetComponent<TeamColors>();
         InitGame();
     }
