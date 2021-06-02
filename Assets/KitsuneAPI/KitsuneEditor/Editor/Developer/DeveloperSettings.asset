@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 676717d6fe533471e9c322999478e863, type: 3}
   m_Name: DeveloperSettings
   m_EditorClassIdentifier: 
-  _secretKey: d5pc8qNlK3Gv/oJxd4RE3AMruI76ltihfAHXLQKESkQ=
+  _secretKey: Vfymw9Gp8e4Yu5HTAqQrlk1qcJdw10z5nmHqdvz/zIk=
   _companyName: Boomzap
   _email: atwl@boomzap.com
   password: ILoveBoomzap
