@@ -53,6 +53,8 @@ public class GameModeSettings
     public int          gameTime = 1;
     public int          minWordLen = 2;
     public bool         allowBacktrack = false;
+    public bool         enableDoubleLetterScore = false;
+    public bool         enableTripleLetterScore = false;
     public bool         enableDoubleWordScore = false;
     public bool         enableTripleWordScore = false;
 }
@@ -639,7 +641,11 @@ public class GobbleGame : MonoBehaviour
                 if (i < diceCount)
                 {
                     letterMultiplier = diceSet[i].GetLetterMultiplier();
-                    wordMultiplier += diceSet[i].GetWordMultiplier() - 1;
+
+                    if (gameConstants.UseDnDStyleMultipliers)
+                        wordMultiplier += diceSet[i].GetWordMultiplier() - 1;
+                    else
+                        wordMultiplier *= diceSet[i].GetWordMultiplier();
                 }
 
                 foreach (var entry in scoreList)

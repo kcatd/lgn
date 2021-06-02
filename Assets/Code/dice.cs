@@ -7,8 +7,10 @@ using TMPro;
 public enum WordType
 {
     Normal              = 0,
-    DoubleWordScore     = 1,
-    TripleWordScore     = 2,
+    DoubleLetterScore   = 1,
+    TripleLetterScore   = 2,
+    DoubleWordScore     = 3,
+    TripleWordScore     = 4,
 }
 
 public class dice : MonoBehaviour
@@ -20,6 +22,8 @@ public class dice : MonoBehaviour
     [SerializeField] TextMeshProUGUI    diceFaceScoreText3D;
     [SerializeField] GameObject         diceHighlight3D;
     [SerializeField] GameObject         diceCube3D;
+    [SerializeField] GameObject         doubleLetterScoreIcon;
+    [SerializeField] GameObject         tripleLetterScoreIcon;
     [SerializeField] GameObject         doubleWordScoreIcon;
     [SerializeField] GameObject         tripleWordScoreIcon;
     [SerializeField] float              rotationScale;
@@ -182,6 +186,8 @@ public class dice : MonoBehaviour
             diceHighlight.gameObject.SetActive(false);
             diceHighlight3D.gameObject.SetActive(false);
 
+            doubleLetterScoreIcon.gameObject.SetActive(WordType.DoubleLetterScore == diceWordType);
+            tripleLetterScoreIcon.gameObject.SetActive(WordType.TripleLetterScore == diceWordType);
             doubleWordScoreIcon.gameObject.SetActive(WordType.DoubleWordScore == diceWordType);
             tripleWordScoreIcon.gameObject.SetActive(WordType.TripleWordScore == diceWordType);
 
@@ -243,6 +249,11 @@ public class dice : MonoBehaviour
 
     public int  GetLetterMultiplier()
     {
+        switch (diceWordType)
+        {
+            case WordType.DoubleLetterScore:    return 2;
+            case WordType.TripleLetterScore:    return 3;
+        }
         return 1;
     }
     public int  GetWordMultiplier()

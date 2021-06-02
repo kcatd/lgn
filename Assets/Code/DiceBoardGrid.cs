@@ -72,16 +72,37 @@ public class DiceBoardGrid : MonoBehaviour
 
         if (null != settings)
         {
-            if (settings.enableDoubleWordScore || settings.enableTripleWordScore)
+            SpecialTilesInfo specials = game.Constants.GetSpecialTilesInfo(settings.boardSize.x, settings.boardSize.y);
+
+            if (null != specials)
             {
-                int doubleCount = 2;
-                int tripleCount = 1;
+                if (settings.enableDoubleLetterScore)
+                {
+                    for (int i = 0; i < specials.doubleLetterTiles; ++i)
+                    {
+                        int idx = Random.Range(0, diceCount);
 
-                game.Constants.GetSpecialTileCount(settings.boardSize.x, settings.boardSize.y, ref doubleCount, ref tripleCount);
+                        if (specialDiceSet.ContainsKey(idx))
+                            continue;
 
+                        specialDiceSet[idx] = WordType.DoubleLetterScore;
+                    }
+                }
+                if (settings.enableTripleLetterScore)
+                {
+                    for (int i = 0; i < specials.tripleLetterTiles; ++i)
+                    {
+                        int idx = Random.Range(0, diceCount);
+
+                        if (specialDiceSet.ContainsKey(idx))
+                            continue;
+
+                        specialDiceSet[idx] = WordType.TripleLetterScore;
+                    }
+                }
                 if (settings.enableDoubleWordScore)
                 {
-                    for (int i = 0; i < doubleCount; ++i)
+                    for (int i = 0; i < specials.doubleWordTiles; ++i)
                     {
                         int idx = Random.Range(0, diceCount);
 
@@ -93,7 +114,7 @@ public class DiceBoardGrid : MonoBehaviour
                 }
                 if (settings.enableTripleWordScore)
                 {
-                    for (int i = 0; i < tripleCount; ++i)
+                    for (int i = 0; i < specials.tripleWordTiles; ++i)
                     {
                         int idx = Random.Range(0, diceCount);
 

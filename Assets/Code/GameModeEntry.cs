@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public enum GameModeOption
 {
+    EnableDoubleLetterTiles,
+    EnableTripleLetterTiles,
     EnableDoubleWordTiles,
     EnableTripleWordTiles,
 }

@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct SpecialTilesInfo
+public class SpecialTilesInfo
 {
     public Vector2Int  boardSize;
+    public int         doubleLetterTiles;
+    public int         tripleLetterTiles;
     public int         doubleWordTiles;
     public int         tripleWordTiles;
 }
 
 public class GameConstants : MonoBehaviour
 {
-    [SerializeField]
-    SpecialTilesInfo[]          specialTiles;
+    [Header("Tiles")]
+    [SerializeField] SpecialTilesInfo[] specialTiles;
+
+    [Header("Flags")]
+    [SerializeField] bool       useDnDStyleMultipliers;
+
+    public bool                 UseDnDStyleMultipliers { get { return useDnDStyleMultipliers; } }
     
     // Start is called before the first frame update
     void Start()
@@ -27,17 +34,13 @@ public class GameConstants : MonoBehaviour
         
     }
 
-    public bool GetSpecialTileCount(int w, int h, ref int doubleWordCount, ref int tripleWordCount)
+    public SpecialTilesInfo GetSpecialTilesInfo(int w, int h)
     {
         foreach (var data in specialTiles)
         {
             if ((w == data.boardSize.x) && (h == data.boardSize.y))
-            {
-                doubleWordCount = data.doubleWordTiles;
-                tripleWordCount = data.tripleWordTiles;
-                return true;
-            }
+                return data;
         }
-        return false;
+        return null;
     }
 }

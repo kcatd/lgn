@@ -102,6 +102,14 @@ public class GameModePanel : MonoBehaviour
         {
             switch (btn.OptionType)
             {
+                case GameModeOption.EnableDoubleLetterTiles:
+                    settings.enableDoubleLetterScore = btn.IsToggled;
+                    break;
+
+                case GameModeOption.EnableTripleLetterTiles:
+                    settings.enableTripleLetterScore = btn.IsToggled;
+                    break;
+
                 case GameModeOption.EnableDoubleWordTiles:
                     settings.enableDoubleWordScore = btn.IsToggled;
                     break;
@@ -139,6 +147,14 @@ public class GameModePanel : MonoBehaviour
         {
             switch (btn.OptionType)
             {
+                case GameModeOption.EnableDoubleLetterTiles:
+                    btn.IsToggled = settings.enableDoubleLetterScore;
+                    break;
+
+                case GameModeOption.EnableTripleLetterTiles:
+                    btn.IsToggled = settings.enableTripleLetterScore;
+                    break;
+
                 case GameModeOption.EnableDoubleWordTiles:
                     btn.IsToggled = settings.enableDoubleWordScore;
                     break;
