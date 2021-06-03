@@ -71,6 +71,7 @@ public class GobbleGame : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] GameObject     gameCanvas;
     [SerializeField] GameObject     loginPanel;
+    [SerializeField] GameObject     gameBoardPanel;
     [SerializeField] GameModePanel  gameModePanel;
     [SerializeField] SummaryPanel   summaryPanel;
 
@@ -103,6 +104,8 @@ public class GobbleGame : MonoBehaviour
     bool                            isGameStarted = false;
     bool                            isOfflineMode = false;
 
+    //Vector2Int                      lastScreenRes = new Vector2Int(0, 0);
+
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
     public FoundWordList WordList       { get { return wordList; } }
     public List<PlayerScoreEntry> Players { get { return playerScoreList; } }
@@ -116,6 +119,7 @@ public class GobbleGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.runInBackground = true;
         client = GetComponent<GobbleClient>();
         gameConstants = GetComponent<GameConstants>();
         teamColorTable = GetComponent<TeamColors>();
@@ -125,6 +129,33 @@ public class GobbleGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if UNITY_STANDALONE
+        /*
+        if ((Screen.width != lastScreenRes.x) || (Screen.height != lastScreenRes.y))
+        {
+            if (FullScreenMode.Windowed == Screen.fullScreenMode)
+            {
+                int newWidth = Screen.width;
+                int newHeight = Screen.height;
+
+                if (newWidth != lastScreenRes.x)
+                {
+                    newHeight = newWidth * 3 / 4;
+                    Screen.SetResolution(newWidth, newHeight, FullScreenMode.Windowed);
+                }
+                else
+                {
+                    newWidth = newHeight * 4 / 3;
+                    Screen.SetResolution(newWidth, newHeight, FullScreenMode.Windowed);
+                }
+
+                lastScreenRes.x = newWidth;
+                lastScreenRes.y = newHeight;
+            }
+        }
+        */
+#endif //UNITY_STANDALONE
+
         if (scoreFXEvents.Count > 0)
         {
             ScoreFXEvent e = scoreFXEvents[0];
@@ -297,7 +328,7 @@ public class GobbleGame : MonoBehaviour
 
     public void InitGame()
     {
-        diceBoard.gameObject.SetActive(false);
+        gameBoardPanel.gameObject.SetActive(false);
         loginPanel.gameObject.SetActive(true);
     }
 
@@ -333,7 +364,7 @@ public class GobbleGame : MonoBehaviour
     {
         backgroundImage.Randomize();
         gameModePanel.gameObject.SetActive(false);
-        diceBoard.gameObject.SetActive(true);
+        gameBoardPanel.gameObject.SetActive(true);
         isGameStarted = true;
 
         if (null != curGameModeSettings)
@@ -367,7 +398,7 @@ public class GobbleGame : MonoBehaviour
     public void LoginDone()
     {
         loginPanel.gameObject.SetActive(false);
-        diceBoard.gameObject.SetActive(true);
+        gameBoardPanel.gameObject.SetActive(true);
         InitializeBoard(true);
     }
 
@@ -375,13 +406,13 @@ public class GobbleGame : MonoBehaviour
     {
         isOfflineMode = true;
         loginPanel.gameObject.SetActive(false);
-        diceBoard.gameObject.SetActive(false);
+        gameBoardPanel.gameObject.SetActive(false);
         InitializeBoard(true);
     }
 
     public void InitializeLobby()
     {
-        diceBoard.gameObject.SetActive(false);
+        gameBoardPanel.gameObject.SetActive(false);
         summaryPanel.gameObject.SetActive(false);
         gameModePanel.gameObject.SetActive(true);
 
@@ -416,14 +447,14 @@ public class GobbleGame : MonoBehaviour
                 diceBoard.SetBoardSize(curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y);
                 gameTime = (float)curGameModeSettings.gameTime;
             }
-            diceBoard.gameObject.SetActive(true);
+            gameBoardPanel.gameObject.SetActive(true);
             diceBoard.InitializeDiceBoard(diceList, this, curGameModeSettings);
         }
     }
 
     public void InitializeSummary()
     {
-        diceBoard.gameObject.SetActive(false);
+        gameBoardPanel.gameObject.SetActive(false);
         summaryPanel.gameObject.SetActive(true);
 
         if (isOfflineMode)
