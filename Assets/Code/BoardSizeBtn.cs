@@ -7,6 +7,7 @@ using TMPro;
 public class BoardSizeBtn : MonoBehaviour
 {
     [SerializeField] Vector2Int gridSize = new Vector2Int(4, 4);
+    [SerializeField] Image      selectedBorderImg;
     Toggle                      tog;
 
     public int                  Width { get { return gridSize.x; } }
@@ -18,11 +19,19 @@ public class BoardSizeBtn : MonoBehaviour
     void Start()
     {
         tog = GetComponent<Toggle>();
+        tog.onValueChanged.AddListener(OnToggle);
+
+        OnToggle(tog.isOn);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void    OnToggle(bool isOn)
+    {
+        selectedBorderImg.gameObject.SetActive(isOn);
     }
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameTimeBtn : MonoBehaviour
+public class GameWordLengthBtn : MonoBehaviour
 {
-    [SerializeField] int    timeInSeconds = 60;
+    [SerializeField] int    wordLength = 2;
     Toggle                  tog;
     TextMeshProUGUI         label;
     Color                   textColor;
 
-    public int              GameTime { get { return timeInSeconds; } }
+    public int              WordLength { get { return wordLength; } }
 
     public bool             IsToggled { get { return tog.isOn; } set { tog.isOn = value; } }
 

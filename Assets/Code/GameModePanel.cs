@@ -11,10 +11,10 @@ public class GameModePanel : MonoBehaviour
     [SerializeField] GobbleGame         game;
     [SerializeField] PlayerLobbyList    playerList;
     [SerializeField] Button             startGameBtn;
-    [SerializeField] TMP_Dropdown       minWordLengthGroup;
     [SerializeField] Selectable[]       hostControls;
 
     List<GameTimeBtn>               gameTimeGroup;
+    List<GameWordLengthBtn>         gameWordLengthGroup;
     List<BoardSizeBtn>              boardSizeGroup;
     List<GameModeEntry>             optionsGroup;
 
@@ -26,6 +26,9 @@ public class GameModePanel : MonoBehaviour
         gameTimeGroup = new List<GameTimeBtn>();
         GetComponentsInChildren<GameTimeBtn>(gameTimeGroup);
 
+        gameWordLengthGroup = new List<GameWordLengthBtn>();
+        GetComponentsInChildren<GameWordLengthBtn>(gameWordLengthGroup);
+
         boardSizeGroup = new List<BoardSizeBtn>();
         GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
 
@@ -33,8 +36,6 @@ public class GameModePanel : MonoBehaviour
         GetComponentsInChildren<GameModeEntry>(optionsGroup);
 
         startGameBtn.onClick.AddListener(OnStartGameBtn);
-
-        minWordLengthGroup.onValueChanged.AddListener(OnGameSettingsChanged);
 
         Toggle[] allToggles = GetComponentsInChildren<Toggle>(true);
         foreach (var tog in allToggles)
@@ -88,6 +89,15 @@ public class GameModePanel : MonoBehaviour
             }
         }
 
+        foreach (GameWordLengthBtn btn in gameWordLengthGroup)
+        {
+            if (btn.IsToggled)
+            {
+                settings.minWordLen = btn.WordLength;
+                break;
+            }
+        }
+
         foreach (var btn in boardSizeGroup)
         {
             if (btn.IsToggled)
@@ -119,8 +129,6 @@ public class GameModePanel : MonoBehaviour
                     break;
             }
         }
-
-        settings.minWordLen = int.Parse(minWordLengthGroup.captionText.text);
     }
 
     public void SetGameSettings(GameModeSettings settings, bool clearPlayerList)
@@ -128,6 +136,15 @@ public class GameModePanel : MonoBehaviour
         foreach (var btn in gameTimeGroup)
         {
             if (btn.GameTime == settings.gameTime)
+            {
+                btn.IsToggled = true;
+                break;
+            }
+        }
+
+        foreach (var btn in gameWordLengthGroup)
+        {
+            if (btn.WordLength == settings.minWordLen)
             {
                 btn.IsToggled = true;
                 break;
@@ -162,18 +179,6 @@ public class GameModePanel : MonoBehaviour
                 case GameModeOption.EnableTripleWordTiles:
                     btn.IsToggled = settings.enableTripleWordScore;
                     break;
-            }
-        }
-
-        string minWordLenStr = settings.minWordLen.ToString();
-        int optionC = minWordLengthGroup.options.Count;
-
-        for (int i = 0; i < optionC; ++i)
-        {
-            if (minWordLenStr == minWordLengthGroup.options[i].text)
-            {
-                minWordLengthGroup.value = i;
-                break;
             }
         }
 
