@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: KitsuneGameSettings
   m_EditorClassIdentifier: 
   _title: LGN Gobble
-  _gameVersionId: 47
+  _gameVersionId: 71
   _releasedGameVersionId: 0
   _gameVersion: 1.0
   _releasedGameVersion: 
   _updateRequired: 0
-  _gameId: 9
-  _apiKeyId: 9
+  _gameId: 13
+  _apiKeyId: 15
   _apiKeyNickname: Default
-  _gameApiKey: NCfeyc7ROQH6WajYVs/375jTdeMNkwQMcYDkehOPhlc=
+  _gameApiKey: XIPimSkBnffaktE7meif9Mx6yqdKfQ0drorn4fJ23nc=
   _serverSettings: {fileID: 11400000, guid: 2a91c0663ecaf43949302d5b31852ad7, type: 2}

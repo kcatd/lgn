@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 676717d6fe533471e9c322999478e863, type: 3}
   m_Name: DeveloperSettings
   m_EditorClassIdentifier: 
-  _secretKey: Vfymw9Gp8e4Yu5HTAqQrlk1qcJdw10z5nmHqdvz/zIk=
+  _secretKey: LEdbgMOQBHtH2oFONJs/2tEbX7sbZndYy9LkUngQr3A=
   _companyName: Boomzap
-  _email: atwl@boomzap.com
-  password: ILoveBoomzap
+  _email: boomzap@livegamenight.com
+  password: =Etc(_A~4tY
   _isRegistered: 1
