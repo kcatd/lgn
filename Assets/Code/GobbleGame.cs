@@ -256,6 +256,7 @@ public class GobbleGame : MonoBehaviour
                     {
                         scoreVal = Mathf.CeilToInt(0.5f * (float)scoreVal);
                     }
+                    srcObj.Score = scoreVal;
                     
                     PlayerScore destObj = scoreBoard.GetPlayer(localPlayerID);
                     if (null != destObj)

@@ -15,12 +15,14 @@ public class FoundWord : MonoBehaviour
     string  foundWord = "";
     PlayerId ownerID;
     Color textColor;
+    int foundScore = 0;
     bool hasStarted = false;
     bool isRevealed = false;
 
     List<PlayerId> finders = new List<PlayerId>();
 
     public string Word { get { return foundWord; } }
+    public int Score { get { return foundScore; } set { foundScore = value; } }
     public bool HasStarted  { get { return hasStarted; } }
     public bool Revealed { get { return isRevealed; } }
 
