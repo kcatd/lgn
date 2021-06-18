@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676717d6fe533471e9c322999478e863, type: 3}
+  m_Name: DeveloperSettings
+  m_EditorClassIdentifier: 
+  _secretKey: LEdbgMOQBHtH2oFONJs/2tEbX7sbZndYy9LkUngQr3A=
+  _companyName: Boomzap
+  _email: boomzap@livegamenight.com
+  password: =Etc(_A~4tY
+  _isRegistered: 1
