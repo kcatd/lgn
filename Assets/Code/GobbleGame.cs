@@ -221,7 +221,8 @@ public class GobbleGame : MonoBehaviour
                     dragPath.positionCount = dragPath.positionCount + 1;
                     dragPath.SetPosition(dragPath.positionCount - 1, localPos);
 
-                    mouseDragFX.Trigger();
+                    FXController.instance.StartDragging(FXController.instance.MousePos());
+                    //mouseDragFX.Trigger();
                 }
             }
         }
@@ -274,6 +275,8 @@ public class GobbleGame : MonoBehaviour
                             FoundWordFX wordFX = Instantiate<FoundWordFX>(prefabFoundWordFX, gameCanvas.transform);
                             wordFX.InitFoundWordFX(trackingSet[i], srcObj, i);
                         }
+                        // how successful was it?
+                        FXController.instance.StopDragging(FXController.instance.MousePos(), 1);
                     }
 
                     if (isOfflineMode)
@@ -289,10 +292,12 @@ public class GobbleGame : MonoBehaviour
                 else
                 {
                     // nay! -- fx and stuff
+                    FXController.instance.StopDragging(FXController.instance.MousePos(), -1);
                 }
             }
             ClearTracking();
-            mouseDragFX.Release();
+
+            //mouseDragFX.Release();
         }
     }
 
