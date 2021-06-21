@@ -44,7 +44,6 @@ public class ScoreFXEvent
     public FoundWord srcObj;
     public PlayerScore destObj;
     public PlayerId ownerID;
-    public int addScore;
 }
 
 public class GameModeSettings
@@ -163,7 +162,7 @@ public class GobbleGame : MonoBehaviour
             if (e.srcObj.Revealed)
             {
                 ScoreFX newFX = Instantiate<ScoreFX>(prefabScoreFX, gameCanvas.transform);
-                newFX.InitScoreFX(e.ownerID, e.addScore, e.srcObj, e.destObj, this);
+                newFX.InitScoreFX(e.ownerID, e.srcObj, e.destObj, this);
                 scoreFXEvents.RemoveAt(0);
             }
         }
@@ -256,14 +255,13 @@ public class GobbleGame : MonoBehaviour
                     {
                         scoreVal = Mathf.CeilToInt(0.5f * (float)scoreVal);
                     }
-                    srcObj.Score = scoreVal;
+                    srcObj.SetScore(localPlayerID, scoreVal);
                     
                     PlayerScore destObj = scoreBoard.GetPlayer(localPlayerID);
                     if (null != destObj)
                     {
                         ScoreFXEvent e = new ScoreFXEvent();
                         e.ownerID = localPlayerID;
-                        e.addScore = scoreVal;
                         e.srcObj = srcObj;
                         e.destObj = destObj;
 
@@ -698,6 +696,7 @@ public class GobbleGame : MonoBehaviour
     public int  GetPendingScore(int playerID, ref List<ScoreFXEvent> pendingSet, ref List<ScoreFX> executingSet)
     {
         ScoreFX[] fxSet = GetComponentsInChildren<ScoreFX>();
+        PlayerId srcID = new PlayerId(playerID);
         int pendingScoreVal = 0;
 
         foreach (var score in scoreFXEvents)
@@ -705,7 +704,7 @@ public class GobbleGame : MonoBehaviour
             if (playerID == score.ownerID)
             {
                 pendingSet.Add(score);
-                pendingScoreVal += score.addScore;
+                pendingScoreVal += score.srcObj.GetScore(srcID);
             }
         }
 

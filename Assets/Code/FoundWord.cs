@@ -6,6 +6,18 @@ using TMPro;
 
 using KitsuneCore.Services.Players;
 
+public class WordPlayerScore
+{
+    public readonly PlayerId player;
+    public int score;
+
+    public WordPlayerScore(PlayerId id, int val)
+    {
+        player = id;
+        score = val;
+    }
+}
+
 public class FoundWord : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI    text;
@@ -13,16 +25,14 @@ public class FoundWord : MonoBehaviour
     [SerializeField] float              unrevealedAlpha;
 
     string  foundWord = "";
-    PlayerId ownerID;
+    WordPlayerScore playerScore;
     Color textColor;
-    int foundScore = 0;
     bool hasStarted = false;
     bool isRevealed = false;
 
-    List<PlayerId> finders = new List<PlayerId>();
+    List<WordPlayerScore> finders = new List<WordPlayerScore>();
 
     public string Word { get { return foundWord; } }
-    public int Score { get { return foundScore; } set { foundScore = value; } }
     public bool HasStarted  { get { return hasStarted; } }
     public bool Revealed { get { return isRevealed; } }
 
@@ -38,10 +48,10 @@ public class FoundWord : MonoBehaviour
         
     }
 
-    public void SetFoundWord(string strWord, PlayerId id, Color c)
+    public void SetFoundWord(string strWord, PlayerId id, Color c, int score)
     {
         foundWord = strWord;
-        ownerID = id;
+        playerScore = new WordPlayerScore(id, score);
 
         //textColor = c;
         textColor = text.color;
@@ -50,28 +60,82 @@ public class FoundWord : MonoBehaviour
         //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
-    public void SetFoundPlayer(PlayerId id, Color c)
+    public void SetFoundPlayer(PlayerId id, Color c, int score)
     {
-        ownerID = id;
+        if ((null != playerScore) && (playerScore.player != id))
+        {
+            WordPlayerScore tmp = playerScore;
+            playerScore = null;
+            AddFinder(tmp.player, tmp.score);
+        }
+        playerScore = new WordPlayerScore(id, score);
+
         text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
         //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
-    public void AddFinder(PlayerId id)
+    public void SetScore(PlayerId id, int score, bool createNew = false)
     {
-        if ((id != ownerID) && !finders.Exists(x => x == id))
-            finders.Add(id);
+        if (playerScore.player == id)
+        {
+            playerScore.score = score;
+        }
+        else
+        {
+            WordPlayerScore wps = finders.Find(x => x.player == id);
+            if (null != wps)
+            {
+                wps.score = score;
+            }
+            else if (createNew)
+            {
+                AddFinder(id, score);
+            }
+        }
+    }
+
+    public int GetScore(PlayerId id, int defaultValue = 0)
+    {
+        if (playerScore.player == id)
+        {
+            return playerScore.score;
+        }
+        else
+        {
+            WordPlayerScore score = finders.Find(x => x.player == id);
+            if (null != score)
+            {
+                return score.score;
+            }
+        }
+        return defaultValue;
+    }
+
+    public void AddFinder(PlayerId id, int score)
+    {
+        if (id != playerScore.player)
+        {
+            WordPlayerScore exist = finders.Find(x => x.player == id);
+            if (null == exist)
+            {
+                finders.Add(new WordPlayerScore(id, score));
+            }
+            else
+            {
+                exist.score = score;
+            }
+        }
     }
 
     public bool IsFoundPlayer(PlayerId id, bool checkOwnerOnly = true)
     {
-        if (id == ownerID)
+        if (id == playerScore.player)
         {
             return true;
         }
         else if (!checkOwnerOnly)
         {
-            return finders.Exists(x => x == id);
+            return finders.Exists(x => x.player == id);
         }
         return false;
     }

@@ -59,7 +59,7 @@ public class FoundWordList : MonoBehaviour
             else if (gameDictionary.ValidateWord(strWord))
             {
                 FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                newWord.SetFoundWord(strWord, ownerID, c);
+                newWord.SetFoundWord(strWord, ownerID, c, 0);
                 outWord = newWord;
                 return FoundWordResult.ok;
             }
@@ -121,32 +121,29 @@ public class FoundWordList : MonoBehaviour
                 FoundWord word = WordExists(wordInfo[0]);
                 if (null != word)
                 {
-                    if (isOwner && !word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(id, c);
-                    else if (!isOwner && word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(new PlayerId(0), c);
+                    if (scoreVal < 0)
+                        scoreVal = word.GetScore(id);
 
-                    if (scoreVal > 0)
-                        word.Score = scoreVal;
+                    if (isOwner && !word.IsFoundPlayer(id))
+                        word.SetFoundPlayer(id, c, scoreVal);
+                    else if (!isOwner && word.IsFoundPlayer(id))
+                        word.SetFoundPlayer(new PlayerId(0), c, scoreVal);
                 }
                 else
                 {
+                    if (scoreVal < 0)
+                        scoreVal = 0;
+
                     if (isOwner)
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], id, c);
-
-                        if (scoreVal > 0)
-                            word.Score = scoreVal;
+                        newWord.SetFoundWord(wordInfo[0], id, c, scoreVal);
                     }
                     else
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], new PlayerId(0), c);
+                        newWord.SetFoundWord(wordInfo[0], new PlayerId(0), c, scoreVal);
                         newWord.SetRevealed();
-
-                        if (scoreVal > 0)
-                            word.Score = scoreVal;
                     }
                 }
             }
@@ -164,5 +161,15 @@ public class FoundWordList : MonoBehaviour
                 output.Add(w.Word);
             }
         }
+    }
+
+    public int  GetFoundWordScore(PlayerId id, string strWord, int defaultValue)
+    {
+        FoundWord word = WordExists(strWord);
+        if (null != word)
+        {
+            return word.GetScore(id, defaultValue);
+        }
+        return defaultValue;
     }
 }

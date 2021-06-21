@@ -62,13 +62,13 @@ public class ScoreFX : MonoBehaviour
         }
     }
 
-    public void    InitScoreFX(PlayerId srcPlayerID, int srcScoreVal, FoundWord objFrom, PlayerScore objTo, GobbleGame objParent)
+    public void    InitScoreFX(PlayerId srcPlayerID, FoundWord objFrom, PlayerScore objTo, GobbleGame objParent)
     {
         var newPos = transform.position;
         origScale = transform.localScale;
 
         playerID = srcPlayerID;
-        scoreVal = srcScoreVal;
+        scoreVal = objFrom.GetScore(playerID);
         startPos = objFrom.transform.position;
         destPos = objTo.transform.position;
         gameParent = objParent;
