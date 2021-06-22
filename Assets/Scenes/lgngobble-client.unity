@@ -5810,6 +5810,7 @@ RectTransform:
   - {fileID: 1480600413}
   - {fileID: 493960518}
   - {fileID: 99330733}
+  - {fileID: 1972333097}
   m_Father: {fileID: 519420032}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5879,6 +5880,100 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1972333096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1972333097}
+  - component: {fileID: 1972333099}
+  - component: {fileID: 1972333098}
+  - component: {fileID: 1972333100}
+  m_Layer: 0
+  m_Name: FXController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1972333097
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972333096}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1895868978}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1972333098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972333096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f0b0b6d0b7542bfbd20a3e05b04ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsTrail: 0
+  m_IgnoreCanvasScaler: 1
+  m_Scale: 10
+  m_Scale3D: {x: 10, y: 10, z: 10}
+  m_AnimatableProperties: []
+  m_Particles: []
+  m_ShrinkByMaterial: 0
+--- !u!222 &1972333099
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972333096}
+  m_CullTransparentMesh: 1
+--- !u!114 &1972333100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972333096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e928f9ac330b83d43b3e0a02c173f05b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDrag: {fileID: 19811078, guid: 23818e20c9fcaa74eae69d5f3348c74d, type: 3}
+  dragStart: {fileID: 19869282, guid: c51e34914bd18ff4880b11005334182e, type: 3}
+  dragSuccess:
+  - {fileID: 19829036, guid: 7d4e99a3eb9e47c4390895c8bec7bae6, type: 3}
+  - {fileID: 19855088, guid: cc4edba986607ba48b17927b27d25e4e, type: 3}
+  - {fileID: 19869282, guid: c51e34914bd18ff4880b11005334182e, type: 3}
+  dragFailure: {fileID: 0}
+  dragEmission: 15
+  worldCam: {fileID: 0}
 --- !u!1 &2036061411
 GameObject:
   m_ObjectHideFlags: 0
@@ -6422,7 +6517,7 @@ PrefabInstance:
       objectReference: {fileID: 1522216210}
     - target: {fileID: 3001432985875440399, guid: c45a80c21032cfc42b782e3b40cd83bc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000009869494
+      value: 0.000045811168
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c45a80c21032cfc42b782e3b40cd83bc, type: 3}
