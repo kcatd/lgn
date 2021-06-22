@@ -68,7 +68,7 @@ MonoBehaviour:
   m_text: the quick brown fox
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
-  m_sharedMaterial: {fileID: 7551842147077711110, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1ddfb1a642b5e054f9d7b155b42ddd32, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1177,7 +1177,7 @@ MonoBehaviour:
   m_text: 00:00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
-  m_sharedMaterial: {fileID: 7551842147077711110, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1ddfb1a642b5e054f9d7b155b42ddd32, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1311,7 +1311,7 @@ MonoBehaviour:
   m_text: MENU
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
-  m_sharedMaterial: {fileID: 7551842147077711110, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1ddfb1a642b5e054f9d7b155b42ddd32, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
