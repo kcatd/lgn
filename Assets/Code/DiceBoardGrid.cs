@@ -5,6 +5,17 @@ using UnityEngine.UI;
 
 public class DiceBoardGrid : MonoBehaviour
 {
+	[System.Serializable]
+	public class GridData
+	{ 
+        public Vector2 cellSize;
+        public Vector2 spacing;
+    }
+
+    [SerializeField] GridData   size4x4;
+    [SerializeField] GridData   size5x5;
+    [SerializeField] GridData   size6x6;
+
     [SerializeField] dice       dicePrefab;
     [SerializeField] Vector2Int baseBoardSize = new Vector2Int(5, 5);
 
@@ -264,7 +275,23 @@ public class DiceBoardGrid : MonoBehaviour
     private void    ResizeBoard()
     {
         grid.constraintCount = curBoardSize.x;
-        grid.cellSize = curGridItemScale * baseCellSize;
-        grid.spacing = curGridItemScale * baseCellSpacing;
+
+        int count = (int)curBoardSize.x;
+        if (count == 4)
+        {
+            grid.cellSize = size4x4.cellSize;
+            grid.spacing = size4x4.spacing;
+		} else
+        if (count == 5)
+        {
+            grid.cellSize = size5x5.cellSize;
+            grid.spacing = size5x5.spacing;
+		}
+        if (count == 6)
+        {
+            grid.cellSize = size6x6.cellSize;
+            grid.spacing = size6x6.spacing;
+		}
+
     }
 }

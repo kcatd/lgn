@@ -15,11 +15,40 @@ public enum WordType
 
 public class dice : MonoBehaviour
 {
-    [Header("Properties")]
+    [System.Serializable]
+    public class LetterState
+    {
+        public Image           normal;
+        public Image           over;
+        public Image           active;
+
+        public void Update(Image current)
+        {
+            normal.gameObject.SetActive(normal == current);    
+            over.gameObject.SetActive(over == current);    
+            active.gameObject.SetActive(active == current);    
+		}
+	}
+    [SerializeField] LetterState         normalTile;
+    [SerializeField] LetterState         doubleLetterTile;
+    [SerializeField] LetterState         trippleLetterTile;
+    [SerializeField] LetterState         doubleWordTile;
+    [SerializeField] LetterState         trippleWordTile;
+   
     [SerializeField] TextMeshProUGUI    diceFaceText;
+    [SerializeField] TextMeshProUGUI    diceFaceScoreText;
+
+    private int         posX = -1;
+    private int         posY = -1;
+    private string      diceFaceValue = "a";
+    private WordType    diceWordType = WordType.Normal;
+    private bool        isHighlighted = false;
+    private bool        isMouseOver = false;
+
+
+/*    [Header("Properties")]
     [SerializeField] GameObject         diceHighlight;
     [SerializeField] TextMeshProUGUI    diceFaceText3D;
-    [SerializeField] TextMeshProUGUI    diceFaceScoreText3D;
     [SerializeField] GameObject         diceHighlight3D;
     [SerializeField] GameObject         diceCube3D;
     [SerializeField] GameObject         doubleLetterScoreIcon;
@@ -29,20 +58,14 @@ public class dice : MonoBehaviour
     [SerializeField] float              rotationScale;
     [SerializeField] float              rotationSpeed;
     [SerializeField] bool               enable3D;
-
-    private BoxCollider2D               primaryCollider;
-    private CircleCollider2D            secondaryCollider;
-
-    private List<string>    diceFaces = new List<string>();
     private Vector3         desiredFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3         actualFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
+*/
+    private BoxCollider2D               primaryCollider;
+    private CircleCollider2D            secondaryCollider;
+    private List<string>    diceFaces = new List<string>();
 
-    private int         posX = -1;
-    private int         posY = -1;
-    private string      diceFaceValue = "a";
-    private WordType    diceWordType = WordType.Normal;
-    private bool        isHighlighted = false;
-    private bool        isMouseOver = false;
+
 
     public string   FaceValue { get { return diceFaceValue; } }
     public WordType DiceType { get { return diceWordType; } }
@@ -54,15 +77,10 @@ public class dice : MonoBehaviour
     {
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    private void FixedUpdate()
+ /*   private void FixedUpdate()
     {
-        if (enable3D)
+       if (enable3D)
         {
             float speedMod = 1.0f;
 
@@ -71,17 +89,6 @@ public class dice : MonoBehaviour
                 Vector3 mousePos = Input.mousePosition;
                 Vector3 localPos = Camera.main.ScreenToWorldPoint(mousePos);
 
-                /*
-                if (localPos.x < transform.position.x)
-                    desiredFacing3D.y = rotationAngle;
-                else if (localPos.x > transform.position.x)
-                    desiredFacing3D.y = -rotationAngle;
-
-                if (localPos.y < transform.position.y)
-                    desiredFacing3D.x = -rotationAngle;
-                else if (localPos.y > transform.position.y)
-                    desiredFacing3D.x = rotationAngle;
-                */
                 desiredFacing3D.y = (transform.position.x - localPos.x) * rotationScale;
                 desiredFacing3D.x = (localPos.y - transform.position.y) * rotationScale;
             }
@@ -127,7 +134,7 @@ public class dice : MonoBehaviour
             diceCube3D.transform.rotation = Quaternion.Euler(actualFacing3D);
         }
     }
-
+*/
     private void OnMouseEnter()
     {
         isMouseOver = true;
@@ -183,17 +190,44 @@ public class dice : MonoBehaviour
 
             diceWordType = type;
 
-            diceHighlight.gameObject.SetActive(false);
+/*            diceHighlight.gameObject.SetActive(false);
             diceHighlight3D.gameObject.SetActive(false);
 
             doubleLetterScoreIcon.gameObject.SetActive(WordType.DoubleLetterScore == diceWordType);
             tripleLetterScoreIcon.gameObject.SetActive(WordType.TripleLetterScore == diceWordType);
             doubleWordScoreIcon.gameObject.SetActive(WordType.DoubleWordScore == diceWordType);
             tripleWordScoreIcon.gameObject.SetActive(WordType.TripleWordScore == diceWordType);
-
+            */
             RollDice(game);
         }
     }
+
+    Image DesiredFace()
+    {
+        LetterState current = normalTile;
+        switch (diceWordType)
+        {
+            case WordType.Normal:               current = normalTile; break;
+            case WordType.DoubleLetterScore:    current = doubleLetterTile; break;
+            case WordType.TripleLetterScore:    current = trippleLetterTile; break;
+            case WordType.DoubleWordScore:      current = doubleWordTile; break;
+            case WordType.TripleWordScore:      current = trippleWordTile; break;
+		}
+        if (isMouseOver) return current.over;
+        if (isHighlighted) return current.active;
+        return current.normal;
+	}
+
+    void Update()
+    {
+        Image current = DesiredFace();
+        normalTile.Update(current);
+        doubleLetterTile.Update(current);
+        trippleLetterTile.Update(current);
+        doubleWordTile.Update(current);
+        trippleWordTile.Update(current);
+	}
+
 
     public void RollDice(GobbleGame game)
     {
@@ -213,12 +247,16 @@ public class dice : MonoBehaviour
             }
 
             diceFaceText.text = faceText;
-            diceFaceText3D.text = faceText;
-            diceFaceScoreText3D.text = game.GetWordScore(faceText).ToString();
+            diceFaceScoreText.text = game.GetWordScore(faceText).ToString();
 
-            GetComponent<Image>().enabled = !enable3D;
-            diceFaceText.gameObject.SetActive(!enable3D);
-            diceFaceText3D.gameObject.SetActive(enable3D);
+
+
+//            diceFaceText3D.text = faceText;
+//            diceFaceScoreText3D.text = game.GetWordScore(faceText).ToString();
+
+            //GetComponent<Image>().enabled = !enable3D;
+            //diceFaceText.gameObject.SetActive(!enable3D);
+            //diceFaceText3D.gameObject.SetActive(enable3D);
         }
     }
 
@@ -243,8 +281,8 @@ public class dice : MonoBehaviour
     public void SetHighlight(bool b)
     {
         isHighlighted = b;
-        diceHighlight.gameObject.SetActive(!enable3D && (isHighlighted || isMouseOver));
-        diceHighlight3D.gameObject.SetActive(enable3D && (isHighlighted || isMouseOver));
+//        diceHighlight.gameObject.SetActive(!enable3D && (isHighlighted || isMouseOver));
+//       diceHighlight3D.gameObject.SetActive(enable3D && (isHighlighted || isMouseOver));
     }
 
     public int  GetLetterMultiplier()
