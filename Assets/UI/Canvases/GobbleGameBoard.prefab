@@ -169,7 +169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -422.95, y: -345.1}
+  m_AnchoredPosition: {x: -422.95, y: -348.7}
   m_SizeDelta: {x: 166.1, y: 58.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825818048676885
@@ -247,7 +247,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 285.4, y: -16}
+  m_AnchoredPosition: {x: 285.4, y: -19.600014}
   m_SizeDelta: {x: 430.7, y: 570}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825818053358421
@@ -518,7 +518,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -220.8, y: -16}
+  m_AnchoredPosition: {x: -220.8, y: -19.600014}
   m_SizeDelta: {x: 557.6, y: 570}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825818522450164
@@ -594,7 +594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -222.4, y: 326.19995}
+  m_AnchoredPosition: {x: -222.4, y: 322.59995}
   m_SizeDelta: {x: 567.2, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825818608042519
@@ -672,7 +672,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 435, y: -348.5}
+  m_AnchoredPosition: {x: 435, y: -352.1}
   m_SizeDelta: {x: 113.7, y: 51.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825818793109896
@@ -881,7 +881,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 285.4, y: 324.6}
+  m_AnchoredPosition: {x: 285.4, y: 321}
   m_SizeDelta: {x: 430.7, y: 96.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6455825819236959365
@@ -1291,7 +1291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00004374372}
+  m_AnchoredPosition: {x: 0, y: 0.00019761013}
   m_SizeDelta: {x: 0, y: 540}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6455825819527460620
@@ -1551,8 +1551,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6455825818373101060}
   m_HandleRect: {fileID: 6455825818373101061}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.78292286
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1747,6 +1747,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6455825819987012450}
   - component: {fileID: 6455825819987012461}
+  - component: {fileID: 6438360837568585579}
+  - component: {fileID: 778785073564165243}
   m_Layer: 5
   m_Name: GobbleGameBoard
   m_TagString: Untagged
@@ -1788,3 +1790,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6455825819987012451}
   m_CullTransparentMesh: 1
+--- !u!111 &6438360837568585579
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455825819987012451}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 99760bef868059142ac5a89847f8dd6e, type: 2}
+  - {fileID: 7400000, guid: de6f4d90f31d3774c8f2e1cc818db180, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &778785073564165243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455825819987012451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c793abf7556aa2478c9c836673d24e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationSpeed: 1

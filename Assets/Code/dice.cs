@@ -13,7 +13,7 @@ public enum WordType
     TripleWordScore     = 4,
 }
 
-public class dice : MonoBehaviour
+public class Dice : MonoBehaviour
 {
     [System.Serializable]
     public class LetterState
@@ -45,26 +45,10 @@ public class dice : MonoBehaviour
     private bool        isHighlighted = false;
     private bool        isMouseOver = false;
 
-
-/*    [Header("Properties")]
-    [SerializeField] GameObject         diceHighlight;
-    [SerializeField] TextMeshProUGUI    diceFaceText3D;
-    [SerializeField] GameObject         diceHighlight3D;
-    [SerializeField] GameObject         diceCube3D;
-    [SerializeField] GameObject         doubleLetterScoreIcon;
-    [SerializeField] GameObject         tripleLetterScoreIcon;
-    [SerializeField] GameObject         doubleWordScoreIcon;
-    [SerializeField] GameObject         tripleWordScoreIcon;
-    [SerializeField] float              rotationScale;
-    [SerializeField] float              rotationSpeed;
-    [SerializeField] bool               enable3D;
-    private Vector3         desiredFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3         actualFacing3D = new Vector3(0.0f, 0.0f, 0.0f);
-*/
     private BoxCollider2D               primaryCollider;
     private CircleCollider2D            secondaryCollider;
-    private List<string>    diceFaces = new List<string>();
-
+    private List<string>                diceFaces = new List<string>();
+    private Color                       color  = Color.white;
 
 
     public string   FaceValue { get { return diceFaceValue; } }
@@ -78,63 +62,6 @@ public class dice : MonoBehaviour
     }
 
 
- /*   private void FixedUpdate()
-    {
-       if (enable3D)
-        {
-            float speedMod = 1.0f;
-
-            if (isMouseOver)
-            {
-                Vector3 mousePos = Input.mousePosition;
-                Vector3 localPos = Camera.main.ScreenToWorldPoint(mousePos);
-
-                desiredFacing3D.y = (transform.position.x - localPos.x) * rotationScale;
-                desiredFacing3D.x = (localPos.y - transform.position.y) * rotationScale;
-            }
-            else
-            {
-                desiredFacing3D.x = 0.0f;
-                desiredFacing3D.y = 0.0f;
-                speedMod = 0.25f;
-            }
-
-            if (actualFacing3D.x != desiredFacing3D.x)
-            {
-                float dt = desiredFacing3D.x - actualFacing3D.x;
-                float dir = dt / Mathf.Abs(dt);
-                float spd = Time.deltaTime * speedMod * rotationSpeed;
-
-                if (spd < (dir * dt))
-                {
-                    actualFacing3D.x += dir * spd;
-                }
-                else
-                {
-                    actualFacing3D.x = desiredFacing3D.x;
-                }
-            }
-
-            if (actualFacing3D.y != desiredFacing3D.y)
-            {
-                float dt = desiredFacing3D.y - actualFacing3D.y;
-                float dir = dt / Mathf.Abs(dt);
-                float spd = Time.deltaTime * speedMod * rotationSpeed;
-
-                if (spd < (dir * dt))
-                {
-                    actualFacing3D.y += dir * spd;
-                }
-                else
-                {
-                    actualFacing3D.y = desiredFacing3D.y;
-                }
-            }
-
-            diceCube3D.transform.rotation = Quaternion.Euler(actualFacing3D);
-        }
-    }
-*/
     private void OnMouseEnter()
     {
         isMouseOver = true;
@@ -226,8 +153,34 @@ public class dice : MonoBehaviour
         trippleLetterTile.Update(current);
         doubleWordTile.Update(current);
         trippleWordTile.Update(current);
+
+        current.color = color;
 	}
 
+    IEnumerator FadeInCo(float initialDelay, float duration)
+    {
+        float t = 0;
+        color = new Color(1,1,1,0);
+        DesiredFace().color = color;
+
+        yield return new WaitForSeconds(initialDelay);
+        while (t < duration)
+        {
+            t+=Time.deltaTime;
+            float alpha = Mathfx.Hermite(0, 1, t/duration);
+            color = new Color(1,1,1,alpha);
+            DesiredFace().color = color;
+            yield return new WaitForEndOfFrame();
+		}
+
+        color = Color.white;
+        DesiredFace().color = color;        
+	}
+
+    public void FadeIn(float initialDelay, float duration)
+    {
+        StartCoroutine(FadeInCo(initialDelay, duration));
+	}
 
     public void RollDice(GobbleGame game)
     {
@@ -266,7 +219,7 @@ public class dice : MonoBehaviour
         posY = idx / constraintCount;
     }
 
-    public bool IsAdjacent(dice obj)
+    public bool IsAdjacent(Dice obj)
     {
         if (this != obj)
         {

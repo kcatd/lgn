@@ -5,11 +5,11 @@ using TMPro;
 
 public class FoundWordFXEvent
 {
-    public dice         srcObj;
+    public Dice         srcObj;
     public FoundWord    destObj;
     int                 sequenceVal;
 
-    public FoundWordFXEvent(dice d, FoundWord w, int i)
+    public FoundWordFXEvent(Dice d, FoundWord w, int i)
     {
         srcObj = d;
         destObj = w;
@@ -66,7 +66,7 @@ public class FoundWordFX : MonoBehaviour
         }
     }
 
-    public void InitFoundWordFX(dice srcObj, FoundWord destObj, int sequenceVal)
+    public void InitFoundWordFX(Dice srcObj, FoundWord destObj, int sequenceVal)
     {
         initEvent = new FoundWordFXEvent(srcObj, destObj, sequenceVal);
     }

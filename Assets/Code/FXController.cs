@@ -41,6 +41,11 @@ public class FXController : SimpleSingleton<FXController>
         }
 	}
 
+    public void EndGame()
+    {
+        EnableMouseDrag(false);
+	}
+
     // Update is called once per frame
     void Update()
     {

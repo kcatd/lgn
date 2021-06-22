@@ -54,9 +54,6 @@ public class GameModePanel : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-    }
 
     void OnStartGameBtn()
     {

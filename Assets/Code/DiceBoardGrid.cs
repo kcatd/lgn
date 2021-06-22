@@ -16,14 +16,14 @@ public class DiceBoardGrid : MonoBehaviour
     [SerializeField] GridData   size5x5;
     [SerializeField] GridData   size6x6;
 
-    [SerializeField] dice       dicePrefab;
+    [SerializeField] Dice       dicePrefab;
     [SerializeField] Vector2Int baseBoardSize = new Vector2Int(5, 5);
 
     GridLayoutGroup             grid;
     Vector2                     baseCellSize;
     Vector2                     baseCellSpacing;
 
-    private List<dice>          diceSet = new List<dice>();
+    private List<Dice>          diceSet = new List<Dice>();
     private bool                diceCollisionFlag = true;
 
     private Vector2Int          curBoardSize = new Vector2Int(5, 5);
@@ -152,7 +152,9 @@ public class DiceBoardGrid : MonoBehaviour
             if (specialDiceSet.ContainsKey(i))
                 diceType = specialDiceSet[i];
 
-            AddDice(diceValue, game, diceType);
+            Dice newDice = AddDice(diceValue, game, diceType);
+            newDice.FadeIn((i * 0.025f), 0.5f);
+
 
             diceUsed.Add(diceValue);
             dicePool.RemoveAt(idx);
@@ -208,7 +210,7 @@ public class DiceBoardGrid : MonoBehaviour
     {
         curBoardLayout = "";
 
-        foreach (dice obj in diceSet)
+        foreach (Dice obj in diceSet)
         {
             Destroy(obj.gameObject);
         }
@@ -216,9 +218,9 @@ public class DiceBoardGrid : MonoBehaviour
         diceCollisionFlag = true;
     }
 
-    public dice GetDice(Vector3 hitPos)
+    public Dice GetDice(Vector3 hitPos)
     {
-        foreach (dice obj in diceSet)
+        foreach (Dice obj in diceSet)
         {
             if (obj.IsMouseOver)
                 return obj;
@@ -230,17 +232,17 @@ public class DiceBoardGrid : MonoBehaviour
     {
         diceCollisionFlag = isPrimary;
 
-        foreach (dice d in diceSet)
+        foreach (Dice d in diceSet)
         {
             d.SetDiceCollision(isPrimary);
         }
     }
 
-    private dice AddDice(string diceValue, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
+    private Dice AddDice(string diceValue, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
     {
         if (!string.IsNullOrEmpty(diceValue))
         {
-            dice newDice = Instantiate<dice>(dicePrefab, transform);
+            Dice newDice = Instantiate<Dice>(dicePrefab, transform);
 
             Vector3 diceScale = newDice.transform.localScale;
             diceScale.x *= curGridItemScale;

@@ -65,7 +65,6 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] FoundWordList  wordList;
     [SerializeField] GameScoreBoard scoreBoard;
     [SerializeField] LineRenderer   dragPath;
-    [SerializeField] MouseFX        mouseDragFX;
 
     [Header("UI Panels")]
     [SerializeField] GameObject     gameCanvas;
@@ -87,7 +86,7 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] string[]       diceList;
     [SerializeField] DiceScoreEntry[] scoreList;
 
-    List<dice>                      trackingSet = new List<dice>();
+    List<Dice>                      trackingSet = new List<Dice>();
     private string                  curTrackingWord = "";
     private bool                    isTracking = false;
 
@@ -175,7 +174,7 @@ public class GobbleGame : MonoBehaviour
             {
                 Vector3 mousePos = Input.mousePosition;
                 Vector3 localPos = Camera.main.ScreenToWorldPoint(mousePos);
-                dice d = diceBoard.GetDice(mousePos);
+                Dice d = diceBoard.GetDice(mousePos);
 
                 if ((null != d) && ((trackingSet.Count < 1) || trackingSet[trackingSet.Count - 1].IsAdjacent(d)))
                 {
@@ -201,7 +200,7 @@ public class GobbleGame : MonoBehaviour
             {
                 Vector3 mousePos = Input.mousePosition;
                 Vector3 localPos = Camera.main.ScreenToWorldPoint(mousePos);
-                dice d = diceBoard.GetDice(mousePos);
+                Dice d = diceBoard.GetDice(mousePos);
 
                 if (null != d)
                 {
@@ -367,8 +366,11 @@ public class GobbleGame : MonoBehaviour
     public void StartGame()
     {
         backgroundImage.Randomize();
-        gameModePanel.gameObject.SetActive(false);
+        gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsExit", ()=>gameModePanel.gameObject.SetActive(false));
+        
         gameBoardPanel.gameObject.SetActive(true);
+        gameBoardPanel.GetComponent<PlayAnimation>().Play("GameBoardEnter");
+
         isGameStarted = true;
 
         if (null != curGameModeSettings)
@@ -379,7 +381,7 @@ public class GobbleGame : MonoBehaviour
     {
         isGameStarted = false;
         ClearTracking();
-        mouseDragFX.Release();
+        FXController.instance.EndGame();
         InitializeSummary();
     }
 
@@ -418,7 +420,10 @@ public class GobbleGame : MonoBehaviour
     {
         gameBoardPanel.gameObject.SetActive(false);
         summaryPanel.gameObject.SetActive(false);
+        //summaryPanel.GetComponent<PlayAnimation>().Play("SummaryExit", ()=>summaryPanel.gameObject.SetActive(false));
+
         gameModePanel.gameObject.SetActive(true);
+        gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsEnter");
 
         if (null != curGameModeSettings)
         {
@@ -458,8 +463,13 @@ public class GobbleGame : MonoBehaviour
 
     public void InitializeSummary()
     {
-        gameBoardPanel.gameObject.SetActive(false);
+
+        backgroundImage.Randomize();
+        
+        gameBoardPanel.GetComponent<PlayAnimation>().Play("GameBoardExit", ()=>gameBoardPanel.gameObject.SetActive(false));
+        
         summaryPanel.gameObject.SetActive(true);
+        //summaryPanel.GetComponent<PlayAnimation>().Play("SummaryEnter");
 
         if (isOfflineMode)
         {
@@ -479,7 +489,7 @@ public class GobbleGame : MonoBehaviour
         ClearFX();
         ClearTracking();
 
-        mouseDragFX.Release();
+        FXController.instance.EndGame();
         wordList.ClearWords();
         ScoreBoard.ClearScoreBoard();
 
@@ -653,7 +663,7 @@ public class GobbleGame : MonoBehaviour
         }
     }
 
-    public int  GetWordScore(string theWord, List<dice> diceSet = null)
+    public int  GetWordScore(string theWord, List<Dice> diceSet = null)
     {
         int result = 0;
         int wordMultiplier = 1;
@@ -801,7 +811,7 @@ public class GobbleGame : MonoBehaviour
 
     private void ClearTracking(bool resetDiceCollisionType = true)
     {
-        foreach (dice d in trackingSet)
+        foreach (Dice d in trackingSet)
         {
             d.SetHighlight(false);
         }
