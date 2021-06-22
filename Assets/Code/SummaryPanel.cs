@@ -106,6 +106,10 @@ public class SummaryPanel : MonoBehaviour
             sortedByScore.Add(w);
         }
 
+        if (totalWordCount > 1)
+        {
+            allWords.Sort((x, y) => x.Length == y.Length ? string.Compare(x, y) : y.Length - x.Length);
+        }
         if (wordCount > 1)
         {
             sortedBySize.Sort((x, y) => x.word.Length == y.word.Length ? x.score == y.score ? string.Compare(x.word, y.word, true) : y.score - x.score : y.word.Length - x.word.Length);
@@ -118,10 +122,11 @@ public class SummaryPanel : MonoBehaviour
         if (null != summaryTotalWordsFound)
             summaryTotalWordsFound.text = string.Format("{0}/{1}", wordCount, totalWordCount);
 
+        if (null != summaryWordList)
+            summaryWordList.PopulateList(ref sortedBySize, ref allWords);
+
         if (wordCount > 0)
         {
-            summaryWordList.PopulateList(ref sortedBySize);
-
             if (null != summaryHighestScoringWord)
                 summaryHighestScoringWord.text = string.Format("{0} ({1})", sortedByScore[0].word, sortedByScore[0].score);
 
@@ -130,8 +135,6 @@ public class SummaryPanel : MonoBehaviour
         }
         else
         {
-            summaryWordList.ClearList();
-
             if (null != summaryHighestScoringWord)
                 summaryHighestScoringWord.text = "-";
 
