@@ -12,6 +12,20 @@ public enum FoundWordResult
     ok,
 }
 
+public class FoundWordInfo
+{
+    public readonly PlayerId player;
+    public readonly int score;
+    public readonly string word;
+
+    public FoundWordInfo(PlayerId id, int val, string str)
+    {
+        player = id;
+        score = val;
+        word = str;
+    }
+}
+
 public class FoundWordList : MonoBehaviour
 {
     [SerializeField] FoundWord      foundWordPrefab;
@@ -150,7 +164,16 @@ public class FoundWordList : MonoBehaviour
         }
     }
 
-    public void GetFoundWordList(PlayerId id, ref List<string> output)
+    public void GetAllFoundWords(ref List<string> output)
+    {
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+
+        foreach (FoundWord w in Words)
+        {
+            output.Add(w.Word);
+        }
+    }
+    public void GetFoundWordList(PlayerId id, ref List<FoundWordInfo> output)
     {
         FoundWord[] Words = GetComponentsInChildren<FoundWord>();
 
@@ -158,7 +181,7 @@ public class FoundWordList : MonoBehaviour
         {
             if (w.IsFoundPlayer(id))
             {
-                output.Add(w.Word);
+                output.Add(new FoundWordInfo(id, w.GetScore(id), w.Word));
             }
         }
     }

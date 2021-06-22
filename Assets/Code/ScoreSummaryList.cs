@@ -20,10 +20,10 @@ public class ScoreSummaryList : MonoBehaviour
         
     }
 
-    public void AddEntry(string name, int score, Color c)
+    public void AddEntry(string name, int id, int score, Color c)
     {
         ScoreSummaryEntry newEntry = Instantiate<ScoreSummaryEntry>(prefab, transform);
-        newEntry.SetupEntry(name, score, c);
+        newEntry.SetupEntry(name, id, score, c);
     }
 
     public void ClearAllEntries()
@@ -48,5 +48,18 @@ public class ScoreSummaryList : MonoBehaviour
             for (int i = 0; i < entryCount; ++i)
                 scores[i].transform.SetSiblingIndex(i);
         }
+    }
+
+    public bool GetTopEntry(ref string outName, ref int outID, ref int outScore)
+    {
+        ScoreSummaryEntry[] scores = GetComponentsInChildren<ScoreSummaryEntry>();
+        if (scores.Length > 0)
+        {
+            outName = scores[0].OwnerName;
+            outID = scores[0].OwnerID;
+            outScore = scores[0].Score;
+            return true;
+        }
+        return false;
     }
 }
