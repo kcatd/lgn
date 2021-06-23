@@ -421,8 +421,8 @@ public class GobbleGame : MonoBehaviour
     public void InitializeLobby()
     {
         gameBoardPanel.gameObject.SetActive(false);
-        summaryPanel.gameObject.SetActive(false);
-        //summaryPanel.GetComponent<PlayAnimation>().Play("SummaryExit", ()=>summaryPanel.gameObject.SetActive(false));
+        if (summaryPanel.gameObject.activeInHierarchy)
+            summaryPanel.GetComponent<PlayAnimation>().Play("SummaryExit", ()=>summaryPanel.gameObject.SetActive(false));
 
         gameModePanel.gameObject.SetActive(true);
         gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsEnter");
@@ -471,7 +471,7 @@ public class GobbleGame : MonoBehaviour
         gameBoardPanel.GetComponent<PlayAnimation>().Play("GameBoardExit", ()=>gameBoardPanel.gameObject.SetActive(false));
         
         summaryPanel.gameObject.SetActive(true);
-        //summaryPanel.GetComponent<PlayAnimation>().Play("SummaryEnter");
+        summaryPanel.GetComponent<PlayAnimation>().Play("SummaryEnter");
 
         if (isOfflineMode)
         {
