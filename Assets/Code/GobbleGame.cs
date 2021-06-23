@@ -526,6 +526,22 @@ public class GobbleGame : MonoBehaviour
             string optionsStr = "";
             int optionsCount = 0;
 
+            if (curGameModeSettings.enableDoubleLetterScore)
+            {
+                if (optionsCount++ > 0)
+                    optionsStr += "+dl";
+                else
+                    optionsStr = "dl";
+            }
+
+            if (curGameModeSettings.enableTripleLetterScore)
+            {
+                if (optionsCount++ > 0)
+                    optionsStr += "+tl";
+                else
+                    optionsStr = "tl";
+            }
+
             if (curGameModeSettings.enableDoubleWordScore)
             {
                 if (optionsCount++ > 0)
@@ -602,6 +618,8 @@ public class GobbleGame : MonoBehaviour
             if (tokens.Length > 4)
             {
                 string[] optionToks = tokens[4].Split('+');
+                curGameModeSettings.enableDoubleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dl", x));
+                curGameModeSettings.enableTripleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tl", x));
                 curGameModeSettings.enableDoubleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dw", x));
                 curGameModeSettings.enableTripleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tw", x));
             }

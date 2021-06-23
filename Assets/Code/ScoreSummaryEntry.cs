@@ -9,7 +9,11 @@ public class ScoreSummaryEntry : MonoBehaviour
     [SerializeField] TextMeshProUGUI    nameText;
     [SerializeField] TextMeshProUGUI    scoreText;
 
+    int         ownerID = 0;
     int         scoreValue = 0;
+
+    public string OwnerName { get { return nameText.text; } }
+    public int  OwnerID { get { return ownerID; } }
     public int  Score { get { return scoreValue; } set { scoreValue = value; } }
 
     // Start is called before the first frame update
@@ -24,8 +28,9 @@ public class ScoreSummaryEntry : MonoBehaviour
         
     }
 
-    public void SetupEntry(string name, int score, Color c)
+    public void SetupEntry(string name, int id, int score, Color c)
     {
+        ownerID = id;
         scoreValue = score;
 
         nameText.text = name;

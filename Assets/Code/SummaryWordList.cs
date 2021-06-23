@@ -20,14 +20,23 @@ public class SummaryWordList : MonoBehaviour
         
     }
 
-    public void    PopulateList(List<string> theList)
+    public void    PopulateList(ref List<FoundWordInfo> theList, ref List<string> allWords)
     {
         ClearList();
 
         foreach (var word in theList)
         {
             SummaryWord newWord = Instantiate<SummaryWord>(summaryWordPrefab, transform);
-            newWord.Word = word;
+            newWord.SetSummaryWord(word.word, true);
+        }
+
+        foreach (var word in allWords)
+        {
+            if (!theList.Exists(x => 0 == string.Compare(x.word, word, true)))
+            {
+                SummaryWord newWord = Instantiate<SummaryWord>(summaryWordPrefab, transform);
+                newWord.SetSummaryWord(word, false);
+            }
         }
     }
 
