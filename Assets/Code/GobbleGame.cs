@@ -267,11 +267,13 @@ public class GobbleGame : MonoBehaviour
 
                         scoreFXEvents.Add(e);
 
-                        for (int i = 0; i < trackingSet.Count; ++i)
+                        /*for (int i = 0; i < trackingSet.Count; ++i)
                         {
                             FoundWordFX wordFX = Instantiate<FoundWordFX>(prefabFoundWordFX, gameCanvas.transform);
                             wordFX.InitFoundWordFX(trackingSet[i], srcObj, i);
-                        }
+                        }*/
+                        foreach (var t in trackingSet) t.Pulse();
+
                         // how successful was it?
                         FXController.instance.StopDragging(FXController.instance.MousePos(), 1);
                     }

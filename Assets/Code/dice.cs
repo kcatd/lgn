@@ -157,6 +157,20 @@ public class Dice : MonoBehaviour
         current.color = color;
 	}
 
+    IEnumerator BounceCo(float duration)
+    {
+        Vector3 defaultScale = transform.localScale;
+        float t = 0;
+        while (t < duration)
+        {
+            t+=Time.deltaTime;
+            float scale = Mathf.Sin((t/duration) * Mathf.PI);
+            transform.localScale = defaultScale * (1.0f + (scale * 0.1f));
+            yield return new WaitForEndOfFrame();
+		}
+        transform.localScale = defaultScale;
+    }
+
     IEnumerator FadeInCo(float initialDelay, float duration)
     {
         float t = 0;
@@ -181,7 +195,11 @@ public class Dice : MonoBehaviour
     {
         StartCoroutine(FadeInCo(initialDelay, duration));
 	}
-
+    
+    public void Pulse()
+    {
+        StartCoroutine(BounceCo(0.5f));
+	}
     public void RollDice(GobbleGame game)
     {
         if (diceFaces.Count > 0)
