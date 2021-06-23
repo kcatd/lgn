@@ -25,7 +25,10 @@ public class PlayAnimation : MonoBehaviour
     protected IEnumerator PlayCo(string firstAnim, UnityEngine.Events.UnityAction onDone = null)
 	{
 		Debug.Log("Playing animation " + firstAnim);
-		if (!animCtrl) 	yield break;
+		if (!animCtrl) 
+			animCtrl = GetComponent<Animation>();
+		if (!animCtrl)
+			yield break;
 		if (!animCtrl.gameObject.activeInHierarchy) animCtrl.gameObject.SetActive(true);
 		if (animCtrl.isPlaying)
 		{
