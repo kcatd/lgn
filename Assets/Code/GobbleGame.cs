@@ -260,6 +260,7 @@ public class GobbleGame : MonoBehaviour
                     PlayerScore destObj = scoreBoard.GetPlayer(localPlayerID);
                     if (null != destObj)
                     {
+                        /*
                         ScoreFXEvent e = new ScoreFXEvent();
                         e.ownerID = localPlayerID;
                         e.srcObj = srcObj;
@@ -267,12 +268,16 @@ public class GobbleGame : MonoBehaviour
 
                         scoreFXEvents.Add(e);
 
-                        /*for (int i = 0; i < trackingSet.Count; ++i)
+                        for (int i = 0; i < trackingSet.Count; ++i)
                         {
                             FoundWordFX wordFX = Instantiate<FoundWordFX>(prefabFoundWordFX, gameCanvas.transform);
                             wordFX.InitFoundWordFX(trackingSet[i], srcObj, i);
                         }*/
                         foreach (var t in trackingSet) t.Pulse();
+
+                        // temporarily fix the scoreboard and scoring - at least until the proper fx is decided and put in
+                        srcObj.SetRevealed();
+                        scoreBoard.AddScore(localPlayerID, scoreVal);
 
                         // how successful was it?
                         FXController.instance.StopDragging(FXController.instance.MousePos(), 1);
