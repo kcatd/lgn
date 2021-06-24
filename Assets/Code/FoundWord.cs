@@ -65,10 +65,13 @@ public class FoundWord : MonoBehaviour
         if ((null != playerScore) && (playerScore.player != id))
         {
             WordPlayerScore tmp = playerScore;
-            playerScore = null;
+            playerScore = new WordPlayerScore(id, score);
             AddFinder(tmp.player, tmp.score);
         }
-        playerScore = new WordPlayerScore(id, score);
+        else
+        {
+            playerScore = new WordPlayerScore(id, score);
+        }
 
         text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
         //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);

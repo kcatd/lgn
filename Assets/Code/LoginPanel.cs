@@ -27,27 +27,7 @@ public class LoginPanel : MonoBehaviour
 
     LoginStateID                    loginState;
 
-    public LoginStateID LoginState
-    {
-        get
-        {
-            return loginState;
-        }
-        set
-        {
-            if (value != loginState)
-            {
-                loginState = value;
-
-                switch (loginState)
-                {
-                    case LoginStateID.LoggedOut:    OnLoggedOut(); break;
-                    case LoginStateID.LoggingIn:    OnLoggingIn(); break;
-                    case LoginStateID.LoggedIn:     OnLoggedIn(); break;
-                }
-            }
-        }
-    }
+    public LoginStateID             LoginState { get { return loginState; } }
 
     // Start is called before the first frame update
     void Start()
@@ -80,12 +60,26 @@ public class LoginPanel : MonoBehaviour
         loginBtn.interactable = true;
         offlineBtn.interactable = true;
 
-        LoginState = LoginStateID.LoggedOut;
-        statusText.text = "Disconnected";
+        SetLoginState(LoginStateID.LoggedOut);
     }
 
     private void OnDisable()
     {
+    }
+
+    public void SetLoginState(LoginStateID state, string messageStr = "")
+    {
+        if (state != loginState)
+        {
+            loginState = state;
+
+            switch (loginState)
+            {
+                case LoginStateID.LoggedOut: OnLoggedOut(messageStr); break;
+                case LoginStateID.LoggingIn: OnLoggingIn(messageStr); break;
+                case LoginStateID.LoggedIn: OnLoggedIn(messageStr); break;
+            }
+        }
     }
 
     void    OnSignUpBtn()
@@ -103,9 +97,13 @@ public class LoginPanel : MonoBehaviour
         game.StartOffline();
     }
 
-    void    OnLoggedOut()
+    void    OnLoggedOut(string messageStr = "")
     {
-        statusText.text = "Disconnected";
+        if (string.IsNullOrEmpty(messageStr))
+            statusText.text = "Disconnected";
+        else
+            statusText.text = messageStr;
+
         userNameField.interactable = true;
         accountNameField.interactable = true;
         passwordField.interactable = true;
@@ -114,9 +112,13 @@ public class LoginPanel : MonoBehaviour
         offlineBtn.interactable = true;
     }
 
-    void    OnLoggingIn()
+    void    OnLoggingIn(string messageStr = "")
     {
-        statusText.text = "Connecting...";
+        if (string.IsNullOrEmpty(messageStr))
+            statusText.text = "Connecting...";
+        else
+            statusText.text = messageStr;
+
         userNameField.interactable = false;
         accountNameField.interactable = false;
         passwordField.interactable = false;
@@ -125,9 +127,13 @@ public class LoginPanel : MonoBehaviour
         offlineBtn.interactable = false;
     }
 
-    void    OnLoggedIn()
+    void    OnLoggedIn(string messageStr = "")
     {
-        statusText.text = "Connected!";
+        if (string.IsNullOrEmpty(messageStr))
+            statusText.text = "Connected!";
+        else
+            statusText.text = messageStr;
+
         game.LoginDone();
     }
 }

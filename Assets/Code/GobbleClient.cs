@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,7 @@ using KitsuneCommon.Net.Messages;
 using KitsuneCore.Broadcast;
 using KitsuneCore.Entity;
 using KitsuneCore.Entity.Components;
+using KitsuneCore.Net;
 using KitsuneCore.Services.Authentication;
 using KitsuneCore.Services.Chat;
 using KitsuneCore.Services.GameServer;
@@ -115,6 +117,7 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
         Kitsune.Authentication.Subscribe<KitsuneEvent.ON_ERROR>(OnError);
         Kitsune.Inventory.Subscribe<KitsuneEvent.ON_ERROR>(OnError);
         Kitsune.Authentication.Subscribe<AuthenticationEvent.ON_DISCONNECTED>(OnDisconnected);
+		Kitsune.Authentication.Subscribe<AuthenticationEvent.ON_SERVER_DISCONNECTED>(OnServerDisconnected);
         Kitsune.Chat.Subscribe<ChatEvent.ON_ROOM_CHAT>(OnRoomChat);
 
 		// or register a service subscriber
@@ -172,7 +175,7 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 	private void OnConnected()
 	{
 		StatusMessage("Connected");
-		loginPanel.LoginState = LoginStateID.LoggedIn;
+		loginPanel.SetLoginState(LoginStateID.LoggedIn);
 
 		Kitsune.Players.Subscribe<PlayerEvent.ON_GET_PLAYER>(OnGetPlayer);
 		Kitsune.Players.GetPlayer(Kitsune.MyPlayerId);
@@ -458,7 +461,21 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		_currencyCache.Clear();
 		_consumeButtonIds.Clear();
 
-		loginPanel.LoginState = LoginStateID.LoggedOut;
+		loginPanel.SetLoginState(LoginStateID.LoggedOut);
+	}
+
+	private void OnServerDisconnected(string message, EServerDisconnectReason reason)
+	{
+		StatusMessage("Server Disconnected");
+
+		_currencyBalances.Clear();
+		_itemQuantities.Clear();
+		_itemCache.Clear();
+		_productCache.Clear();
+		_currencyCache.Clear();
+		_consumeButtonIds.Clear();
+
+		loginPanel.SetLoginState(LoginStateID.LoggedOut, message);
 	}
 
 	private void OnRoomChat(ChatMessage chatMessage)
@@ -499,7 +516,7 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 	private void OnErrorEvent(string errorMessage)
 	{
 		StatusMessage(errorMessage, "red");
-		loginPanel.LoginState = LoginStateID.LoggedOut;
+		loginPanel.SetLoginState(LoginStateID.LoggedOut, errorMessage);
 	}
 
 	private void StatusMessage(string message, string color = "black")
@@ -664,13 +681,13 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 			Kitsune.Authentication.Login(loginInfo.accountName, loginInfo.accountPassword);
 		}
 
-		loginPanel.LoginState = LoginStateID.LoggingIn;
+		loginPanel.SetLoginState(LoginStateID.LoggingIn);
 		pendingLoginInfo = loginInfo;
 	}
 
 	public void DoLogout()
 	{
-		loginPanel.LoginState = LoginStateID.LoggedOut;
+		loginPanel.SetLoginState(LoginStateID.LoggedOut);
 		Kitsune.Authentication.Logout();
 	}
 
