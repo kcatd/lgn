@@ -11,6 +11,7 @@ public class PlayerLobbyEntry : MonoBehaviour
     [SerializeField] TextMeshProUGUI    playerNameText;
     [SerializeField] Button             joinGameBtn;
     [SerializeField] Button             spectateGameBtn;
+    [SerializeField] Button             kickGameBtn;
     [SerializeField] GameObject         isHostIndicator;
     [SerializeField] GameObject         isSpectatorIndicator;
 
@@ -35,6 +36,7 @@ public class PlayerLobbyEntry : MonoBehaviour
 
         joinGameBtn.onClick.AddListener(OnJoinBtn);
         spectateGameBtn.onClick.AddListener(OnSpectateBtn);
+        //kickGameBtn.onClick.AddListener(OnKickBtn);
     }
 
     // Update is called once per frame
@@ -74,6 +76,10 @@ public class PlayerLobbyEntry : MonoBehaviour
             joinGameBtn.interactable = false;
             parentList.SetListUpdate();
         }
+    }
+
+    void    OnKickBtn()
+    {
     }
 
     public void InitPlayer(PlayerId id, string playerName, int teamID, bool isHost, bool isLocalPlayer, PlayerLobbyList listObj)

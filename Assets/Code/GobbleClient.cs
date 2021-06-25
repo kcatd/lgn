@@ -33,6 +33,7 @@ public class GobbleMsgTag
 	public const MessageTag AddWord = MessageTag.kTagMessageCustomGame2;	// c->s
 	public const MessageTag GameState = MessageTag.kTagMessageCustomGame3;  // c->s + s->c
 	public const MessageTag PlayerTeam = MessageTag.kTagMessageCustomGame4;  // c->s + s->c
+	public const MessageTag KickPlayer = MessageTag.kTagMessageCustomGame5; // c->s
 }
 public class GobbleTag
 {
@@ -729,6 +730,13 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
     {
 		Message message = Message.Mk(GobbleMsgTag.PlayerTeam);
 		message.AddInteger(GobbleTag.PlayerTeamID, teamID);
+		Kitsune.GameServer.Send(message);
+    }
+
+	public void	DoKickPlayer(int playerID)
+    {
+		Message message = Message.Mk(GobbleMsgTag.KickPlayer);
+		message.AddInteger(Tag.kDBUserId, playerID);
 		Kitsune.GameServer.Send(message);
     }
 }
