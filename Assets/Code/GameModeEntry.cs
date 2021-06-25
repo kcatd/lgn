@@ -15,6 +15,7 @@ public class GameModeEntry : MonoBehaviour
 {
     [SerializeField] GameModeOption     optionType;
     [SerializeField] Toggle             optionToggle;
+    public bool                         initButton = true;
 
     public GameModeOption OptionType    { get {return optionType; } }
     public bool IsToggled               { get { return optionToggle.isOn; } set { optionToggle.SetIsOnWithoutNotify(value); } }
@@ -22,11 +23,21 @@ public class GameModeEntry : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitButton();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void InitButton()
+    {
+        if (initButton)
+        {
+            initButton = false;
+            // anything to init?
+        }
     }
 }

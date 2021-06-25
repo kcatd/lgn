@@ -18,30 +18,13 @@ public class GameModePanel : MonoBehaviour
     List<BoardSizeBtn>              boardSizeGroup;
     List<GameModeEntry>             optionsGroup;
 
+    bool                            initPanel = true;
     bool                            settingsChangedFlag = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameTimeGroup = new List<GameTimeBtn>();
-        GetComponentsInChildren<GameTimeBtn>(gameTimeGroup);
-
-        gameWordLengthGroup = new List<GameWordLengthBtn>();
-        GetComponentsInChildren<GameWordLengthBtn>(gameWordLengthGroup);
-
-        boardSizeGroup = new List<BoardSizeBtn>();
-        GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
-
-        optionsGroup = new List<GameModeEntry>();
-        GetComponentsInChildren<GameModeEntry>(optionsGroup);
-
-        startGameBtn.onClick.AddListener(OnStartGameBtn);
-
-        Toggle[] allToggles = GetComponentsInChildren<Toggle>(true);
-        foreach (var tog in allToggles)
-        {
-            tog.onValueChanged.AddListener(OnGameSettingsChanged);
-        }
+        InitPanel();
     }
 
     // Update is called once per frame
@@ -77,6 +60,8 @@ public class GameModePanel : MonoBehaviour
 
     public void GetGameSettings(ref GameModeSettings settings)
     {
+        InitPanel();
+
         foreach (var btn in gameTimeGroup)
         {
             if (btn.IsToggled)
@@ -130,6 +115,8 @@ public class GameModePanel : MonoBehaviour
 
     public void SetGameSettings(GameModeSettings settings, bool clearPlayerList)
     {
+        InitPanel();
+
         foreach (var btn in gameTimeGroup)
         {
             if (btn.GameTime == settings.gameTime)
@@ -187,6 +174,7 @@ public class GameModePanel : MonoBehaviour
 
     public void SetupPlayerControllables(bool isHost)
     {
+        InitPanel();
         foreach (var obj in hostControls)
         {
             obj.interactable = isHost;
@@ -195,6 +183,51 @@ public class GameModePanel : MonoBehaviour
 
     public void UpdatePlayer(PlayerId id, string playerName, int teamID, bool isHost, bool isLocalPlayer)
     {
+        InitPanel();
         playerList.UpdatePlayer(id, playerName, teamID, isHost, isLocalPlayer);
+    }
+
+    private void    InitPanel()
+    {
+        if (initPanel)
+        {
+            initPanel = false;
+
+            gameTimeGroup = new List<GameTimeBtn>();
+            GetComponentsInChildren<GameTimeBtn>(gameTimeGroup);
+            foreach(var btn in gameTimeGroup)
+            {
+                btn.InitButton();
+            }
+
+            gameWordLengthGroup = new List<GameWordLengthBtn>();
+            GetComponentsInChildren<GameWordLengthBtn>(gameWordLengthGroup);
+            foreach (var btn in gameWordLengthGroup)
+            {
+                btn.InitButton();
+            }
+
+            boardSizeGroup = new List<BoardSizeBtn>();
+            GetComponentsInChildren<BoardSizeBtn>(boardSizeGroup);
+            foreach(var btn in boardSizeGroup)
+            {
+                btn.InitButton();
+            }
+
+            optionsGroup = new List<GameModeEntry>();
+            GetComponentsInChildren<GameModeEntry>(optionsGroup);
+            foreach (var btn in optionsGroup)
+            {
+                btn.InitButton();
+            }
+
+            startGameBtn.onClick.AddListener(OnStartGameBtn);
+
+            Toggle[] allToggles = GetComponentsInChildren<Toggle>(true);
+            foreach (var tog in allToggles)
+            {
+                tog.onValueChanged.AddListener(OnGameSettingsChanged);
+            }
+        }
     }
 }

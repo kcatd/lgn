@@ -10,6 +10,7 @@ public class GameTimeBtn : MonoBehaviour
     Toggle                  tog;
     TextMeshProUGUI         label;
     Color                   textColor;
+    bool                    initButton = true;
 
     public int              GameTime { get { return timeInSeconds; } }
 
@@ -18,12 +19,7 @@ public class GameTimeBtn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tog = GetComponent<Toggle>();
-        label = GetComponentInChildren<TextMeshProUGUI>();
-        textColor = label.color;
-
-        tog.onValueChanged.AddListener(OnToggle);
-        OnToggle(tog.isOn);
+        InitButton();
     }
 
     // Update is called once per frame
@@ -35,5 +31,20 @@ public class GameTimeBtn : MonoBehaviour
     void OnToggle(bool isOn)
     {
         label.color = new Color(textColor.r, textColor.g, textColor.b, isOn ? textColor.a : textColor.a * 0.33f);
+    }
+
+    public void InitButton()
+    {
+        if (initButton)
+        {
+            initButton = false;
+
+            tog = GetComponent<Toggle>();
+            label = GetComponentInChildren<TextMeshProUGUI>();
+            textColor = label.color;
+
+            tog.onValueChanged.AddListener(OnToggle);
+            OnToggle(tog.isOn);
+        }
     }
 }

@@ -432,6 +432,11 @@ public class GobbleGame : MonoBehaviour
         gameModePanel.gameObject.SetActive(true);
         gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsEnter");
 
+        if (isOfflineMode && (null == curGameModeSettings))
+        {
+            curGameModeSettings = new GameModeSettings();
+        }
+
         if (null != curGameModeSettings)
         {
             gameModePanel.SetGameSettings(curGameModeSettings, false);
@@ -582,9 +587,13 @@ public class GobbleGame : MonoBehaviour
         if (tokens.Length > 0)
         {
             string boardLayout = diceBoard.BoardLayout;
+            bool initSettings = false;
 
             if (null == curGameModeSettings)
+            {
                 curGameModeSettings = new GameModeSettings();
+                initSettings = !isOfflineMode && client.IsHostPlayer;
+            }
 
             if (tokens.Length > 0)
             {
@@ -602,37 +611,43 @@ public class GobbleGame : MonoBehaviour
                 {
                     Debug.LogWarning(string.Format("Invalid board size parameter: {0}", tokens[1]));
                 }
-            }
-            if (tokens.Length > 2)
-            {
-                curGameModeSettings.minWordLen = int.Parse(tokens[2]);
-            }
-            if (tokens.Length > 3)
-            {
-                string[] timeStr = tokens[3].Split('/');
-                if (2 == timeStr.Length)
+
+                if (tokens.Length > 2)
                 {
-                    float updateTime = float.Parse(timeStr[0]);
-                    curGameModeSettings.gameTime = int.Parse(timeStr[1]);
+                    curGameModeSettings.minWordLen = int.Parse(tokens[2]);
                 }
-                else
+                if (tokens.Length > 3)
                 {
-                    Debug.LogWarning(string.Format("Invalid game time parameter: {0}", tokens[3]));
+                    string[] timeStr = tokens[3].Split('/');
+                    if (2 == timeStr.Length)
+                    {
+                        float updateTime = float.Parse(timeStr[0]);
+                        curGameModeSettings.gameTime = int.Parse(timeStr[1]);
+                    }
+                    else
+                    {
+                        Debug.LogWarning(string.Format("Invalid game time parameter: {0}", tokens[3]));
+                    }
                 }
-            }
-            if (tokens.Length > 4)
-            {
-                string[] optionToks = tokens[4].Split('+');
-                curGameModeSettings.enableDoubleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dl", x));
-                curGameModeSettings.enableTripleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tl", x));
-                curGameModeSettings.enableDoubleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dw", x));
-                curGameModeSettings.enableTripleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tw", x));
+                if (tokens.Length > 4)
+                {
+                    string[] optionToks = tokens[4].Split('+');
+                    curGameModeSettings.enableDoubleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dl", x));
+                    curGameModeSettings.enableTripleLetterScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tl", x));
+                    curGameModeSettings.enableDoubleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("dw", x));
+                    curGameModeSettings.enableTripleWordScore = System.Array.Exists<string>(optionToks, x => 0 == string.Compare("tw", x));
+                }
             }
 
             diceBoard.SetBoardSize(curGameModeSettings.boardSize.x, curGameModeSettings.boardSize.y);
             diceBoard.UpdateBoardLayout(boardLayout, this);
             gameModePanel.SetGameSettings(curGameModeSettings, true);
             gameModePanel.SetupPlayerControllables(client.IsHostPlayer);
+
+            if (initSettings)
+            {
+                client.DoUpdateGameState(GetGameState());
+            }
         }
     }
 
