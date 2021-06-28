@@ -13,10 +13,12 @@ public class PlayerScore : MonoBehaviour
     string          playerName = "";
     PlayerId        playerID;
     int             playerScore = 0;
+    bool            isLocalPlayer = false;
 
     public string   PlayerName { get { return playerName; } }
     public PlayerId PlayerID { get { return playerID; } }
     public int      Score { get { return playerScore; } }
+    public bool     IsLocal { get { return isLocalPlayer; } }
 
     // Start is called before the first frame update
     void Start()
@@ -30,11 +32,12 @@ public class PlayerScore : MonoBehaviour
         
     }
 
-    public void InitScore(string name, PlayerId id)
+    public void InitScore(string name, PlayerId id, bool isLocal)
     {
         playerName = name;
         playerID = id;
         playerScore = 0;
+        isLocalPlayer = isLocal;
 
         scoreName.text = name;
         scoreText.text = "0";

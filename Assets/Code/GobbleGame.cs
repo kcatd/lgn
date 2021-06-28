@@ -507,14 +507,14 @@ public class GobbleGame : MonoBehaviour
 
         if (isOfflineMode)
         {
-            scoreBoard.AddPlayer("Player", new PlayerId(0), new Color(1.0f, 1.0f, 1.0f));
+            scoreBoard.AddPlayer("Player", new PlayerId(0), new Color(1.0f, 1.0f, 1.0f), true);
         }
         else
         {
             PlayerId localPlayer = client.MyPlayerID;
             if (null != localPlayer)
             {
-                scoreBoard.AddPlayer(client.MyPlayerName, localPlayer, new Color(1.0f, 1.0f, 1.0f));
+                scoreBoard.AddPlayer(client.MyPlayerName, localPlayer, new Color(1.0f, 1.0f, 1.0f), true);
             }
         }
     }
@@ -659,7 +659,7 @@ public class GobbleGame : MonoBehaviour
 
         gameModePanel.UpdatePlayer(id, playerName, teamID, !isOfflineMode && (id == client.HostPlayerID), (!isOfflineMode && id == client.MyPlayerID));
         wordList.UpdateFoundWords(id, foundWordSet, teamColorTable.GetTeamColor(teamID, false));
-        scoreBoard.UpdatePlayer(this, id, playerName, playerScore, teamID);
+        scoreBoard.UpdatePlayer(this, id, playerName, playerScore, teamID, client.MyPlayerID == playerID);
     }
 
     public void UpdatePlayerTeam(int teamID)

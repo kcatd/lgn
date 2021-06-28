@@ -12,6 +12,7 @@ public class GameScoreBoard : MonoBehaviour
     [SerializeField] bool           autoResizeGrid = true;
 
     List<PlayerScore>   activePlayers = new List<PlayerScore>();
+    bool                sortFlag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +29,10 @@ public class GameScoreBoard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (sortFlag)
+        {
+            SortScoreBoard(true);
+        }
     }
 
     public void    ClearScoreBoard()
@@ -38,16 +42,18 @@ public class GameScoreBoard : MonoBehaviour
             Destroy(p.gameObject);
         }
         activePlayers.Clear();
+        sortFlag = false;
     }
 
-    public void    AddPlayer(string name, PlayerId id, Color c)
+    public void    AddPlayer(string name, PlayerId id, Color c, bool isLocal)
     {
         if (null == GetPlayer(id))
         {
             PlayerScore newScore = Instantiate<PlayerScore>(scorePrefab, transform);
-            newScore.InitScore(name, id);
+            newScore.InitScore(name, id, isLocal);
             newScore.UpdateColor(c);
             activePlayers.Add(newScore);
+            sortFlag = activePlayers.Count > 1;
         }
     }
 
@@ -57,6 +63,7 @@ public class GameScoreBoard : MonoBehaviour
         if (null != ps)
         {
             ps.AddScore(scoreVal, setAbsolute);
+            sortFlag = activePlayers.Count > 1;
         }
     }
 
@@ -80,7 +87,7 @@ public class GameScoreBoard : MonoBehaviour
         return 0;
     }
 
-    public void UpdatePlayer(GobbleGame game, PlayerId id, string playerName, int playerScore, int teamID)
+    public void UpdatePlayer(GobbleGame game, PlayerId id, string playerName, int playerScore, int teamID, bool isLocal)
     {
         List<ScoreFXEvent> pendingSet = new List<ScoreFXEvent>();
         List<ScoreFX> execSet = new List<ScoreFX>();
@@ -114,7 +121,7 @@ public class GameScoreBoard : MonoBehaviour
         {
             if (teamID >= 0)
             {
-                AddPlayer(playerName, id, game.TeamColorTable.GetTeamColor(teamID));
+                AddPlayer(playerName, id, game.TeamColorTable.GetTeamColor(teamID), isLocal);
                 AddScore(id, updateScoreVal, true);
             }
         }
@@ -123,19 +130,28 @@ public class GameScoreBoard : MonoBehaviour
             player.UpdateName(playerName);
             player.UpdateColor(game.TeamColorTable.GetTeamColor(teamID));
             player.AddScore(updateScoreVal, true);
+            sortFlag = activePlayers.Count > 1;
         }
     }
 
-    public void SortScoreBoard()
+    public void SortScoreBoard(bool immediate = false)
     {
-        int playerCount = activePlayers.Count;
-
-        if (playerCount > 1)
+        if (immediate)
         {
-            activePlayers.Sort((x, y) => x.Score == y.Score ? string.Compare(x.PlayerName, y.PlayerName, true) : y.Score - x.Score);
+            int playerCount = activePlayers.Count;
+            sortFlag = false;
 
-            for (int i = 0; i < playerCount; ++i)
-                activePlayers[i].gameObject.transform.SetSiblingIndex(i);
+            if (playerCount > 1)
+            {
+                activePlayers.Sort((x, y) => x.IsLocal ? -99999 : y.IsLocal ? 99999 : x.Score == y.Score ? string.Compare(x.PlayerName, y.PlayerName, true) : y.Score - x.Score);
+
+                for (int i = 0; i < playerCount; ++i)
+                    activePlayers[i].gameObject.transform.SetSiblingIndex(i);
+            }
+        }
+        else if (!sortFlag)
+        {
+            sortFlag = activePlayers.Count > 1;
         }
     }
 }
