@@ -87,7 +87,7 @@ public class PlayerLobbyEntry : MonoBehaviour
         PlayerTeamBtn[] teamBtns = GetComponentsInChildren<PlayerTeamBtn>(true);
         foreach (var btn in teamBtns)
         {
-            btn.InitState();
+            btn.InitState(listObj.Game.TeamColorTable);
         }
         UpdatePlayer(id, playerName, teamID, isHost, isLocalPlayer, listObj);
     }

@@ -447,6 +447,7 @@ MonoBehaviour:
   playerNameText: {fileID: 6056350102581134041}
   joinGameBtn: {fileID: 6056350103826960450}
   spectateGameBtn: {fileID: 6056350102298607451}
+  kickGameBtn: {fileID: 0}
   isHostIndicator: {fileID: 6056350103242103093}
   isSpectatorIndicator: {fileID: 6056350103119012825}
 --- !u!1 &6056350102686530585
@@ -548,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30717da7d7a5c4e4dba7bbd92a871bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorImg: {fileID: 6056350104072106595}
   teamID: 1
 --- !u!1 &6056350102830430524
 GameObject:
@@ -1542,6 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30717da7d7a5c4e4dba7bbd92a871bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorImg: {fileID: 6056350103542217782}
   teamID: 3
 --- !u!1 &6056350103634209727
 GameObject:
@@ -1718,6 +1721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30717da7d7a5c4e4dba7bbd92a871bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorImg: {fileID: 6056350103011309360}
   teamID: 4
 --- !u!1 &6056350103690931821
 GameObject:
@@ -2152,6 +2156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30717da7d7a5c4e4dba7bbd92a871bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorImg: {fileID: 6056350103634209721}
   teamID: 2
 --- !u!1 &6056350104055688691
 GameObject:

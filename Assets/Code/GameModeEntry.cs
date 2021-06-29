@@ -15,6 +15,8 @@ public class GameModeEntry : MonoBehaviour
 {
     [SerializeField] GameModeOption     optionType;
     [SerializeField] Toggle             optionToggle;
+    [SerializeField] Image              selectedBackground;
+    Toggle                              tog;
     public bool                         initButton = true;
 
     public GameModeOption OptionType    { get {return optionType; } }
@@ -32,12 +34,24 @@ public class GameModeEntry : MonoBehaviour
         
     }
 
+    void    OnToggle(bool isOn)
+    {
+        if (null != selectedBackground)
+            selectedBackground.gameObject.SetActive(isOn);
+    }
+
     public void InitButton()
     {
         if (initButton)
         {
             initButton = false;
-            // anything to init?
+
+            tog = GetComponentInChildren<Toggle>();
+            if (null != tog)
+            {
+                tog.onValueChanged.AddListener(OnToggle);
+                OnToggle(tog.isOn);
+            }
         }
     }
 }

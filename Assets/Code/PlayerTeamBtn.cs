@@ -6,6 +6,7 @@ using TMPro;
 
 public class PlayerTeamBtn : MonoBehaviour
 {
+    [SerializeField] Image  colorImg;
     [SerializeField] int    teamID;
     Toggle                  tog;
 
@@ -25,9 +26,12 @@ public class PlayerTeamBtn : MonoBehaviour
         
     }
 
-    public void InitState()
+    public void InitState(TeamColors colorTable)
     {
         if (null == tog)
             tog = GetComponent<Toggle>();
+
+        if (null != colorImg)
+            colorImg.color = colorTable.GetTeamColor(teamID);
     }
 }
