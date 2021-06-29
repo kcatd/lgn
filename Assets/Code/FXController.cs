@@ -69,6 +69,7 @@ public class FXController : SimpleSingleton<FXController>
     public void StartDragging(Vector3 pos)
     {
         EnableMouseDrag(true);
+        if (!dragStart) return;
         ParticleSystem start = Instantiate<ParticleSystem>(dragStart, transform);
         start.transform.localPosition = pos;
         systems.Add(start);
@@ -80,9 +81,12 @@ public class FXController : SimpleSingleton<FXController>
         if (successRank >= 0)
         {
             if (successRank >= dragSuccess.Length) successRank = dragSuccess.Length-1;
-            ParticleSystem end = Instantiate<ParticleSystem>(dragSuccess[successRank], transform);
-            end.transform.localPosition = pos;
-            systems.Add(end);
+            if (dragSuccess[successRank])
+            {
+                ParticleSystem end = Instantiate<ParticleSystem>(dragSuccess[successRank], transform);
+                end.transform.localPosition = pos;
+                systems.Add(end);
+            }
         } else
         if (dragFailure)
         {
