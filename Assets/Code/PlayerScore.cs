@@ -9,7 +9,10 @@ public class PlayerScore : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI    scoreName;
     [SerializeField] TextMeshProUGUI    scoreText;
+    [SerializeField] TextMeshProUGUI    updateScoreText;
 
+
+    PlayAnimation   animCtrl;
     string          playerName = "";
     PlayerId        playerID;
     int             playerScore = 0;
@@ -23,7 +26,7 @@ public class PlayerScore : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        animCtrl = GetComponent<PlayAnimation>();
     }
 
     // Update is called once per frame
@@ -41,6 +44,8 @@ public class PlayerScore : MonoBehaviour
 
         scoreName.text = name;
         scoreText.text = "0";
+        updateScoreText.text = "0";
+        updateScoreText.gameObject.SetActive(false);
     }
 
     public void AddScore(int setValue, bool absoluteVal = false)
@@ -55,6 +60,11 @@ public class PlayerScore : MonoBehaviour
         }
 
         scoreText.text = playerScore.ToString();
+        if (!absoluteVal)
+        {
+            updateScoreText.text = setValue.ToString();
+            if (animCtrl) animCtrl.Play("ScoreAdded");
+        }
     }
 
     public void UpdateName(string updateName)
@@ -73,5 +83,6 @@ public class PlayerScore : MonoBehaviour
     {
         scoreName.color = c;
         scoreText.color = c;
+        updateScoreText.color = c;
     }
 }

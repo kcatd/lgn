@@ -51,7 +51,9 @@ public class SummaryPanel : MonoBehaviour
 
     void    OnSummaryDoneBtn()
     {
-        gameObject.SetActive(false);
+       GetComponent<PlayAnimation>().Play("SummaryExit", ()=>gameObject.SetActive(false));
+
+        //gameObject.SetActive(false);
         game.InitializeLobby();
     }
 

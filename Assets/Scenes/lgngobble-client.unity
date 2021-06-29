@@ -1144,12 +1144,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e928f9ac330b83d43b3e0a02c173f05b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onDrag: {fileID: 19811078, guid: 23818e20c9fcaa74eae69d5f3348c74d, type: 3}
-  dragStart: {fileID: 19869282, guid: c51e34914bd18ff4880b11005334182e, type: 3}
+  onDrag: {fileID: 19811078, guid: 9ef9a0f7538b16442b3dad0c1c16bc3d, type: 3}
+  dragStart: {fileID: 0}
   dragSuccess:
-  - {fileID: 19829036, guid: 7d4e99a3eb9e47c4390895c8bec7bae6, type: 3}
-  - {fileID: 19855088, guid: cc4edba986607ba48b17927b27d25e4e, type: 3}
-  - {fileID: 19869282, guid: c51e34914bd18ff4880b11005334182e, type: 3}
+  - {fileID: 19869282, guid: cf09354f47c7c9340acd7aae0531ba5f, type: 3}
+  - {fileID: 19869282, guid: 8c08db2400d8fd54dadb6d9742793fc8, type: 3}
+  - {fileID: 19869282, guid: f2744d84f120e174688f423834dd96e9, type: 3}
   dragFailure: {fileID: 0}
   dragEmission: 15
   worldCam: {fileID: 0}
@@ -1469,12 +1469,24 @@ PrefabInstance:
       objectReference: {fileID: 1522216210}
     - target: {fileID: 6455825819527460621, guid: 0263197c164995944a242467c862789f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.3258896
+      value: -0.00000667572
       objectReference: {fileID: 0}
     - target: {fileID: 6455825819527460623, guid: 0263197c164995944a242467c862789f, type: 3}
       propertyPath: gameDictionary
       value: 
       objectReference: {fileID: 1522216209}
+    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6455825819987012450, guid: 0263197c164995944a242467c862789f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
