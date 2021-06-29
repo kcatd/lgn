@@ -1467,26 +1467,10 @@ PrefabInstance:
       propertyPath: game
       value: 
       objectReference: {fileID: 1522216210}
-    - target: {fileID: 6455825819527460621, guid: 0263197c164995944a242467c862789f, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.00000667572
-      objectReference: {fileID: 0}
     - target: {fileID: 6455825819527460623, guid: 0263197c164995944a242467c862789f, type: 3}
       propertyPath: gameDictionary
       value: 
       objectReference: {fileID: 1522216209}
-    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6455825819984986058, guid: 0263197c164995944a242467c862789f, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6455825819987012450, guid: 0263197c164995944a242467c862789f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
