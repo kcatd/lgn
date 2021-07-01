@@ -136,6 +136,8 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
         {
             DequeueMessage();
         }
+
+		/* we auto-login after creation now, this is no longer necessary
 		if ((null != pendingLoginInfo) && (pendingLoginInfo.reloginTimer > 0.0f))
 		{
 			pendingLoginInfo.reloginTimer -= Time.deltaTime;
@@ -145,6 +147,7 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 				DoLogin(pendingLoginInfo.userName, pendingLoginInfo.accountName, pendingLoginInfo.accountPassword);
 			}
 		}
+		*/
     }
 
     private void RegisterGameServer()
@@ -160,8 +163,10 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		if (null != pendingLoginInfo)
         {
 			loginPanel.SetLoginState(LoginStateID.LoggingIn, "Account created, logging in...");
+			/* we auto-login after creation now, this is no longer necessary
 			pendingLoginInfo.reloginTimer = 1.5f;
-        }
+			*/
+	}
 		else
 		{
 			loginPanel.SetLoginState(LoginStateID.LoggedOut, "Account created");
