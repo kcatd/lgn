@@ -30,7 +30,8 @@ public class BoardSizeBtn : MonoBehaviour
 
     void    OnToggle(bool isOn)
     {
-        selectedBorderImg.gameObject.SetActive(isOn);
+        if (null != selectedBorderImg)
+            selectedBorderImg.gameObject.SetActive(isOn);
     }
 
     public void InitButton()

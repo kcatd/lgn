@@ -48,14 +48,14 @@ public class ScoreFXEvent
 
 public class GameModeSettings
 {
-    public Vector2Int   boardSize = new Vector2Int(4, 4);
+    public Vector2Int   boardSize = new Vector2Int(5, 5);
     public int          gameTime = 1;
     public int          minWordLen = 2;
     public bool         allowBacktrack = false;
-    public bool         enableDoubleLetterScore = false;
-    public bool         enableTripleLetterScore = false;
-    public bool         enableDoubleWordScore = false;
-    public bool         enableTripleWordScore = false;
+    public bool         enableDoubleLetterScore = true;
+    public bool         enableTripleLetterScore = true;
+    public bool         enableDoubleWordScore = true;
+    public bool         enableTripleWordScore = true;
 }
 
 public class GobbleGame : MonoBehaviour

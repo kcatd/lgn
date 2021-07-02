@@ -101,6 +101,10 @@ public class LoginPanel : MonoBehaviour
                 case LoginStateID.LoggedIn: OnLoggedIn(messageStr); break;
             }
         }
+        else if (!string.IsNullOrEmpty(messageStr))
+        {
+            statusText.text = messageStr;
+        }
     }
 
     void    OnSignUpBtn()

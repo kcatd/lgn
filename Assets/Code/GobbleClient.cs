@@ -59,6 +59,7 @@ public class UserLoginInfo
 	public readonly string userName;
 	public readonly string accountName;
 	public readonly string accountPassword;
+	public float reloginTimer = -1.0f;
 
 	public UserLoginInfo(string strName, string strAcct, string strPwd)
     {
@@ -135,6 +136,18 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
         {
             DequeueMessage();
         }
+
+		/* we auto-login after creation now, this is no longer necessary
+		if ((null != pendingLoginInfo) && (pendingLoginInfo.reloginTimer > 0.0f))
+		{
+			pendingLoginInfo.reloginTimer -= Time.deltaTime;
+			if (pendingLoginInfo.reloginTimer <= 0.0f)
+			{
+				pendingLoginInfo.reloginTimer = -1.0f;
+				DoLogin(pendingLoginInfo.userName, pendingLoginInfo.accountName, pendingLoginInfo.accountPassword);
+			}
+		}
+		*/
     }
 
     private void RegisterGameServer()
@@ -147,6 +160,18 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
     {
         StatusMessage("Account Created with PlayerId=" + newPlayerId);
 
+		if (null != pendingLoginInfo)
+        {
+			loginPanel.SetLoginState(LoginStateID.LoggingIn, "Account created, logging in...");
+			/* we auto-login after creation now, this is no longer necessary
+			pendingLoginInfo.reloginTimer = 1.5f;
+			*/
+	}
+		else
+		{
+			loginPanel.SetLoginState(LoginStateID.LoggedOut, "Account created");
+		}
+		/*
         Thread.Sleep(1500);
 
         StatusMessage("Logging In...");
@@ -159,6 +184,7 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		{
 			DoLogin("guest", "guest@boomzap.com", "guest");
 		}
+		*/
     }
 
 	private void OnAuthenticated(PlayerId playerId, SessionId sessionId)
