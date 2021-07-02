@@ -244,7 +244,7 @@ public class GobbleGame : MonoBehaviour
                     teamID = client.MyTeamID;
                 }
 
-                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, teamColorTable.GetTeamColor(teamID, false), ref srcObj);
+                FoundWordResult wordResult = wordList.AddWord(curTrackingWord.ToLower(), localPlayerID, teamColorTable.GetTeamColor(teamID, false), ref trackingSet, ref srcObj);
                 if (FoundWordResult.no != wordResult)
                 {
                     // yay! -- fx and stuff
@@ -290,7 +290,7 @@ public class GobbleGame : MonoBehaviour
                     else
                     {
                         if (!client.IsSpectator)
-                            client.DoAddFoundWord(curTrackingWord.ToLower(), fullScoreVal);
+                            client.DoAddFoundWord(curTrackingWord.ToLower(), fullScoreVal, trackingSet);
                     }
                 }
                 else
@@ -820,7 +820,7 @@ public class GobbleGame : MonoBehaviour
     private void StartTracking()
     {
         ClearTracking(false);
-        diceBoard.SetDiceCollision(false);
+        diceBoard.SetDiceCollision(DiceCollisionType.Secondary);
         isTracking = true;
     }
 
@@ -863,7 +863,7 @@ public class GobbleGame : MonoBehaviour
         
         if (resetDiceCollisionType)
         {
-            diceBoard.SetDiceCollision(true);
+            diceBoard.SetDiceCollision(DiceCollisionType.Primary);
         }
 
         trackingSet.Clear();

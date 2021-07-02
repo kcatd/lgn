@@ -9,12 +9,14 @@ using KitsuneCore.Services.Players;
 public class WordPlayerScore
 {
     public readonly PlayerId player;
+    public readonly List<int> diceSet;
     public int score;
 
-    public WordPlayerScore(PlayerId id, int val)
+    public WordPlayerScore(PlayerId id, int val, List<int> data)
     {
         player = id;
         score = val;
+        diceSet = data;
     }
 }
 
@@ -48,10 +50,10 @@ public class FoundWord : MonoBehaviour
         
     }
 
-    public void SetFoundWord(string strWord, PlayerId id, Color c, int score)
+    public void SetFoundWord(string strWord, List<int> diceIdxSet, PlayerId id, Color c, int score)
     {
         foundWord = strWord;
-        playerScore = new WordPlayerScore(id, score);
+        playerScore = new WordPlayerScore(id, score, diceIdxSet);
 
         //textColor = c;
         textColor = text.color;
@@ -62,15 +64,17 @@ public class FoundWord : MonoBehaviour
 
     public void SetFoundPlayer(PlayerId id, Color c, int score)
     {
+        // TODO: replace this
+        List<int> tmpList = new List<int>();
         if ((null != playerScore) && (playerScore.player != id))
         {
             WordPlayerScore tmp = playerScore;
-            playerScore = new WordPlayerScore(id, score);
+            playerScore = new WordPlayerScore(id, score, tmpList);
             AddFinder(tmp.player, tmp.score);
         }
         else
         {
-            playerScore = new WordPlayerScore(id, score);
+            playerScore = new WordPlayerScore(id, score, tmpList);
         }
 
         text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
@@ -121,7 +125,9 @@ public class FoundWord : MonoBehaviour
             WordPlayerScore exist = finders.Find(x => x.player == id);
             if (null == exist)
             {
-                finders.Add(new WordPlayerScore(id, score));
+                // TODO: replace this
+                List<int> tmpList = new List<int>();
+                finders.Add(new WordPlayerScore(id, score, tmpList));
             }
             else
             {

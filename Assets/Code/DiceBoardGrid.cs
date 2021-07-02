@@ -24,7 +24,7 @@ public class DiceBoardGrid : MonoBehaviour
     Vector2                     baseCellSpacing;
 
     private List<Dice>          diceSet = new List<Dice>();
-    private bool                diceCollisionFlag = true;
+    DiceCollisionType           diceCollision = DiceCollisionType.Primary;
 
     private Vector2Int          curBoardSize = new Vector2Int(5, 5);
     private float               curGridItemScale = 1.0f;
@@ -215,7 +215,9 @@ public class DiceBoardGrid : MonoBehaviour
             Destroy(obj.gameObject);
         }
         diceSet.Clear();
-        diceCollisionFlag = true;
+
+        if (DiceCollisionType.Secondary == diceCollision)
+            diceCollision = DiceCollisionType.Primary;
     }
 
     public Dice GetDice(Vector3 hitPos)
@@ -228,13 +230,33 @@ public class DiceBoardGrid : MonoBehaviour
         return null;
     }
 
-    public void SetDiceCollision(bool isPrimary)
+    public Dice GetDice(int x, int y)
     {
-        diceCollisionFlag = isPrimary;
+        foreach(Dice obj in diceSet)
+        {
+            if ((obj.X == x) && (obj.Y == y))
+                return obj;
+        }
+        return null;
+    }
+
+    public Dice GetDice(int idx)
+    {
+        foreach (Dice obj in diceSet)
+        {
+            if (obj.Idx == idx)
+                return obj;
+        }
+        return null;
+    }
+
+    public void SetDiceCollision(DiceCollisionType type)
+    {
+        diceCollision = type;
 
         foreach (Dice d in diceSet)
         {
-            d.SetDiceCollision(isPrimary);
+            d.SetDiceCollision(diceCollision);
         }
     }
 
@@ -252,7 +274,7 @@ public class DiceBoardGrid : MonoBehaviour
 
             newDice.InitDice(diceValue, game, type, rollSet);
             newDice.SetPositionIndex(diceSet.Count, grid.constraintCount);
-            newDice.SetDiceCollision(diceCollisionFlag);
+            newDice.SetDiceCollision(diceCollision);
             diceSet.Add(newDice);
 
             if (curBoardLayout.Length > 0)

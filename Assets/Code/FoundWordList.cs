@@ -50,7 +50,7 @@ public class FoundWordList : MonoBehaviour
         
     }
 
-    public FoundWordResult  AddWord(string strWord, PlayerId ownerID, Color c, ref FoundWord outWord)
+    public FoundWordResult  AddWord(string strWord, PlayerId ownerID, Color c, ref List<Dice> diceSet, ref FoundWord outWord)
     {
         if (!string.IsNullOrEmpty(strWord))
         {
@@ -73,7 +73,12 @@ public class FoundWordList : MonoBehaviour
             else if (gameDictionary.ValidateWord(strWord))
             {
                 FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                newWord.SetFoundWord(strWord, ownerID, c, 0);
+                List<int> diceIdxSet = new List<int>();
+
+                foreach (Dice d in diceSet)
+                    diceIdxSet.Add(d.Idx);
+
+                newWord.SetFoundWord(strWord, diceIdxSet, ownerID, c, 0);
                 outWord = newWord;
                 return FoundWordResult.ok;
             }
@@ -145,18 +150,21 @@ public class FoundWordList : MonoBehaviour
                 }
                 else
                 {
+                    // TODO: replace this
+                    List<int> tmpList = new List<int>();
+
                     if (scoreVal < 0)
                         scoreVal = 0;
 
                     if (isOwner)
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], id, c, scoreVal);
+                        newWord.SetFoundWord(wordInfo[0], tmpList, id, c, scoreVal);
                     }
                     else
                     {
                         FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], new PlayerId(0), c, scoreVal);
+                        newWord.SetFoundWord(wordInfo[0], tmpList, new PlayerId(0), c, scoreVal);
                         newWord.SetRevealed();
                     }
                 }

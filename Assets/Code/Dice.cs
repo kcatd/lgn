@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum DiceCollisionType
+{
+    Disabled,
+    Primary,
+    Secondary,
+}
+
 public enum WordType
 {
     Normal              = 0,
@@ -38,12 +45,14 @@ public class Dice : MonoBehaviour
     [SerializeField] TextMeshProUGUI    diceFaceText;
     [SerializeField] TextMeshProUGUI    diceFaceScoreText;
 
+    private int         posIdx = -1;
     private int         posX = -1;
     private int         posY = -1;
     private string      diceFaceValue = "a";
     private WordType    diceWordType = WordType.Normal;
     private bool        isHighlighted = false;
     private bool        isMouseOver = false;
+    private bool        isEnabled = true;
 
     private BoxCollider2D               primaryCollider;
     private CircleCollider2D            secondaryCollider;
@@ -53,6 +62,9 @@ public class Dice : MonoBehaviour
 
     public string   FaceValue { get { return diceFaceValue; } }
     public WordType DiceType { get { return diceWordType; } }
+    public int      Idx { get { return posIdx; } }
+    public int      X { get { return 1; } }
+    public int      Y { get { return posY; } }
     public bool     IsHighlighted { get { return isHighlighted; } }
     public bool     IsMouseOver { get { return isMouseOver; } }
 
@@ -64,17 +76,23 @@ public class Dice : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        isMouseOver = true;
-        SetHighlight(isHighlighted);
+        if (isEnabled)
+        {
+            isMouseOver = true;
+            SetHighlight(isHighlighted);
+        }
     }
 
     private void OnMouseExit()
     {
-        isMouseOver = false;
-        SetHighlight(isHighlighted);
+        if (isEnabled)
+        {
+            isMouseOver = false;
+            SetHighlight(isHighlighted);
+        }
     }
 
-    public void SetDiceCollision(bool isPrimary)
+    public void SetDiceCollision(DiceCollisionType type)
     {
         if (null == primaryCollider)
             primaryCollider = GetComponent<BoxCollider2D>();
@@ -82,8 +100,9 @@ public class Dice : MonoBehaviour
         if (null == secondaryCollider)
             secondaryCollider = GetComponent<CircleCollider2D>();
 
-        primaryCollider.enabled = isPrimary;
-        secondaryCollider.enabled = !isPrimary;
+        primaryCollider.enabled = DiceCollisionType.Primary == type;
+        secondaryCollider.enabled = DiceCollisionType.Secondary == type;
+        isEnabled = DiceCollisionType.Disabled != type;
     }
 
     public void InitDice(string Data, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
@@ -233,6 +252,7 @@ public class Dice : MonoBehaviour
 
     public void SetPositionIndex(int idx, int constraintCount)
     {
+        posIdx = idx;
         posX = idx % constraintCount;
         posY = idx / constraintCount;
     }

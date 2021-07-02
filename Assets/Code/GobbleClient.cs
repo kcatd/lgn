@@ -44,6 +44,9 @@ public class GobbleTag
 	public const Tag PlayerScore = Tag.kTagCustomGame5;
 	public const Tag PlayerWords = Tag.kTagCustomGame6;
 	public const Tag PlayerTeamID = Tag.kTagCustomGame7;
+	public const Tag DiceSet = Tag.kTagCustomGame8;
+	public const Tag DieInfo = Tag.kTagCustomGame9;
+	public const Tag DieIndex = Tag.kTagCustomGame10;
 }
 public class GobbleJoinConfig : IJoinGameConfig
 {
@@ -736,12 +739,21 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		}
 	}
 
-	public void DoAddFoundWord(string foundWordStr, int scoreVal)
+	public void DoAddFoundWord(string foundWordStr, int scoreVal, List<Dice> diceSet)
 	{
 		Message message = Message.Mk(GobbleMsgTag.AddWord);
 		message.AddInteger(GobbleTag.GameID, gameID);
 		message.AddString(GobbleTag.PlayerWords, foundWordStr);
 		message.AddInteger(GobbleTag.PlayerScore, scoreVal);
+
+		MessageBody diceMsg = message.CreateChild(GobbleTag.DiceSet);
+		foreach (Dice d in diceSet)
+		{
+			MessageBody msg = diceMsg.CreateChild(GobbleTag.DieInfo);
+			msg.AddString(GobbleTag.PlayerWords, d.FaceValue);
+			msg.AddInteger(GobbleTag.DieIndex, d.Idx);
+		}
+
 		Kitsune.GameServer.Send(message);
 	}
 
