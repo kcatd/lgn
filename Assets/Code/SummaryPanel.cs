@@ -149,7 +149,11 @@ public class SummaryPanel : MonoBehaviour
             summaryPlayerScores.ClearAllEntries();
             foreach (var p in game.Players)
             {
-                summaryPlayerScores.AddEntry(p.name, p.id, p.value, game.TeamColorTable.GetTeamColor(game.GetPlayerTeam(p.id)));
+                int teamID = game.GetPlayerTeam(p.id);
+                if ((setPlayer == p.id) || (teamID >= 0))
+                {
+                    summaryPlayerScores.AddEntry(p.name, p.id, p.value, game.TeamColorTable.GetTeamColor(teamID));
+                }
             }
             summaryPlayerScores.SortEntries();
         }
@@ -157,11 +161,17 @@ public class SummaryPanel : MonoBehaviour
         if (null != summaryTeamScores)
         {
             summaryTeamScores.ClearAllEntries();
-            foreach (var t in game.Teams)
+            if (isTeamGame)
             {
-                summaryTeamScores.AddEntry(string.Format("Team {0}", t.id), t.id, game.GetTeamScore(t.id), game.TeamColorTable.GetTeamColor(t.id));
+                foreach (var t in game.Teams)
+                {
+                    if (t.id > 0)
+                    {
+                        summaryTeamScores.AddEntry(string.Format("Team {0}", t.id), t.id, game.GetTeamScore(t.id), game.TeamColorTable.GetTeamColor(t.id));
+                    }
+                }
+                summaryTeamScores.SortEntries();
             }
-            summaryTeamScores.SortEntries();
         }
 
         if (isTeamGame)

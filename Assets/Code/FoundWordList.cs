@@ -127,11 +127,12 @@ public class FoundWordList : MonoBehaviour
     {
         foreach (var foundWord in foundWordSet)
         {
+            /*
             string debugDice = "";
             foreach (var d in foundWord.diceIdx)
                 debugDice += string.Format("+{0}", d);
             Debug.Log("Update found word: " + foundWord.data + debugDice);
-
+            */
             string[] wordInfo = foundWord.data.Split('[');
             int scoreVal = -1;
             bool isOwner = false;
