@@ -62,26 +62,24 @@ public class FoundWord : MonoBehaviour
         //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
-    public void SetFoundPlayer(PlayerId id, Color c, int score)
+    public void SetFoundPlayer(PlayerId id, Color c, int score, List<int> data)
     {
-        // TODO: replace this
-        List<int> tmpList = new List<int>();
         if ((null != playerScore) && (playerScore.player != id))
         {
             WordPlayerScore tmp = playerScore;
-            playerScore = new WordPlayerScore(id, score, tmpList);
-            AddFinder(tmp.player, tmp.score);
+            playerScore = new WordPlayerScore(id, score, data);
+            AddFinder(tmp.player, tmp.score, data);
         }
         else
         {
-            playerScore = new WordPlayerScore(id, score, tmpList);
+            playerScore = new WordPlayerScore(id, score, data);
         }
 
         text.color = new Color(textColor.r, textColor.g, textColor.b, textColor.a * unrevealedAlpha);
         //textBg.color = new Color(c.r, c.g, c.b, unrevealedAlpha);
     }
 
-    public void SetScore(PlayerId id, int score, bool createNew = false)
+    public void SetScore(PlayerId id, int score, List<int> data, bool createNew = false)
     {
         if (playerScore.player == id)
         {
@@ -96,7 +94,7 @@ public class FoundWord : MonoBehaviour
             }
             else if (createNew)
             {
-                AddFinder(id, score);
+                AddFinder(id, score, data);
             }
         }
     }
@@ -118,16 +116,14 @@ public class FoundWord : MonoBehaviour
         return defaultValue;
     }
 
-    public void AddFinder(PlayerId id, int score)
+    public void AddFinder(PlayerId id, int score, List<int> data)
     {
         if (id != playerScore.player)
         {
             WordPlayerScore exist = finders.Find(x => x.player == id);
             if (null == exist)
             {
-                // TODO: replace this
-                List<int> tmpList = new List<int>();
-                finders.Add(new WordPlayerScore(id, score, tmpList));
+                finders.Add(new WordPlayerScore(id, score, data));
             }
             else
             {

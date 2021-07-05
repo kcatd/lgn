@@ -47,6 +47,7 @@ public class GobbleTag
 	public const Tag DiceSet = Tag.kTagCustomGame8;
 	public const Tag DieInfo = Tag.kTagCustomGame9;
 	public const Tag DieIndex = Tag.kTagCustomGame10;
+	public const Tag DieWord = Tag.kTagCustomGame11;
 }
 public class GobbleJoinConfig : IJoinGameConfig
 {
@@ -614,10 +615,23 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 				string playerName = player.GetString(Tag.kDBName);
 				int curScore = player.GetInteger(GobbleTag.PlayerScore);
 				int teamID = player.GetInteger(GobbleTag.PlayerTeamID);
-				string foundWords = player.GetString(GobbleTag.PlayerWords);
+				List<FoundWordNetData> foundWords = new List<FoundWordNetData>();
 
 				if (playerID == myPlayerID)
 					myTeamID = teamID;
+
+				List<MessageBody> words = player.GetChildrenByTag(GobbleTag.PlayerWords);
+				foreach (var word in words)
+				{
+					string foundWord = word.GetString(GobbleTag.DieWord);
+					List<int> diceIdx = new List<int>();
+
+					List<MessageBody> diceSet = word.GetChildrenByTag(GobbleTag.DieInfo);
+					foreach (var idx in diceSet)
+						diceIdx.Add(idx.GetInteger(GobbleTag.DieIndex));
+
+					foundWords.Add(new FoundWordNetData(foundWord, diceIdx));
+				}
 
 				game.UpdatePlayerState(playerID, playerName, curScore, teamID, foundWords);
 			}

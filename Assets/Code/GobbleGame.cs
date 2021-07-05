@@ -250,12 +250,16 @@ public class GobbleGame : MonoBehaviour
                     // yay! -- fx and stuff
                     int fullScoreVal = GetWordScore(curTrackingWord, trackingSet);
                     int scoreVal = fullScoreVal;
+                    List<int> diceIdxSet = new List<int>();
+
+                    foreach (var d in trackingSet)
+                        diceIdxSet.Add(d.Idx);
                     
                     if (FoundWordResult.partial == wordResult)
                     {
                         scoreVal = Mathf.CeilToInt(0.5f * (float)scoreVal);
                     }
-                    srcObj.SetScore(localPlayerID, scoreVal);
+                    srcObj.SetScore(localPlayerID, scoreVal, diceIdxSet);
                     
                     PlayerScore destObj = scoreBoard.GetPlayer(localPlayerID);
                     if (null != destObj)
@@ -651,7 +655,7 @@ public class GobbleGame : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerState(int playerID, string playerName, int playerScore, int teamID, string foundWordSet)
+    public void UpdatePlayerState(int playerID, string playerName, int playerScore, int teamID, List<FoundWordNetData> foundWordSet)
     {
         PlayerId id = new PlayerId(playerID);
         UpdatePlayerScore(id, playerName, playerScore);

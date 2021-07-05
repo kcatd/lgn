@@ -26,6 +26,18 @@ public class FoundWordInfo
     }
 }
 
+public class FoundWordNetData
+{
+    public readonly string data;
+    public readonly List<int> diceIdx;
+
+    public FoundWordNetData(string str, List<int> idx)
+    {
+        data = str;
+        diceIdx = idx;
+    }
+}
+
 public class FoundWordList : MonoBehaviour
 {
     [SerializeField] FoundWord      foundWordPrefab;
@@ -111,62 +123,60 @@ public class FoundWordList : MonoBehaviour
         }
     }
 
-    public void UpdateFoundWords(PlayerId id, string foundWordSet, Color c)
+    public void UpdateFoundWords(PlayerId id, List<FoundWordNetData> foundWordSet, Color c)
     {
-        if (!string.IsNullOrEmpty(foundWordSet))
+        foreach (var foundWord in foundWordSet)
         {
-            string[] tokens = foundWordSet.Split(',');
-            foreach (var token in tokens)
+            string debugDice = "";
+            foreach (var d in foundWord.diceIdx)
+                debugDice += string.Format("+{0}", d);
+            Debug.Log("Update found word: " + foundWord.data + debugDice);
+
+            string[] wordInfo = foundWord.data.Split('[');
+            int scoreVal = -1;
+            bool isOwner = false;
+
+            if ((wordInfo.Length > 1) && (wordInfo[1].Length > 1))
             {
-                string[] wordInfo = token.Split('[');
-                int scoreVal = -1;
-                bool isOwner = false;
+                string tok = wordInfo[1].Substring(0, wordInfo[1].Length - 1);
 
-                if ((wordInfo.Length > 1) && (wordInfo[1].Length > 1))
+                if ('!' == tok[tok.Length - 1])
                 {
-                    string tok = wordInfo[1].Substring(0, wordInfo[1].Length - 1);
-
-                    if ('!' == tok[tok.Length - 1])
-                    {
-                        isOwner = true;
-                        scoreVal = int.Parse(tok.Substring(0, tok.Length - 1));
-                    }
-                    else
-                    {
-                        scoreVal = int.Parse(tok);
-                    }
-                }
-
-                FoundWord word = WordExists(wordInfo[0]);
-                if (null != word)
-                {
-                    if (scoreVal < 0)
-                        scoreVal = word.GetScore(id);
-
-                    if (isOwner && !word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(id, c, scoreVal);
-                    else if (!isOwner && word.IsFoundPlayer(id))
-                        word.SetFoundPlayer(new PlayerId(0), c, scoreVal);
+                    isOwner = true;
+                    scoreVal = int.Parse(tok.Substring(0, tok.Length - 1));
                 }
                 else
                 {
-                    // TODO: replace this
-                    List<int> tmpList = new List<int>();
+                    scoreVal = int.Parse(tok);
+                }
+            }
 
-                    if (scoreVal < 0)
-                        scoreVal = 0;
+            FoundWord word = WordExists(wordInfo[0]);
+            if (null != word)
+            {
+                if (scoreVal < 0)
+                    scoreVal = word.GetScore(id);
 
-                    if (isOwner)
-                    {
-                        FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], tmpList, id, c, scoreVal);
-                    }
-                    else
-                    {
-                        FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
-                        newWord.SetFoundWord(wordInfo[0], tmpList, new PlayerId(0), c, scoreVal);
-                        newWord.SetRevealed();
-                    }
+                if (isOwner && !word.IsFoundPlayer(id))
+                    word.SetFoundPlayer(id, c, scoreVal, foundWord.diceIdx);
+                else if (!isOwner && word.IsFoundPlayer(id))
+                    word.SetFoundPlayer(new PlayerId(0), c, scoreVal, foundWord.diceIdx);
+            }
+            else
+            {
+                if (scoreVal < 0)
+                    scoreVal = 0;
+
+                if (isOwner)
+                {
+                    FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
+                    newWord.SetFoundWord(wordInfo[0], foundWord.diceIdx, id, c, scoreVal);
+                }
+                else
+                {
+                    FoundWord newWord = Instantiate<FoundWord>(foundWordPrefab, transform);
+                    newWord.SetFoundWord(wordInfo[0], foundWord.diceIdx, new PlayerId(0), c, scoreVal);
+                    newWord.SetRevealed();
                 }
             }
         }

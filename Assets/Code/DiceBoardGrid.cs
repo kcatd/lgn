@@ -29,46 +29,19 @@ public class DiceBoardGrid : MonoBehaviour
     private Vector2Int          curBoardSize = new Vector2Int(5, 5);
     private float               curGridItemScale = 1.0f;
     private string              curBoardLayout = "";
+    private bool                initBoard = true;
 
     public string               BoardLayout { get { return curBoardLayout; } }
 
     // Start is called before the first frame update
     void Start()
     {
-        grid = GetComponent<GridLayoutGroup>();
-        baseCellSize = grid.cellSize;
-        baseCellSpacing = grid.spacing;
-
-        // test
-        // SetBoardSize(6, 6);
+        InitBoard();
     }
 
     // Update is called once per frame
     void Update()
     {
-    }
-
-    public void InitializeDefault(GobbleGame game)
-    {
-        int diceCount = curBoardSize.x * curBoardSize.y;
-        int idx = 0;
-
-        ClearBoard();
-        ResizeBoard();
-
-        AddDice("L", game); ++idx;
-        AddDice("G", game); ++idx;
-        AddDice("N", game); ++idx;
-        AddDice(".", game); ++idx;
-        AddDice(".", game); ++idx;
-        AddDice("G", game); ++idx;
-        AddDice("O", game); ++idx;
-        AddDice("B", game); ++idx;
-        AddDice("L", game); ++idx;
-        AddDice("E", game); ++idx;
-
-        for (int i = idx; i < diceCount; ++i)
-            AddDice(".", game);
     }
 
     public void InitializeDiceBoard(string[] diceList, GobbleGame game, GameModeSettings settings = null)
@@ -78,6 +51,7 @@ public class DiceBoardGrid : MonoBehaviour
         Dictionary<int, WordType> specialDiceSet = new Dictionary<int, WordType>();
         int diceCount = curBoardSize.x * curBoardSize.y;
 
+        InitBoard();
         ClearBoard();
         ResizeBoard();
 
@@ -170,6 +144,30 @@ public class DiceBoardGrid : MonoBehaviour
         }
     }
 
+    public void InitializeDiceBoard(int w, int h, string boardLayout, WordPlayerScore foundWord, GobbleGame game)
+    {
+        InitBoard();
+
+        if ((w > 0) && (h > 0) && !string.IsNullOrEmpty(boardLayout) && (null != foundWord))
+        {
+            SetDiceCollision(DiceCollisionType.Disabled);
+            ClearBoard();
+            SetBoardSize(w, h);
+            ResizeBoard();
+
+            PopulateBoard(boardLayout, game);
+
+            foreach (var idx in foundWord.diceSet)
+            {
+                Dice d = GetDice(idx);
+                if (null != d)
+                {
+                    d.SetHighlight(true);
+                }
+            }
+        }
+    }
+
     public void SetBoardSize(int x, int y)
     {
         curBoardSize.x = x;
@@ -182,26 +180,13 @@ public class DiceBoardGrid : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(data) && (0 != string.Compare(data, curBoardLayout, true)))
         {
+            InitBoard();
             ClearBoard();
             ResizeBoard();
 
             if ("nil" != data)
             {
-                string[] tokens = data.Split(',');
-                foreach (string t in tokens)
-                {
-                    string[] toks = t.Split(':');
-
-                    if (toks.Length > 1)
-                    {
-                        WordType type = (WordType)int.Parse(toks[1]);
-                        AddDice(toks[0], game, type, false);
-                    }
-                    else
-                    {
-                        AddDice(t, game, WordType.Normal, false);
-                    }
-                }
+                PopulateBoard(data, game);
             }
         }
     }
@@ -260,8 +245,29 @@ public class DiceBoardGrid : MonoBehaviour
         }
     }
 
+    private void PopulateBoard(string data, GobbleGame game)
+    {
+        string[] tokens = data.Split(',');
+        foreach (string t in tokens)
+        {
+            string[] toks = t.Split(':');
+
+            if (toks.Length > 1)
+            {
+                WordType type = (WordType)int.Parse(toks[1]);
+                AddDice(toks[0], game, type, false);
+            }
+            else
+            {
+                AddDice(t, game, WordType.Normal, false);
+            }
+        }
+    }
+
     private Dice AddDice(string diceValue, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
     {
+        InitBoard();
+
         if (!string.IsNullOrEmpty(diceValue))
         {
             Dice newDice = Instantiate<Dice>(dicePrefab, transform);
@@ -316,6 +322,16 @@ public class DiceBoardGrid : MonoBehaviour
             grid.cellSize = size6x6.cellSize;
             grid.spacing = size6x6.spacing;
 		}
+    }
 
+    private void    InitBoard()
+    {
+        if (initBoard)
+        {
+            grid = GetComponent<GridLayoutGroup>();
+            baseCellSize = grid.cellSize;
+            baseCellSpacing = grid.spacing;
+            initBoard = false;
+        }
     }
 }
