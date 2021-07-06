@@ -72,6 +72,7 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] GameObject     gameBoardPanel;
     [SerializeField] GameModePanel  gameModePanel;
     [SerializeField] SummaryPanel   summaryPanel;
+    [SerializeField] SummaryGroup   summaryGroupPanels;
 
     [Header("UI Elements")]
     [SerializeField] BackgroundImage    backgroundImage;
@@ -104,6 +105,7 @@ public class GobbleGame : MonoBehaviour
 
     //Vector2Int                      lastScreenRes = new Vector2Int(0, 0);
 
+    public DiceBoardGrid DiceBoard      { get { return diceBoard; } }
     public GameScoreBoard ScoreBoard    { get { return scoreBoard; } }
     public FoundWordList WordList       { get { return wordList; } }
     public List<PlayerScoreEntry> Players { get { return playerScoreList; } }
@@ -430,8 +432,12 @@ public class GobbleGame : MonoBehaviour
     public void InitializeLobby()
     {
         gameBoardPanel.gameObject.SetActive(false);
+
+        /*
         if (summaryPanel.gameObject.activeInHierarchy)
             summaryPanel.GetComponent<PlayAnimation>().Play("SummaryExit", ()=>summaryPanel.gameObject.SetActive(false));
+        */
+        summaryGroupPanels.EndIfActive();
 
         gameModePanel.gameObject.SetActive(true);
         gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsEnter");
@@ -483,7 +489,8 @@ public class GobbleGame : MonoBehaviour
         backgroundImage.Randomize();
         
         gameBoardPanel.GetComponent<PlayAnimation>().Play("GameBoardExit", ()=>gameBoardPanel.gameObject.SetActive(false));
-        
+
+        /*
         summaryPanel.gameObject.SetActive(true);
         summaryPanel.GetComponent<PlayAnimation>().Play("SummaryEnter");
 
@@ -494,6 +501,15 @@ public class GobbleGame : MonoBehaviour
         else
         {
             summaryPanel.InitSummary(this, client.MyPlayerID);
+        }
+        */
+        if (isOfflineMode)
+        {
+            summaryGroupPanels.StartSummary(this, new PlayerId(0), true);
+        }
+        else
+        {
+            summaryGroupPanels.StartSummary(this, client.MyPlayerID, client.IsHostPlayer);
         }
     }
 
@@ -512,6 +528,7 @@ public class GobbleGame : MonoBehaviour
         if (isOfflineMode)
         {
             scoreBoard.AddPlayer("Player", new PlayerId(0), new Color(1.0f, 1.0f, 1.0f), true);
+            playerScoreList.Add(new PlayerScoreEntry(new PlayerId(0), "Player"));
         }
         else
         {
@@ -776,6 +793,16 @@ public class GobbleGame : MonoBehaviour
             }
         }
         return pendingScoreVal;
+    }
+
+    public string   GetPlayerName(PlayerId id)
+    {
+        PlayerScoreEntry score = playerScoreList.Find(x => x.id == id);
+        if (null != score)
+        {
+            return score.name;
+        }
+        return "";
     }
 
     public int  GetPlayerScore(PlayerId id)

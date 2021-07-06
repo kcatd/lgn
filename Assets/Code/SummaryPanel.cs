@@ -114,8 +114,8 @@ public class SummaryPanel : MonoBehaviour
         }
         if (wordCount > 1)
         {
-            sortedBySize.Sort((x, y) => x.word.Length == y.word.Length ? x.score == y.score ? string.Compare(x.word, y.word, true) : y.score - x.score : y.word.Length - x.word.Length);
-            sortedByScore.Sort((x, y) => x.score == y.score ? x.word.Length == y.word.Length ? string.Compare(x.word, y.word, true) : y.word.Length - x.word.Length : y.score - x.score);
+            sortedBySize.Sort((x, y) => x.word.Length == y.word.Length ? x.score == y.score ? string.Compare(x.word, y.word, true) : y.score.score - x.score.score : y.word.Length - x.word.Length);
+            sortedByScore.Sort((x, y) => x.score == y.score ? x.word.Length == y.word.Length ? string.Compare(x.word, y.word, true) : y.word.Length - x.word.Length : y.score.score - x.score.score);
         }
 
         if (null != summaryTotalScore)

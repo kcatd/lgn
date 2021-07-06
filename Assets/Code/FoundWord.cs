@@ -22,11 +22,11 @@ public class WordPlayerScore
 
 public class FoundWord : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI    text;
-    [SerializeField] Image              textBg;
-    [SerializeField] float              unrevealedAlpha;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] Image textBg;
+    [SerializeField] float unrevealedAlpha;
 
-    string  foundWord = "";
+    string foundWord = "";
     WordPlayerScore playerScore;
     Color textColor;
     bool hasStarted = false;
@@ -35,6 +35,7 @@ public class FoundWord : MonoBehaviour
     List<WordPlayerScore> finders = new List<WordPlayerScore>();
 
     public string Word { get { return foundWord; } }
+    public WordPlayerScore PlayerScore { get { return playerScore; } }
     public bool HasStarted  { get { return hasStarted; } }
     public bool Revealed { get { return isRevealed; } }
 
@@ -114,6 +115,43 @@ public class FoundWord : MonoBehaviour
             }
         }
         return defaultValue;
+    }
+
+    public WordPlayerScore  GetHighestScore(List<PlayerId> players)
+    {
+        WordPlayerScore result = null;
+        int highestVal = 0;
+
+        if (players.Exists(x => x == playerScore.player))
+        {
+            result = playerScore;
+            highestVal = playerScore.score;
+        }
+
+        foreach (var finder in finders)
+        {
+            if ((finder.score > highestVal) && players.Exists(x => x == finder.player))
+            {
+                highestVal = finder.score;
+                result = finder;
+            }
+        }
+        return result;
+    }
+    public WordPlayerScore  GetHighestScore()
+    {
+        WordPlayerScore result = playerScore;
+        int highestVal = playerScore.score;
+
+        foreach(var finder in finders)
+        {
+            if (finder.score > highestVal)
+            {
+                highestVal = finder.score;
+                result = finder;
+            }
+        }
+        return result;
     }
 
     public void AddFinder(PlayerId id, int score, List<int> data)

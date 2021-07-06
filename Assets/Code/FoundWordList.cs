@@ -14,15 +14,12 @@ public enum FoundWordResult
 
 public class FoundWordInfo
 {
-    public readonly PlayerId player;
-    public readonly int score;
     public readonly string word;
-
-    public FoundWordInfo(PlayerId id, int val, string str)
+    public readonly WordPlayerScore score;
+    public FoundWordInfo(string str, WordPlayerScore data)
     {
-        player = id;
-        score = val;
         word = str;
+        score = new WordPlayerScore(data.player, data.score, data.diceSet);
     }
 }
 
@@ -200,7 +197,33 @@ public class FoundWordList : MonoBehaviour
         {
             if (w.IsFoundPlayer(id))
             {
-                output.Add(new FoundWordInfo(id, w.GetScore(id), w.Word));
+                output.Add(new FoundWordInfo(w.Word, w.PlayerScore));
+            }
+        }
+    }
+    public void GetFoundWordList(List<PlayerId> players, ref List<FoundWordInfo> output)
+    {
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+
+        foreach (FoundWord w in Words)
+        {
+            bool isTeamFind = false;
+            foreach (var p in players)
+            {
+                if (w.IsFoundPlayer(p, false))
+                {
+                    isTeamFind = true;
+                    break;
+                }
+            }
+
+            if (isTeamFind)
+            {
+                WordPlayerScore score = w.GetHighestScore(players);
+                if (null != score)
+                {
+                    output.Add(new FoundWordInfo(w.Word, score));
+                }
             }
         }
     }
@@ -213,5 +236,95 @@ public class FoundWordList : MonoBehaviour
             return word.GetScore(id, defaultValue);
         }
         return defaultValue;
+    }
+
+    public WordPlayerScore  GetHighestScoringWord(ref string highestWordStr)
+    {
+        WordPlayerScore highestWord = null;
+        int wordScore = 0;
+
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+        highestWordStr = "";
+
+        foreach (FoundWord w in Words)
+        {
+            WordPlayerScore score = w.GetHighestScore();
+            if (score.score > wordScore)
+            {
+                highestWordStr = w.Word;
+                highestWord = score;
+                wordScore = score.score;
+            }
+        }
+        return highestWord;
+    }
+    public WordPlayerScore  GetLongestWord(ref string longestWordStr)
+    {
+        WordPlayerScore longestWord = null;
+        int wordScore = 0;
+
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+        longestWordStr = "";
+
+        foreach (FoundWord w in Words)
+        {
+            if (w.Word.Length >= longestWordStr.Length)
+            {
+                WordPlayerScore score = w.GetHighestScore();
+
+                if (w.Word.Length > longestWordStr.Length)
+                {
+                    // longest word takes precedence
+                    longestWordStr = w.Word;
+                    longestWord = score;
+                }
+                else if (score.score > wordScore)
+                {
+                    // score takes precedence when words are same length
+                    longestWordStr = w.Word;
+                    longestWord = score;
+                }
+            }
+        }
+        return longestWord;
+    }
+
+    public int  GetMostWordsFound(ref PlayerId id)
+    {
+        Dictionary<PlayerId, int> resultMap = new Dictionary<PlayerId, int>();
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+        int highestVal = 0;
+
+        foreach (FoundWord w in Words)
+        {
+            PlayerId finderId = w.PlayerScore.player;
+            if (resultMap.ContainsKey(finderId))
+            {
+                resultMap[finderId]++;
+            }
+            else
+            {
+                resultMap[finderId] = 1;
+            }
+        }
+
+        if (resultMap.Count > 0)
+        {
+            foreach(var res in resultMap)
+            {
+                if (res.Value > highestVal)
+                {
+                    id = res.Key;
+                    highestVal = res.Value;
+                }
+            }
+        }
+        return highestVal;
+    }
+
+    public int  GetTotalWordsFound()
+    {
+        FoundWord[] Words = GetComponentsInChildren<FoundWord>();
+        return Words.Length;
     }
 }

@@ -32,6 +32,8 @@ public class DiceBoardGrid : MonoBehaviour
     private bool                initBoard = true;
 
     public string               BoardLayout { get { return curBoardLayout; } }
+    public int                  Width { get { return curBoardSize.x; } }
+    public int                  Height { get { return curBoardSize.y; } }
 
     // Start is called before the first frame update
     void Start()
