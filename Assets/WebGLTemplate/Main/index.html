@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico?v={{{ PRODUCT_VERSION }}}">
+    <link rel="stylesheet" href="TemplateData/style.css?v={{{ PRODUCT_VERSION }}}">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width="{{{ WIDTH }}}" height="{{{ HEIGHT }}}"></canvas>
+      <div id="error-container" style="display: none;">
+        <div class="tip-text">
+          <div class="tip-pointer">
+            ☝️
+          </div>
+          <p>
+            <span class="game-name">{{{ PRODUCT_NAME }}}</span> is designed to be played in a larger window. Please use the controls in the upper-right corner of this window to expand or pop out the game.
+          </p>
+        </div>
+        <img class="tip-image" src="expand2.png" alt="Click expand to make the window larger.">
+        <p class="tip-text">- OR -</p>
+        <img class="tip-image" src="popout2.png" alt="Click popout to make the window larger.">
+      </div>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-mobile-warning">
+        WebGL builds are not supported on mobile devices.
+      </div>
+    </div>
+    <script src="game.js?v={{{ PRODUCT_VERSION }}}" type="application/javascript"></script>
+  </body>
+</html>

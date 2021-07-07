@@ -1,0 +1,23 @@
+body { padding: 0; margin: 0; background: black; overflow: hidden }
+#unity-container { position: absolute }
+#unity-container.unity-mobile { width: 100%; height: 100% }
+#unity-container.unity-desktop { position: absolute; width: 100%; left: 50%; top: 0; transform: translate(-50%, 0) }
+#error-container { background-color: black; padding: 20px; text-align: center; position: absolute; }
+#unity-canvas { width: 100%; background: black }
+.unity-mobile #unity-canvas { width: 100%; height: 100% }
+#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
+#unity-logo { width: 154px; height: 130px; background: url('unity-logo-dark.png') no-repeat center }
+#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; background: url('progress-bar-empty-dark.png') no-repeat center }
+#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-dark.png') no-repeat center }
+#unity-footer { position: relative }
+.unity-mobile #unity-footer { display: none }
+#unity-webgl-logo { float:left; width: 204px; height: 38px; background: url('webgl-logo.png') no-repeat center }
+#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
+#unity-fullscreen-button { float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
+#unity-mobile-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
+#error-container {display: flex}
+#error { margin: auto; color: white; font-family: arial, sans-serif; font-size: 24px }
+.tip-image { width: 90%; border: 1px solid white; margin: 10px; }
+.tip-text { font-family: arial; font-size: 16px; color: white; margin: 20px; }
+.tip-pointer { float: right; font-size: 50px; }
+.game-name { font-weight: bold; color: white; }
