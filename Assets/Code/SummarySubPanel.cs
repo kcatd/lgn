@@ -135,13 +135,13 @@ public class SummarySubPanel : MonoBehaviour
     void    OnPlayButton()
     {
         if (null != parentSummary)
-            parentSummary.EndSummary(); // TODO: distinguish between play and quit
+            parentSummary.EndSummary(EndSummaryMode.RestartWithCurrentSettings);
     }
 
     void    OnQuitButton()
     {
         if (null != parentSummary)
-            parentSummary.EndSummary(); // TODO: distinguish between play and quit
+            parentSummary.EndSummary(EndSummaryMode.QuitToGameOptions);
     }
 
     void    UpdateButtonStates()

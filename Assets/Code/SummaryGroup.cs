@@ -6,6 +6,12 @@ using TMPro;
 
 using KitsuneCore.Services.Players;
 
+public enum EndSummaryMode
+{
+    CloseOnly,
+    QuitToGameOptions,
+    RestartWithCurrentSettings,
+}
 public class SummaryGroup : MonoBehaviour
 {
     [SerializeField] GameObject         foregroundGroup;
@@ -55,7 +61,7 @@ public class SummaryGroup : MonoBehaviour
         }
     }
 
-    public void EndSummary()
+    public void EndSummary(EndSummaryMode mode)
     {
         // TODO: animate summary?
         foreach (var pane in panes)
@@ -63,9 +69,17 @@ public class SummaryGroup : MonoBehaviour
 
         gameObject.SetActive(false);
 
-        if (null != game)
+        if ((null != game) && (EndSummaryMode.CloseOnly != mode))
         {
-            game.InitializeLobby();
+            switch (mode)
+            {
+                case EndSummaryMode.RestartWithCurrentSettings:
+                    game.RestartGame();
+                    break;
+                case EndSummaryMode.QuitToGameOptions:
+                    game.InitializeLobby();
+                    break;
+            }
         }
     }
 
@@ -73,7 +87,7 @@ public class SummaryGroup : MonoBehaviour
     {
         if (gameObject.activeSelf)
         {
-            EndSummary();
+            EndSummary(EndSummaryMode.CloseOnly);
         }
     }
 

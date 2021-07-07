@@ -592,12 +592,12 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 		int curGameID = msg.GetInteger(GobbleTag.GameID);
 		int hostID = msg.GetInteger(GobbleTag.HostPlayer);
 		string boardLayout = msg.GetString(GobbleTag.GameBoard);
-		bool beginNewGame = false;
+		bool gameIDChanged = false;
 
 		//Debug.LogError(string.Format("update state: {0}", boardLayout));
 		if (gameID != curGameID)
 		{
-			beginNewGame = true;
+			gameIDChanged = true;
 			game.ClearBoard();
 		}
 		gameID = curGameID;
@@ -637,17 +637,25 @@ public class GobbleClient : MonoBehaviour, IGameServerSubscriber, IPlacesSubscri
 			}
 		}
 
+		Debug.Log(string.Format("Game state update {0}[{1}]", gameID, game.IsGameStarted));
 		if ((gameID > 0) && !game.IsGameStarted)
 		{
-			if (beginNewGame)
+			if (gameIDChanged)
 			{
 				//game.InitializeBoard();
 			}
 			game.StartGame();
 		}
-		else if ((0 == gameID) && game.IsGameStarted)
+		else if (0 == gameID)
 		{
-			game.EndGame();
+			if (game.IsGameStarted)
+			{
+				game.EndGame();
+			}
+            else if (!gameIDChanged)
+            {
+				game.ReturnToLobby();
+            }
 		}
 
 		/*

@@ -380,7 +380,9 @@ public class GobbleGame : MonoBehaviour
     {
         backgroundImage.Randomize();
         gameModePanel.GetComponent<PlayAnimation>().Play("GameSettingsExit", ()=>gameModePanel.gameObject.SetActive(false));
-        
+
+        summaryGroupPanels.EndIfActive();
+
         gameBoardPanel.gameObject.SetActive(true);
         gameBoardPanel.GetComponent<PlayAnimation>().Play("GameBoardEnter");
 
@@ -388,6 +390,15 @@ public class GobbleGame : MonoBehaviour
 
         if (null != curGameModeSettings)
             gameTime = curGameModeSettings.gameTime;
+    }
+
+    public void RestartGame()
+    {
+        if (null != curGameModeSettings)
+        {
+            GameModeSettings tmp = curGameModeSettings;
+            ResetGame(tmp);
+        }
     }
 
     public void EndGame()
@@ -431,6 +442,8 @@ public class GobbleGame : MonoBehaviour
 
     public void InitializeLobby()
     {
+        bool updateServer = false;
+
         gameBoardPanel.gameObject.SetActive(false);
 
         /*
@@ -450,6 +463,7 @@ public class GobbleGame : MonoBehaviour
         if (null != curGameModeSettings)
         {
             gameModePanel.SetGameSettings(curGameModeSettings, false);
+            updateServer = !isOfflineMode && client.IsHostPlayer;
         }
 
         if (isOfflineMode)
@@ -459,6 +473,17 @@ public class GobbleGame : MonoBehaviour
         else
         {
             gameModePanel.SetupPlayerControllables(client.IsHostPlayer);
+
+            if (updateServer)
+                client.DoUpdateGameState(GetGameState());
+        }
+    }
+
+    public void ReturnToLobby()
+    {
+        if (!gameModePanel.gameObject.activeSelf)
+        {
+            InitializeLobby();
         }
     }
 
