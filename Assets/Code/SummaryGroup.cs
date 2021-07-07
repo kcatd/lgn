@@ -110,7 +110,7 @@ public class SummaryGroup : MonoBehaviour
             {
                 SummarySubPanel curPane = panes[(i + idx) % paneCount];
                 curPane.SetMainSummaryPanel(0 == i, this);
-                MovePane(curPane, 0 == i ? foregroundGroup : backgroundGroup, panePositions[i]);
+                MovePane(curPane, 0 == i ? foregroundGroup : backgroundGroup, panePositions[i], 0 == i);
             }
         }
     }
@@ -168,13 +168,10 @@ public class SummaryGroup : MonoBehaviour
         }
     }
 
-    void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos)
+    void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos, bool toForeground)
     {
         pane.SetPanePosition(pos.dir);
-
-        // TODO: animate motion?
-        pane.transform.SetParent(parent.transform);
-        pane.transform.position = pos.pos;
+        pane.MoveTo(parent.transform, pos.pos, toForeground);
     }
 
     SummarySubPanel GetPaneByType(SummaryPaneType type)

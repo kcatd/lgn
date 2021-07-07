@@ -137,6 +137,52 @@ public class SummarySubPanel : MonoBehaviour
         wordsDiceBlock.ClearWordBlock();
     }
 
+    public void MoveTo(Transform parent, Vector3 destPos, bool toForeground)
+    {
+        StartCoroutine(MovePane(parent, destPos, toForeground));
+    }
+    IEnumerator MovePane(Transform parent, Vector3 destPos, bool toForeground)
+    {
+        const float moveFPS = 1.0f / 60.0f;
+        const float moveRate = 4.0f;
+
+        Vector3 startPos = gameObject.transform.position;
+        Vector3 dir = destPos - startPos;
+        float prog = 0.0f;
+        bool updateParent = true;
+
+        if (toForeground)
+        {
+            gameObject.transform.SetParent(parent);
+            updateParent = false;
+        }
+
+        if (dir.magnitude > float.Epsilon)
+        {
+            for (; ; )
+            {
+                //prog += 4.0f * Time.deltaTime;
+                prog += moveRate * moveFPS;
+                if (prog < 1.0f)
+                {
+                    gameObject.transform.position = startPos + (prog * dir);
+                    yield return new WaitForSeconds(moveFPS);
+                }
+                else
+                {
+                    gameObject.transform.position = destPos;
+                    break;
+                }
+            }
+        }
+
+        if (updateParent)
+        {
+            gameObject.transform.SetParent(parent);
+        }
+        yield return null;
+    }
+
     void    OnMainButton()
     {
         if (!isForeground && (null != parentSummary))
