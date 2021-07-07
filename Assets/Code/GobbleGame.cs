@@ -73,6 +73,7 @@ public class GobbleGame : MonoBehaviour
     [SerializeField] GameModePanel  gameModePanel;
     [SerializeField] SummaryPanel   summaryPanel;
     [SerializeField] SummaryGroup   summaryGroupPanels;
+    [SerializeField] MenuPanel      menuPanel;
 
     [Header("UI Elements")]
     [SerializeField] BackgroundImage    backgroundImage;
@@ -536,6 +537,11 @@ public class GobbleGame : MonoBehaviour
         {
             summaryGroupPanels.StartSummary(this, client.MyPlayerID, client.IsHostPlayer);
         }
+    }
+
+    public void StartMenu()
+    {
+        menuPanel.StartMenu(this, isOfflineMode || client.IsHostPlayer);
     }
 
     public void ClearBoard()
