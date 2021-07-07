@@ -45,11 +45,13 @@ public class SummarySubPanel : MonoBehaviour
     [SerializeField] WordBlock              wordsDiceBlock;
 
     [Header("Buttons")]
-    [SerializeField] Button                 mainButton;
+    [SerializeField] Button                 mainButtonLeft;
+    [SerializeField] Button                 mainButtonRight;
     [SerializeField] Button                 playButton;
     [SerializeField] Button                 quitButton;
 
     SummaryGroup                            parentSummary = null;
+    int                                     panePosition = 0;
     bool                                    isForeground = false;
     bool                                    isLocalOrHost = false;
 
@@ -59,28 +61,31 @@ public class SummarySubPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mainButton.onClick.AddListener(OnMainButton);
+        mainButtonLeft.onClick.AddListener(OnMainButton);
+        mainButtonRight.onClick.AddListener(OnMainButton);
         playButton.onClick.AddListener(OnPlayButton);
         quitButton.onClick.AddListener(OnQuitButton);
 
         resultPane.SetActive(SummaryPaneType.GameResults != summaryPaneType);
         scorePane.SetActive(SummaryPaneType.GameResults == summaryPaneType);
 
-        TextMeshProUGUI mainText = mainButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (null != mainText)
+        TextMeshProUGUI mainTextL = mainButtonLeft.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI mainTextR = mainButtonRight.GetComponentInChildren<TextMeshProUGUI>();
+
+        switch (summaryPaneType)
         {
-            switch (summaryPaneType)
-            {
-                case SummaryPaneType.GameResults:
-                    mainText.text = "Game";
-                    break;
-                case SummaryPaneType.PlayerResults:
-                    mainText.text = "Player";
-                    break;
-                case SummaryPaneType.TeamResults:
-                    mainText.text = "Team";
-                    break;
-            }
+            case SummaryPaneType.GameResults:
+                if (null != mainTextL) mainTextL.text = "Game";
+                if (null != mainTextR) mainTextR.text = "Game";
+                break;
+            case SummaryPaneType.PlayerResults:
+                if (null != mainTextL) mainTextL.text = "Player";
+                if (null != mainTextR) mainTextR.text = "Player";
+                break;
+            case SummaryPaneType.TeamResults:
+                if (null != mainTextL) mainTextL.text = "Team";
+                if (null != mainTextR) mainTextR.text = "Team";
+                break;
         }
     }
 
@@ -119,6 +124,12 @@ public class SummarySubPanel : MonoBehaviour
         UpdateButtonStates();
     }
 
+    public void SetPanePosition(int dir)
+    {
+        panePosition = dir;
+        UpdateButtonStates();
+    }
+
     public void ClearPanel()
     {
         // anything else need to be cleared?
@@ -147,7 +158,8 @@ public class SummarySubPanel : MonoBehaviour
     void    UpdateButtonStates()
     {
         fadeOverlay.SetActive(!isForeground);
-        mainButton.gameObject.SetActive(!isForeground);
+        mainButtonLeft.gameObject.SetActive(!isForeground && (panePosition < 0));
+        mainButtonRight.gameObject.SetActive(!isForeground && (panePosition > 0));
         playButton.gameObject.SetActive(isForeground);
         quitButton.gameObject.SetActive(isForeground);
 
@@ -194,7 +206,7 @@ public class SummarySubPanel : MonoBehaviour
     {
         int playerScore = game.GetPlayerScore(thePlayer);
         scoreTitleText.text = "You scored";
-        scoreValueText.text = playerScore.ToString("#,#");
+        scoreValueText.text = playerScore > 0 ? playerScore.ToString("#,#") : "0";
 
         List<FoundWordInfo> foundWordList = new List<FoundWordInfo>();
         game.WordList.GetFoundWordList(thePlayer, ref foundWordList);
@@ -220,7 +232,7 @@ public class SummarySubPanel : MonoBehaviour
         int teamID = game.GetPlayerTeam(thePlayer);
         int teamScore = game.GetTeamScore(teamID);
         scoreTitleText.text = "Your team scored";
-        scoreValueText.text = teamScore.ToString("#,#");
+        scoreValueText.text = teamScore > 0 ? teamScore.ToString("#,#") : "0";
 
         List<PlayerId> teamPlayers = new List<PlayerId>();
         PlayerTeamEntry teamInfo = game.Teams.Find(x => x.id == teamID);

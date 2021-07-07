@@ -12,6 +12,12 @@ public enum EndSummaryMode
     QuitToGameOptions,
     RestartWithCurrentSettings,
 }
+
+public class PanePositionEntry
+{
+    public Vector3 pos;
+    public int dir;
+}
 public class SummaryGroup : MonoBehaviour
 {
     [SerializeField] GameObject         foregroundGroup;
@@ -19,7 +25,7 @@ public class SummaryGroup : MonoBehaviour
     [SerializeField] TextMeshProUGUI    titleText;
 
     List<SummarySubPanel>               panes;
-    Vector3[]                           panePositions;
+    PanePositionEntry[]                 panePositions;
     bool                                initSummaryGroup = true;
 
     GobbleGame                          game = null;
@@ -115,11 +121,13 @@ public class SummaryGroup : MonoBehaviour
         {
             SummarySubPanel activePane = foregroundGroup.GetComponentInChildren<SummarySubPanel>();
             SummarySubPanel[] inactivePanes = backgroundGroup.GetComponentsInChildren<SummarySubPanel>();
+            Vector3 activePos = new Vector3();
 
             panes = new List<SummarySubPanel>();
 
             if (null != activePane)
             {
+                activePos = activePane.transform.position;
                 activePane.SetMainSummaryPanel(true, this);
                 panes.Add(activePane);
             }
@@ -133,21 +141,40 @@ public class SummaryGroup : MonoBehaviour
             if (panes.Count > 0)
             {
                 int idx = 0;
-                panePositions = new Vector3[panes.Count];
+                panePositions = new PanePositionEntry[panes.Count];
 
                 foreach (var pane in panes)
-                    panePositions[idx++] = pane.transform.position;
+                {
+                    Vector3 pos = pane.transform.position;
+
+                    panePositions[idx] = new PanePositionEntry();
+                    panePositions[idx].pos = pos;
+                    panePositions[idx].dir = 0;
+
+                    if ((null != activePane) && (pane != activePane))
+                    {
+                        if (pos.x < activePos.x)
+                            panePositions[idx].dir = -1;
+                        else if (pos.x > activePos.x)
+                            panePositions[idx].dir = 1;
+                    }
+
+                    pane.SetPanePosition(panePositions[idx].dir);
+                    ++idx;
+                }
             }
 
             initSummaryGroup = false;
         }
     }
 
-    void    MovePane(SummarySubPanel pane, GameObject parent, Vector3 pos)
+    void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos)
     {
+        pane.SetPanePosition(pos.dir);
+
         // TODO: animate motion?
         pane.transform.SetParent(parent.transform);
-        pane.transform.position = pos;
+        pane.transform.position = pos.pos;
     }
 
     SummarySubPanel GetPaneByType(SummaryPaneType type)

@@ -91,6 +91,7 @@ public class GobbleGame : MonoBehaviour
     List<Dice>                      trackingSet = new List<Dice>();
     private string                  curTrackingWord = "";
     private bool                    isTracking = false;
+    private bool                    enableTracking = true;
 
     List<PlayerScoreEntry>          playerScoreList = new List<PlayerScoreEntry>();
     List<PlayerTeamEntry>           playerTeamList = new List<PlayerTeamEntry>();
@@ -113,6 +114,7 @@ public class GobbleGame : MonoBehaviour
     public List<PlayerTeamEntry> Teams  { get { return playerTeamList; } }
     public TeamColors TeamColorTable    { get { return teamColorTable; } }
     public GameConstants Constants      { get { return gameConstants; } }
+    public bool EnableTracking          { get { return enableTracking; } set { enableTracking = value; if (!enableTracking && isTracking) { ClearTracking(); } } }
     public bool IsGameStarted           { get { return isGameStarted; } }
     public bool IsHost                  { get { return client.IsHostPlayer; } }
     public bool IsOfflineMode           { get { return isOfflineMode; } }
@@ -199,7 +201,7 @@ public class GobbleGame : MonoBehaviour
                     }
                 }
             }
-            else if (isGameStarted)
+            else if (isGameStarted && enableTracking)
             {
                 Vector3 mousePos = Input.mousePosition;
                 Vector3 localPos = Camera.main.ScreenToWorldPoint(mousePos);

@@ -41,6 +41,7 @@ public class MenuPanel : MonoBehaviour
         // TODO: animate me
         gameObject.SetActive(true);
 
+        game.EnableTracking = false;
         RefreshMenuUI();
     }
 
@@ -86,6 +87,8 @@ public class MenuPanel : MonoBehaviour
 
     void    OnCloseMenu()
     {
+        game.EnableTracking = true;
+
         // TODO: animate me
         gameObject.SetActive(false);
     }
