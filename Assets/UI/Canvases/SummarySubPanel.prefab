@@ -2069,7 +2069,7 @@ MonoBehaviour:
   summaryPaneType: 2
   summaryTitleText: {fileID: 8993977472622319376}
   backgroundScale: 0.75
-  animSpeedFactor: 4
+  animSpeedFactor: 8
   fadeOverlay: {fileID: 7862802813570017268}
   resultPane: {fileID: 3124738769545089447}
   scorePane: {fileID: 3124738769412335695}
