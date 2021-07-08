@@ -149,11 +149,11 @@ public class SummarySubPanel : MonoBehaviour
         wordsDiceBlock.ClearWordBlock();
     }
 
-    public void MoveTo(Transform parent, Vector3 destPos, bool toForeground)
+    public void MoveTo(Transform parent, Vector3 destPos, bool toForeground, bool transitionFlag)
     {
-        StartCoroutine(MovePane(parent, destPos, toForeground));
+        StartCoroutine(MovePane(parent, destPos, toForeground, transitionFlag));
     }
-    IEnumerator MovePane(Transform parent, Vector3 destPos, bool toForeground)
+    IEnumerator MovePane(Transform parent, Vector3 destPos, bool toForeground, bool transitionFlag)
     {
         const float moveFPS = 1.0f / 60.0f;
 
@@ -162,9 +162,13 @@ public class SummarySubPanel : MonoBehaviour
         float prog = 0.0f;
         bool updateParent = true;
 
-        if (toForeground)
+        if (transitionFlag)
         {
             fadeOverlay.gameObject.SetActive(true);
+        }
+
+        if (toForeground)
+        {
             gameObject.transform.SetParent(parent);
             updateParent = false;
         }
@@ -177,23 +181,29 @@ public class SummarySubPanel : MonoBehaviour
                 prog += animSpeedFactor * moveFPS;
                 if (prog < 1.0f)
                 {
-                    Vector3 scale = gameObject.transform.localScale;
-                    Color c = fadeColor;
+                    if (transitionFlag)
+                    {
+                        Vector3 scale = gameObject.transform.localScale;
+                        Color c = fadeColor;
 
-                    scale.x = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
-                    scale.y = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
-                    c.a = fadeColor.a * (toForeground ? 1.0f - prog : prog);
+                        scale.x = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
+                        scale.y = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
+                        c.a = fadeColor.a * (toForeground ? 1.0f - prog : prog);
 
-                    fadeOverlay.color = c;
+                        fadeOverlay.color = c;
+                        gameObject.transform.localScale = scale;
+                    }
                     gameObject.transform.position = startPos + (prog * dir);
-                    gameObject.transform.localScale = scale;
                     yield return new WaitForSeconds(moveFPS);
                 }
                 else
                 {
-                    fadeOverlay.color = fadeColor;
+                    if (transitionFlag)
+                    {
+                        fadeOverlay.color = fadeColor;
+                        gameObject.transform.localScale = new Vector3(isForeground ? 1.0f : backgroundScale, isForeground ? 1.0f : backgroundScale, 1.0f);
+                    }
                     gameObject.transform.position = destPos;
-                    gameObject.transform.localScale = new Vector3(isForeground ? 1.0f : backgroundScale, isForeground ? 1.0f : backgroundScale, 1.0f);
                     break;
                 }
             }

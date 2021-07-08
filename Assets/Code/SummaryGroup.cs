@@ -109,8 +109,10 @@ public class SummaryGroup : MonoBehaviour
             for (int i = 0; i < paneCount; ++i)
             {
                 SummarySubPanel curPane = panes[(i + idx) % paneCount];
-                curPane.SetMainSummaryPanel(0 == i, this);
-                MovePane(curPane, 0 == i ? foregroundGroup : backgroundGroup, panePositions[i], 0 == i);
+                bool toForeground = 0 == i;
+                bool toTransition = curPane.IsForeground != toForeground;
+                curPane.SetMainSummaryPanel(toForeground, this);
+                MovePane(curPane, toForeground ? foregroundGroup : backgroundGroup, panePositions[i], toForeground, toTransition);
             }
         }
     }
@@ -168,9 +170,9 @@ public class SummaryGroup : MonoBehaviour
         }
     }
 
-    void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos, bool toForeground)
+    void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos, bool toForeground, bool transitionFlag)
     {
-        pane.MoveTo(parent.transform, pos.pos, toForeground);
+        pane.MoveTo(parent.transform, pos.pos, toForeground, transitionFlag);
     }
 
     SummarySubPanel GetPaneByType(SummaryPaneType type)
