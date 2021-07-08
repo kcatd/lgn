@@ -817,15 +817,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 22
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1ddfb1a642b5e054f9d7b155b42ddd32, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
+  m_sharedMaterial: {fileID: -662704072125460824, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -951,15 +951,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: W
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ea7ae7745de1b12469a25f1c2f1ad933, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1ddfb1a642b5e054f9d7b155b42ddd32, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
+  m_sharedMaterial: {fileID: -662704072125460824, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -976,11 +976,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.7
+  m_fontSize: 70
   m_fontSizeBase: 96
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 32
+  m_fontSizeMin: 24
   m_fontSizeMax: 96
   m_fontStyle: 1
   m_HorizontalAlignment: 2
@@ -1032,7 +1032,7 @@ GameObject:
   - component: {fileID: 6867576391487272204}
   - component: {fileID: 5421169257636889028}
   m_Layer: 5
-  m_Name: dice
+  m_Name: Dice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

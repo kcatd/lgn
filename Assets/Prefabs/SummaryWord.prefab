@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: abcdefghijklmn
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
+  m_sharedMaterial: {fileID: -662704072125460824, guid: 576f438c1ee147d4eb91e12587f09625, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 488628659345248035}
   - component: {fileID: 488628659345248034}
   m_Layer: 5
-  m_Name: SummaryWordFound
+  m_Name: SummaryWord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

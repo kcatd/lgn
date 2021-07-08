@@ -103,6 +103,8 @@ public class Dice : MonoBehaviour
         primaryCollider.enabled = DiceCollisionType.Primary == type;
         secondaryCollider.enabled = DiceCollisionType.Secondary == type;
         isEnabled = DiceCollisionType.Disabled != type;
+
+        diceFaceScoreText.gameObject.SetActive(isEnabled);
     }
 
     public void InitDice(string Data, GobbleGame game, WordType type = WordType.Normal, bool rollSet = true)
@@ -151,14 +153,17 @@ public class Dice : MonoBehaviour
     Image DesiredFace()
     {
         LetterState current = normalTile;
-        switch (diceWordType)
+        if (isEnabled)
         {
-            case WordType.Normal:               current = normalTile; break;
-            case WordType.DoubleLetterScore:    current = doubleLetterTile; break;
-            case WordType.TripleLetterScore:    current = trippleLetterTile; break;
-            case WordType.DoubleWordScore:      current = doubleWordTile; break;
-            case WordType.TripleWordScore:      current = trippleWordTile; break;
-		}
+            switch (diceWordType)
+            {
+                case WordType.Normal: current = normalTile; break;
+                case WordType.DoubleLetterScore: current = doubleLetterTile; break;
+                case WordType.TripleLetterScore: current = trippleLetterTile; break;
+                case WordType.DoubleWordScore: current = doubleWordTile; break;
+                case WordType.TripleWordScore: current = trippleWordTile; break;
+            }
+        }
         if (isMouseOver) return current.over;
         if (isHighlighted) return current.active;
         return current.normal;
