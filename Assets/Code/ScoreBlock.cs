@@ -31,7 +31,7 @@ public class ScoreBlock : MonoBehaviour
     {
         int teamID = game.GetPlayerTeam(id);
 
-        teamIcon.color = game.TeamColorTable.GetTeamColor(teamID, false);
+        teamIcon.color = game.TeamColorTable.GetTeamColor(teamID);
         nameTitleText.text = game.GetPlayerName(id);
 
         switch (scoreType)
