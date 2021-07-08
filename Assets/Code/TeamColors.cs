@@ -13,6 +13,7 @@ public struct TeamColor
 public class TeamColors : MonoBehaviour
 {
     [SerializeField] TeamColor[]    teamColors;
+    [SerializeField] Color          neutralColor;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,7 @@ public class TeamColors : MonoBehaviour
         
     }
 
-    public Color    GetTeamColor(int teamID, bool defaultToWhite = true)
+    public Color    GetTeamColor(int teamID, bool returnNeutral = true)
     {
         foreach (var team in teamColors)
         {
@@ -35,7 +36,7 @@ public class TeamColors : MonoBehaviour
                 return team.teamColor;
             }
         }
-        return defaultToWhite ? new Color(1.0f, 1.0f, 1.0f) : new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        return returnNeutral ? neutralColor : new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     public int      GetMaxTeams()

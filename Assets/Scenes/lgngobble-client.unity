@@ -802,6 +802,7 @@ MonoBehaviour:
     teamColor: {r: 0.23137255, g: 0.6039216, b: 0.28627452, a: 1}
   - teamID: 4
     teamColor: {r: 0.05490196, g: 0.58431375, b: 0.77254903, a: 1}
+  neutralColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
 --- !u!114 &1522216214
 MonoBehaviour:
   m_ObjectHideFlags: 0

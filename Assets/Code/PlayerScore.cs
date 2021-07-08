@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 using KitsuneCore.Services.Players;
@@ -10,6 +11,7 @@ public class PlayerScore : MonoBehaviour
     [SerializeField] TextMeshProUGUI    scoreName;
     [SerializeField] TextMeshProUGUI    scoreText;
     [SerializeField] TextMeshProUGUI    updateScoreText;
+    [SerializeField] Image              teamIcon;
 
 
     PlayAnimation   animCtrl;
@@ -81,8 +83,9 @@ public class PlayerScore : MonoBehaviour
 
     public void UpdateColor(Color c)
     {
-        scoreName.color = c;
-        scoreText.color = c;
-        updateScoreText.color = c;
+        //scoreName.color = c;
+        //scoreText.color = c;
+        //updateScoreText.color = c;
+        teamIcon.color = c;
     }
 }
