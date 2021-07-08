@@ -102,7 +102,7 @@ public class PlayerLobbyEntry : MonoBehaviour
         localPlayer = isLocalPlayer;
 
         playerNameText.text = playerName;
-        playerNameText.color = parentList.Game.TeamColorTable.GetTeamColor(playerTeamId);
+        //playerNameText.color = parentList.Game.TeamColorTable.GetTeamColor(playerTeamId);
 
         foreach (var btn in teamBtns)
         {

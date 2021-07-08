@@ -49,7 +49,7 @@ public class ScoreFXEvent
 public class GameModeSettings
 {
     public Vector2Int   boardSize = new Vector2Int(5, 5);
-    public int          gameTime = 1;
+    public int          gameTime = 2;
     public int          minWordLen = 2;
     public bool         allowBacktrack = false;
     public bool         enableDoubleLetterScore = true;
