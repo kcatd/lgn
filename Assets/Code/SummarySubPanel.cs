@@ -22,9 +22,14 @@ public enum SummaryPaneType
 public class SummarySubPanel : MonoBehaviour
 {
     [SerializeField] SummaryPaneType        summaryPaneType;
+    [SerializeField] TextMeshProUGUI        summaryTitleText;
+
+    [Header("Settings")]
+    [SerializeField] float                  backgroundScale = 0.75f;
+    [SerializeField] float                  animSpeedFactor = 4.0f;
 
     [Header("UI Groups")]
-    [SerializeField] GameObject             fadeOverlay;
+    [SerializeField] Image                  fadeOverlay;
     [SerializeField] GameObject             resultPane;
     [SerializeField] GameObject             scorePane;
     [SerializeField] GameObject             diceBlockPane;
@@ -51,6 +56,7 @@ public class SummarySubPanel : MonoBehaviour
     [SerializeField] Button                 quitButton;
 
     SummaryGroup                            parentSummary = null;
+    Color                                   fadeColor = new Color(1.0f, 1.0f, 1.0f);
     int                                     panePosition = 0;
     bool                                    isForeground = false;
     bool                                    isLocalOrHost = false;
@@ -75,18 +81,17 @@ public class SummarySubPanel : MonoBehaviour
         switch (summaryPaneType)
         {
             case SummaryPaneType.GameResults:
-                if (null != mainTextL) mainTextL.text = "Game";
-                if (null != mainTextR) mainTextR.text = "Game";
+                summaryTitleText.text = "Game";
                 break;
             case SummaryPaneType.PlayerResults:
-                if (null != mainTextL) mainTextL.text = "Player";
-                if (null != mainTextR) mainTextR.text = "Player";
+                summaryTitleText.text = "Player";
                 break;
             case SummaryPaneType.TeamResults:
-                if (null != mainTextL) mainTextL.text = "Team";
-                if (null != mainTextR) mainTextR.text = "Team";
+                summaryTitleText.text = "Team";
                 break;
         }
+        if (null != mainTextL) mainTextL.text = summaryTitleText.text;
+        if (null != mainTextR) mainTextR.text = summaryTitleText.text;
     }
 
     // Update is called once per frame
@@ -111,10 +116,17 @@ public class SummarySubPanel : MonoBehaviour
         }
     }
 
-    public void SetMainSummaryPanel(bool isOn, SummaryGroup parent)
+    public void SetMainSummaryPanel(bool isOn, SummaryGroup parent, bool initFlag = false)
     {
         isForeground = isOn;
         parentSummary = parent;
+
+        if (initFlag)
+        {
+            fadeColor = fadeOverlay.color;
+            fadeOverlay.gameObject.SetActive(!isForeground);
+            gameObject.transform.localScale = new Vector3(isForeground ? 1.0f : backgroundScale, isForeground ? 1.0f : backgroundScale, 1.0f);
+        }
         UpdateButtonStates();
     }
 
@@ -144,7 +156,6 @@ public class SummarySubPanel : MonoBehaviour
     IEnumerator MovePane(Transform parent, Vector3 destPos, bool toForeground)
     {
         const float moveFPS = 1.0f / 60.0f;
-        const float moveRate = 4.0f;
 
         Vector3 startPos = gameObject.transform.position;
         Vector3 dir = destPos - startPos;
@@ -153,6 +164,7 @@ public class SummarySubPanel : MonoBehaviour
 
         if (toForeground)
         {
+            fadeOverlay.gameObject.SetActive(true);
             gameObject.transform.SetParent(parent);
             updateParent = false;
         }
@@ -162,15 +174,26 @@ public class SummarySubPanel : MonoBehaviour
             for (; ; )
             {
                 //prog += 4.0f * Time.deltaTime;
-                prog += moveRate * moveFPS;
+                prog += animSpeedFactor * moveFPS;
                 if (prog < 1.0f)
                 {
+                    Vector3 scale = gameObject.transform.localScale;
+                    Color c = fadeColor;
+
+                    scale.x = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
+                    scale.y = backgroundScale + ((1.0f - backgroundScale) * (toForeground ? prog : 1.0f - prog));
+                    c.a = fadeColor.a * (toForeground ? 1.0f - prog : prog);
+
+                    fadeOverlay.color = c;
                     gameObject.transform.position = startPos + (prog * dir);
+                    gameObject.transform.localScale = scale;
                     yield return new WaitForSeconds(moveFPS);
                 }
                 else
                 {
+                    fadeOverlay.color = fadeColor;
                     gameObject.transform.position = destPos;
+                    gameObject.transform.localScale = new Vector3(isForeground ? 1.0f : backgroundScale, isForeground ? 1.0f : backgroundScale, 1.0f);
                     break;
                 }
             }
@@ -180,6 +203,8 @@ public class SummarySubPanel : MonoBehaviour
         {
             gameObject.transform.SetParent(parent);
         }
+        fadeOverlay.gameObject.SetActive(!toForeground);
+        UpdateButtonStates();
         yield return null;
     }
 
@@ -203,9 +228,10 @@ public class SummarySubPanel : MonoBehaviour
 
     void    UpdateButtonStates()
     {
-        fadeOverlay.SetActive(!isForeground);
-        mainButtonLeft.gameObject.SetActive(!isForeground && (panePosition < 0));
-        mainButtonRight.gameObject.SetActive(!isForeground && (panePosition > 0));
+        //mainButtonLeft.gameObject.SetActive(!isForeground && (panePosition < 0));
+        //mainButtonRight.gameObject.SetActive(!isForeground && (panePosition > 0));
+        mainButtonLeft.gameObject.SetActive(!isForeground);
+        mainButtonRight.gameObject.SetActive(!isForeground);
         playButton.gameObject.SetActive(isForeground);
         quitButton.gameObject.SetActive(isForeground);
 

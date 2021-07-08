@@ -128,13 +128,13 @@ public class SummaryGroup : MonoBehaviour
             if (null != activePane)
             {
                 activePos = activePane.transform.position;
-                activePane.SetMainSummaryPanel(true, this);
+                activePane.SetMainSummaryPanel(true, this, true);
                 panes.Add(activePane);
             }
 
             foreach (var pane in inactivePanes)
             {
-                pane.SetMainSummaryPanel(false, this);
+                pane.SetMainSummaryPanel(false, this, true);
                 panes.Add(pane);
             }
 
@@ -170,7 +170,6 @@ public class SummaryGroup : MonoBehaviour
 
     void    MovePane(SummarySubPanel pane, GameObject parent, PanePositionEntry pos, bool toForeground)
     {
-        pane.SetPanePosition(pos.dir);
         pane.MoveTo(parent.transform, pos.pos, toForeground);
     }
 
